@@ -1,0 +1,39 @@
+big mike's fancy file distributor
+
+contact: http://howler.us.to/swt/
+license: GPLv3 (see LICENSE)
+
+bmffd was developed as an https solution to allow remote, secure access to
+files. bmffd was implemented originally at https://bigmike.sne.jp/onsen/.
+
+bmffd currently ships with these features:
+
+- remote directory navigation
+	any files put into share/ are addressable by the end-user of bmffd.
+	access to any files outside of share/ is strictly prohibited through
+	the interface
+- directory zipping
+	some directories can be zipped. currently, this is folders which
+	contain music files or only images. this is born of the needs of
+	bigmike.sne.jp and the definition of a "zippable folder" will likely
+	change
+- image gallery
+	if a directory contains only images, that folder may be viewed as a
+	gallery using the super_simple_image_viewer_v3.js. this js is
+	planned to be deprecated in favor of js I will write myself becuase
+	I am reading a javascript book I bought at a booksale at university.
+
+these features are planned for bmffd:
+
+- file tagging
+	I am very excited to implement a file tagger that I helping to
+	debug and develop. In future builds, bmffd will ship with a
+	search function which lets you search for any file tagged with your
+	query. only local users will be trusted to add/remove tags.
+- optional user verification
+	as is the case on bigmike.sne.jp/onsen, I have a SQL table of
+	users who are allowed to access bmffd. integrating this into the git
+	repo is a non-issue, I just need the motivation to do it.
+- configuration
+	planned implementation of a /includes/config.php will aid
+	administrators in deployment of bmffd

@@ -1,0 +1,6 @@
+share/*
+!share/sample.png
+
+extras
+includes/auth.php
+includes/config.php

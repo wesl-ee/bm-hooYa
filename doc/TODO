@@ -1,0 +1,11 @@
+things to do
+
+- /includes/config.php and /includes/config.template.php
+- dumpster super_simple_image_viewer_v3.js
+- optional user authentication against a SQL table
+- nice js for image viewing
+- nice js for playing music
+- nice js for watching video
+
+probably the most important thing is:
+- improving code readibility and explaining functions
