@@ -30,7 +30,7 @@ body {
 	padding-bottom: 25px;
 	position:absolute;
 }
-.logout {
+#logout {
 	border-radius: 0px 0px 25px 25px;
 	background-color: #FFD4E5;
 	padding: 5px 45px 15px 45px;
@@ -83,7 +83,7 @@ h1 {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
-.galleryFrame {
+#galleryFrame {
 	width: 75%;
 	height: 75%;
         margin: auto;
@@ -97,7 +97,7 @@ h1 {
 	overflow: hidden;
 	display:block;
 }
-.title {
+#title {
 	display:block;
 	overflow: hidden;
 	height:50px;

@@ -5,7 +5,7 @@ include "includes/core.php";
 	<?php include("includes/head.php") ?>
 </head>
 <body>
-<div class="logout">
+<div id="logout">
         <a href="/">home</a></br>
         <a href="userprefs.html">user preferences</a>
 </div>

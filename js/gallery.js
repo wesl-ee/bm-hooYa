@@ -23,7 +23,57 @@ function previousImage()
 }
 function zoomImage()
 {
-	alert("zoom");
+	div = document.getElementById("picture");
+	div.style.position = "absolute";
+	div.style.right = "0";
+	div.style.left = "0";
+	div.style.height = "auto";
+	div.style.zIndex = "999";
+	div.style.maxHeight = "initial";
+	div.onclick = function() { unzoomImage() };
+
+	div = document.getElementById("galleryFrame");
+	div.style.backgroundColor = "black";
+
+	div = document.getElementById("next");
+	div.style.display = "none";
+
+	div = document.getElementById("previous");
+	div.style.display = "none";
+
+	div = document.getElementById("logout");
+	div.style.display = "none";
+
+	document.body.style.backgroundColor = "black";
+
+	return;
+}
+function unzoomImage()
+{
+	div = document.getElementById("picture");
+	div.style.position = "";
+	div.style.top = "";
+	div.style.right = "";
+	div.style.bottom = "";
+	div.style.left = "";
+	div.style.height = "";
+	div.style.zIndex = "";
+	div.style.maxHeight = "100%";
+	div.onclick = function() { zoomImage() };
+
+	div = document.getElementById("galleryFrame");
+	div.style.backgroundColor = "";
+
+	div = document.getElementById("next");
+	div.style.display = "";
+
+	div = document.getElementById("previous");
+	div.style.display = "";
+
+	div = document.getElementById("logout");
+	div.style.display = "";
+
+	document.body.style.backgroundColor = "";
 	return;
 }
 function updateImage()

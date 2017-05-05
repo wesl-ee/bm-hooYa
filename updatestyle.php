@@ -9,7 +9,7 @@ header("Refresh: 1; url=userprefs.php");
 	<?php include("includes/head.php") ?>
 </head>
 <body>
-<div class="logout">
+<div id="logout">
         <a href="/onsen/">home</a></br>
         <a href="userprefs.php">user preferences</a>
 </div>

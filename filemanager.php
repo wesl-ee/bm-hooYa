@@ -50,7 +50,7 @@ function ls($dir)
 	<title>bigmike - <?php echo "$dir"?></title>
 </head>
 <body>
-<div class="logout">
+<div id="logout">
 	<a href="/">home</a></br>
 	<a href="userprefs.php">user preferences</a>
 </div>

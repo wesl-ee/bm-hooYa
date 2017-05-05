@@ -29,19 +29,19 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 <body>
 <h1 style="text-align:center;"><?php echo $parentdir;?></h1>
 
-<div class="logout">
+<div id="logout">
         <a href="/">home</a></br>
         <a href="userprefs.php">user preferences</a>
 </div>
 
-<div class="galleryFrame">
-<div class="title">
+<div id="galleryFrame">
+<div id="title">
 	<div style="float:left;width:33%;">
 		<a style="text-align:left;" href="filemanager.php?dir=<?php echo urlencode($parentdir);?>">
 		« back to file manager
 		</a>
 	</div>
-	<div id="caption" style="float:left;width:33%;text-align:center;">
+	<div id="caption" style="float:left;width:33%;text-align:center;max-width:100%;">
 		<?php echo $initialPicture ?>
 	</div>
 	<div style="float:left;width:33%;text-align:right;">
@@ -56,6 +56,7 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 
 	<div style="float:left;width:80%;">
 	<img id="picture" src="share<?php echo $dir?>" onClick="zoomImage()"/>
+	&nbsp;
 	</div>
 
 	<div id="next" style="float:left;" onClick="nextImage()">
