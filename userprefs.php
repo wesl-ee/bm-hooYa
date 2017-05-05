@@ -11,7 +11,7 @@ include "includes/core.php";
 </div>
 
 <h1 style="text-align:center;">User preferences</h1>
-<div class="frame">
+<div id="frame">
 	<div style="padding-bottom:20px;">
 		<a href="filemanager.php">« back</a>
 	</div>
@@ -22,6 +22,8 @@ include "includes/core.php";
 		<form action="updatestyle.php" method="post">
 		<select name="pref_css" onchange="this.form.submit()">
 		<option <?php if ($curr_css=="classic") echo "selected" ?> value="classic">Classic</option>
+		<option <?php if ($curr_css=="gold") echo "selected" ?> value="gold">Gold</option>
+		<option <?php if ($curr_css=="wu_tang") echo "selected" ?> value="wu_tang">Wu-tang</option>
 		</select>
 	</div>
 </div>

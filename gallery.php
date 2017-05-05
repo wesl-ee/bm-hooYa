@@ -19,12 +19,12 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 <head>
 	<?php include("includes/head.php") ?>
 	<script type="text/javascript">
-		var currPicture=<?php echo json_encode($initialPicture)?>;
+		var currFile=<?php echo json_encode($initialPicture)?>;
 		var currDir=<?php echo json_encode($parentdir);?>;
 		var contents=<?php echo json_encode(getFiles($parentdir))?>;
 	</script>
 	<script type="text/javascript" src="js/gallery.js"></script>
-	<title>big mike's fancy file viewer</title>
+	<title>● bmffd — <?php echo $parentdir ?></title>
 </head>
 <body>
 <h1 style="text-align:center;"><?php echo $parentdir;?></h1>
@@ -48,19 +48,17 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 		view tags
 	</div>
 </div>
-
 <div class="gallery">
-	<div id="previous" style="float:left;" onClick="previousImage()">
+	<div id="previous" style="float:left" onClick="previousFile()">
+	◀
+	</div>
+
+	<div id="content" style="float:left;width:80%;text-align:center;height:100%;">
 	&nbsp;
 	</div>
 
-	<div style="float:left;width:80%;">
-	<img id="picture" src="share<?php echo $dir?>" onClick="zoomImage()"/>
-	&nbsp;
-	</div>
-
-	<div id="next" style="float:left;" onClick="nextImage()">
-	&nbsp;
+	<div id="next" style="float:left;" onClick="nextFile()">
+	▶
 	</div>
 </div>
 </div>

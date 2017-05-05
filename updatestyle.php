@@ -15,7 +15,7 @@ header("Refresh: 1; url=userprefs.php");
 </div>
 
 <h1 style="text-align:center;">Updating user preferences...</h1>
-<div class="frame">
+<div id="frame">
 <div class="centeredEntry">
 <?php
 if (isset($_POST['pref_css'])) {

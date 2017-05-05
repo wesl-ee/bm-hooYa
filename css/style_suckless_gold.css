@@ -1,10 +1,10 @@
 body {
-	background-color: #BBF3FF;
-	color: #B0475A;
+	background-color: #FAFDFF;
+	color: #3E3F40;
 }
 #logout, #galleryFrame, #frame {
-	background-color: #FFD4E5;
-	color: #B0475A;
+	background-color: #FEFFDD;
+	color: #3E3F40;
 }
 @font-face {
 	font-family: ProggySquare;
@@ -114,10 +114,10 @@ h1 {
 	max-height:100%;
 	border-collapse:collapse;
 	border-radius:25px 25px 25px 25px;
+	cursor: pointer;
 }
 .gallery #next, .gallery #previous {
 	text-align: center;
-	font-size: 1.5em;
 	cursor: pointer;
 	width:10%;
 	height:100%;
@@ -126,12 +126,12 @@ h1 {
 	-ms-user-select: none; /* IE10+ */
 }
 .gallery #next {
+	border: 1px solid #3E3F40;
 	margin-right: -2px;
-	border: 1px solid #B0475A;
 	border-radius: 0px 25px 25px 0px;
 }
 .gallery #previous {
-	border: 1px solid #B0475A;
+	border: 1px solid #3E3F40;
 	margin-left: -2px;
 	border-radius: 25px 0px 0px 25px;
 }

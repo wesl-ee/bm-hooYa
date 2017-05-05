@@ -1,17 +1,26 @@
 body {
-	background-color: #BBF3FF;
-	color: #B0475A;
+	background-color: #000000;
+	color: #FFF18B;
 }
 #logout, #galleryFrame, #frame {
-	background-color: #FFD4E5;
-	color: #B0475A;
+	background-color: #FFF18B;
+	color: #3E3F40;
 }
+.gallery #next, .gallery #previous {
+	border: 1px solid #3E3F40;
+}
+
 @font-face {
-	font-family: ProggySquare;
-	src: url('ProggySquare.ttf');
+	font-family: MPlus;
+	src: url('JF-Dot-MPlusS10.ttf');
 }
 body {
-	font-family: ProggySquare;
+	font-family: MPlus;
+	background-image: url("/css/wutang.png");
+	background-repeat:no-repeat;
+	background-position: center;
+	background-attachment: fixed;
+	background-size: 40%;
 }
 .fileList {
         text-align: left;
@@ -100,6 +109,7 @@ h1 {
 #title {
 	display:block;
 	overflow: hidden;
+	text-overflow: "fade";
 	height:50px;
 }
 .gallery {
@@ -114,11 +124,12 @@ h1 {
 	max-height:100%;
 	border-collapse:collapse;
 	border-radius:25px 25px 25px 25px;
+	cursor: pointer;
 }
 .gallery #next, .gallery #previous {
-	text-align: center;
-	font-size: 1.5em;
 	cursor: pointer;
+	text-align: center;
+	opacity: 0.5;
 	width:10%;
 	height:100%;
 	-webkit-user-select: none; /* Chrome/Safari */        
@@ -127,12 +138,12 @@ h1 {
 }
 .gallery #next {
 	margin-right: -2px;
-	border: 1px solid #B0475A;
+	border: 1px solid #3E3F40;
 	border-radius: 0px 25px 25px 0px;
 }
 .gallery #previous {
-	border: 1px solid #B0475A;
 	margin-left: -2px;
+	border: 1px solid #3E3F40;
 	border-radius: 25px 0px 0px 25px;
 }
 img {

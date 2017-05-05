@@ -47,7 +47,7 @@ function ls($dir)
 <HTML>
 <head>
 	<?php include("./includes/head.php") ?>
-	<title>bigmike - <?php echo "$dir"?></title>
+	<title>○ bmffd — <?php echo "$dir"?></title>
 </head>
 <body>
 <div id="logout">
@@ -56,7 +56,7 @@ function ls($dir)
 </div>
 <h1 style="text-align:center;"><?php echo "$dir" ?></h1>
 
-<div class="frame">
+<div id="frame">
 	<div class="title">
 	<div style="float:left;width:33%;">
 		&nbsp;
@@ -73,7 +73,6 @@ function ls($dir)
 		}
 		if (onlyPictures($contents)) {
 			$parent = basename($dir);
-			echo("<a href='gallery.php?dir=".urlencode("$dir")."'>view as a gallery</a></br>");
 			echo("<a href='zip.php?dir=".urlencode("$dir")."'>[download this folder]</a></br>");
 		}
 		echo(human_filesize(dirSize("share".$dir)));

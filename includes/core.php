@@ -1,15 +1,30 @@
 <?php
+
+// Yes, this site uses sessions! Please enable cookies!
 session_start();
 
-// variable declarations
-
+// variable declarations (more coming soon)
 define("CONFIG_ROOT_PATH", "/var/git/bmffd/");
 
+// Set up variables that will define the page's style depending
+// on the pref_css PHP session variable
 switch($_SESSION['pref_css']) {
 	case "classic":
 		$curr_css="classic";
 		$stylesheet="css/style_suckless.css";
 		$mascot="img/rei.png";
+		break;
+	case "gold":
+		$curr_css="gold";
+		$stylesheet="css/style_suckless_gold.css";
+		$mascot="img/yui.png";
+		$motd="ゆゆ式";
+		break;
+	case "wu_tang":
+		$curr_css="wu_tang";
+		$stylesheet="css/style_suckless_wutang.css";
+		$mascot="img/ghost.png";
+		$motd="Daily reminder: Protect ya neck";
 		break;
 	default:
 		$curr_css="classic";
@@ -17,12 +32,15 @@ switch($_SESSION['pref_css']) {
 		$mascot="img/rei.png";
 }
 
-// fn definitions
+// function definitions
+
+// updates php session variable pref_css
 function updateUserStyle($css)
 {
 	$_SESSION['pref_css'] = $css;
 	return True;
 }
+// returns the size of a directory in bytes
 function dirSize($dir)
 {
 	$totalSize = 0;
@@ -33,18 +51,23 @@ function dirSize($dir)
 	}
 	return $totalSize;
 }
+// returns a human-readable file-size
 function human_filesize($bytes, $decimals = 2)
 {
     $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
     $factor = floor((strlen($bytes) - 1) / 3);
     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
 }
+// really silly function for sending files in a stream-compatible mode
+// this will be integrated with a download.php when you request to download
+// a file
 function sendAnime($filename)
 {
 	header("Content-Type:".mime_content_type("$filename"));
 	header("Content-Disposition: attachment; filename=\"" . basename("$filename") . "\"");
 	header('X-Sendfile:'.realpath($filename));
 }
+// used for determining elligibility to be downloaded as a zip file
 function isAnAudioFile($filename)
 {
 	$extension = pathinfo($filename)["extension"];
@@ -59,6 +82,8 @@ function isAnAudioFile($filename)
 	if ($extension == "wma") return true;
 	return false;
 }
+// was used for determining elligibility to be viewed as a gallery
+// I should clean this code up, since I'm not sure this is called anymore
 function isAPictureFile($filename)
 {
 	$extension = pathinfo($filename)["extension"];
@@ -85,6 +110,8 @@ function testForMusicFiles($files)
 	}
 	return $isAMusicFolder;
 }
+// tests if all passed files are pictures
+// was used to determine gallery elligibility, probably deprecated
 function onlyPictures($files)
 {
 	if (empty($files))
@@ -96,12 +123,13 @@ function onlyPictures($files)
 	}
 	return true;
 }
+// return an array of all files in a directory
 function getFiles($dir)
 {
 	$array = array();
 	$files = scandir("share".$dir);
 	foreach($files as $file) {
-		if (isAPictureFile($dir.$file)) {
+		if (is_file("share".$dir.$file)) {
 			$array[] = $file;
 		}
 	}
