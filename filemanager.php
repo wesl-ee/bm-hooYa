@@ -4,6 +4,8 @@ include "includes/core.php";
 $dir = "/";
 if (isset($_GET["dir"]))
 	$dir = $_GET["dir"];
+if ($dir != "/")
+	$dir .+ "/";
 
 if (is_file("share"."$dir")) {
 	sendAnime("share"."$dir");
@@ -30,7 +32,7 @@ function ls($dir)
 
 	foreach ($contents as $item) {
 		if (is_file("share"."$dir/$item"))
-			echo("<a href='?dir=".urlencode("$dir").urlencode("$item")."&PHPSESSID=".session_id()."'>$item</a></br>");
+			echo("<a href='gallery.php?dir=".urlencode("$dir").urlencode("$item")."'>$item</a></br>");
 		else
 			echo("<a href='?dir=".urlencode("$dir").urlencode("$item")."/"."'>$item/</a></br>");
 	}
@@ -53,41 +55,50 @@ function ls($dir)
 	<a href="userprefs.php">user preferences</a>
 </div>
 <h1 style="text-align:center;"><?php echo "$dir" ?></h1>
+
 <div class="frame">
-<div class="fileList">
-<p>
-<?php
+	<div class="title">
+	<div style="float:left;width:33%;">
+		&nbsp;
+	</div>
+	<div style="float:left;width:33%;">
+		&nbsp;
+	</div>
+	<div style="float:left;width:33%;text-align:right;">
+		<?php
+		$contents = array_diff(scandir("share".$dir), array('.', '..'));
+		if (testForMusicFiles($contents)) {
+			$parent = basename($dir);
+			echo("<a href='zip.php?dir=".urlencode("$dir")."'>[download this folder]</a></br>");
+		}
+		if (onlyPictures($contents)) {
+			$parent = basename($dir);
+			echo("<a href='gallery.php?dir=".urlencode("$dir")."'>view as a gallery</a></br>");
+			echo("<a href='zip.php?dir=".urlencode("$dir")."'>[download this folder]</a></br>");
+		}
+		echo(human_filesize(dirSize("share".$dir)));
+		?>
 
-// Handle requests that try to break out of the /bmffd/share/ directory
-if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."bmffd/share")) === false) {
-	return;
-}
+	</div>
+	</div>
 
-if (!ls($dir)) {
-	echo "<p>Looks like the research database is offline. . .</p>";
-	return;
-}
-?>
+	<div class="fileList">
+		<p>
+		<?php
+		// Handle requests that try to break out of the /bmffd/share/ directory
+		if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."bmffd/share")) === false) {
+			return;
+		}
 
-</p>
+		if (!ls($dir)) {
+			echo "<p>Looks like the research database is offline. . .</p>";
+			return;
+		}
+		?>
+
+	</p>
 </div>
-<div class="upperRight">
-<?php
-$contents = array_diff(scandir("share".$dir), array('.', '..'));
-if (testForMusicFiles($contents)) {
-	$parent = basename($dir);
-	echo("<a href='zip.php?dir=".urlencode("$dir")."'>[download this folder]</a></br>");
-}
-if (onlyPictures($contents)) {
-	$parent = basename($dir);
-	echo("<a href='gallery.php?dir=".urlencode("$dir")."'>view as a gallery</a></br>");
-	echo("<a href='zip.php?dir=".urlencode("$dir")."'>[download this folder]</a></br>");
-}
-echo(human_filesize(dirSize("share".$dir)));
-?>
+
 </div>
-</div>
-<!-- Fix their legs cutting off
-<img id="mascot" src="/mascot_alt.png"/>-->
 </body>
 </HTML>

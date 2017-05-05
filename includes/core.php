@@ -11,21 +11,10 @@ switch($_SESSION['pref_css']) {
 		$stylesheet="css/style_suckless.css";
 		$mascot="img/rei.png";
 		break;
-	case "wu_tang":
-		$curr_css="wu_tang";
-		$stylesheet="css/style_suckless_wutang.css";
-		$mascot="img/ghost.png";
-		$motd="Daily reminder: Protect ya neck";
-		break;
-	case "gold":
-		$curr_css="gold";
-		$stylesheet="css/style_suckless_gold.css";
-		$mascot="img/yui.png";
-		$motd="ゆゆ式";
-		break;
 	default:
-		$curr_css="default";
+		$curr_css="classic";
 		$stylesheet="css/style_suckless.css";
+		$mascot="img/rei.png";
 }
 
 // fn definitions
@@ -107,5 +96,15 @@ function onlyPictures($files)
 	}
 	return true;
 }
-
+function getFiles($dir)
+{
+	$array = array();
+	$files = scandir("share".$dir);
+	foreach($files as $file) {
+		if (isAPictureFile($dir.$file)) {
+			$array[] = $file;
+		}
+	}
+	return $array;
+}
 ?>
