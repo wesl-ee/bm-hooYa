@@ -1,6 +1,8 @@
 <?php
 include "includes/core.php";
 
+if (CONFIG_REQUIRE_AUTHENTICATION)
+        include "includes/auth.php";
 
 if (!isset($_GET["dir"]))
 	die();
@@ -24,14 +26,14 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 		var contents=<?php echo json_encode(getFiles($parentdir))?>;
 	</script>
 	<script type="text/javascript" src="js/gallery.js"></script>
-	<title>● bmffd — <?php echo $parentdir ?></title>
+	<title>bmffd — <?php echo $parentdir ?></title>
 </head>
 <body>
 <h1 style="text-align:center;"><?php echo $parentdir;?></h1>
 
 <div id="logout">
-        <a href="/">home</a></br>
-        <a href="userprefs.php">user preferences</a>
+        <a href="index.php">home</a></br>
+        <a href="logout.php">logout</a>
 </div>
 
 <div id="galleryFrame">

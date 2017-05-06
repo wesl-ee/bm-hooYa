@@ -7,11 +7,12 @@ header("Refresh: 1; url=userprefs.php");
 ?>
 <head>
 	<?php include("includes/head.php") ?>
+	<title>bmffd — preferences</title>
 </head>
 <body>
 <div id="logout">
-        <a href="/onsen/">home</a></br>
-        <a href="userprefs.php">user preferences</a>
+        <a href="index.php">home</a></br>
+        <a href="logout.php">logout</a>
 </div>
 
 <h1 style="text-align:center;">Updating user preferences...</h1>

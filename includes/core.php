@@ -3,8 +3,8 @@
 // Yes, this site uses sessions! Please enable cookies!
 session_start();
 
-// variable declarations (more coming soon)
-define("CONFIG_ROOT_PATH", "/var/git/bmffd/");
+// load the user configuration file
+include "includes/config.php";
 
 // Set up variables that will define the page's style depending
 // on the pref_css PHP session variable

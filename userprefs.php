@@ -3,17 +3,18 @@ include "includes/core.php";
 ?>
 <head>
 	<?php include("includes/head.php") ?>
+	<title>bmffd — preferences</title>
 </head>
 <body>
 <div id="logout">
-        <a href="/">home</a></br>
-        <a href="userprefs.html">user preferences</a>
+        <a href="index.php">home</a></br>
+        <a href="logout.php">logout</a>
 </div>
 
 <h1 style="text-align:center;">User preferences</h1>
 <div id="frame">
 	<div style="padding-bottom:20px;">
-		<a href="filemanager.php">« back</a>
+		<a href="index.php">« back</a>
 	</div>
 	<div style="float:left;width:50%;">
 		CSS Style</br>

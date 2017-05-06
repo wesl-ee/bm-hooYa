@@ -8,76 +8,118 @@ bmffd requires some things to be installed:
 ARCH LINUX INSTALL INSTRUCTIONS
 1. Install lighttpd and php if you do not have another http server already
 
-$ pacman -S lighttpd php php-cgi
+	$ pacman -S lighttpd php php-cgi
 
 2. Set up lighttpd to understand php
 
-$ cat /etc/lighttpd/conf.d/fastcgi.conf
+	$ cat /etc/lighttpd/conf.d/fastcgi.conf
 
-  server.modules += ("mod_fastcgi")
+	server.modules += ("mod_fastcgi")
 
-  index-file.names += ("index.php")
-  fastcgi.server = ( 
-      # Load-balance requests for this path...
-      ".php" => (
-          # ... among the following FastCGI servers. The string naming each
-          # server is just a label used in the logs to identify the server.
-          "localhost" => ( 
-              "allow-x-send-file" => "enable" ,
-              "bin-path" => "/usr/bin/php-cgi",
-              "socket" => "/tmp/php-fastcgi.sock",
-              # breaks SCRIPT_FILENAME in a way that PHP can extract PATH_INFO
-              # from it 
-              "broken-scriptfilename" => "enable",
-              # Launch (max-procs + (max-procs * PHP_FCGI_CHILDREN)) procs, where
-              # max-procs are "watchers" and the rest are "workers". See:
-              # https://redmine.lighttpd.net/projects/1/wiki/frequentlyaskedquestions#How-many-php-CGI-processes-will-lighttpd-spawn 
-              "max-procs" => 4, # default value
-              "bin-environment" => (
-                  "PHP_FCGI_CHILDREN" => "1" # default value
-              )
-          )
-      )   
-  )
+	index-file.names += ("index.php")
+	fastcgi.server = ( 
+		# Load-balance requests for this path...
+		".php" => (
+		# ... among the following FastCGI servers. The string naming each
+		# server is just a label used in the logs to identify the server.
+		"localhost" => ( 
+		"allow-x-send-file" => "enable" ,
+		"bin-path" => "/usr/bin/php-cgi",
+		"socket" => "/tmp/php-fastcgi.sock",
+		# breaks SCRIPT_FILENAME in a way that PHP can extract PATH_INFO
+		# from it 
+		"broken-scriptfilename" => "enable",
+		# Launch (max-procs + (max-procs * PHP_FCGI_CHILDREN)) procs, where
+		# max-procs are "watchers" and the rest are "workers". See:
+		# https://redmine.lighttpd.net/projects/1/wiki/frequentlyaskedquestions#How-many-php-CGI-processes-will-lighttpd-spawn 
+		"max-procs" => 4, # default value
+		"bin-environment" => (
+			"PHP_FCGI_CHILDREN" => "1" # default value
+		)
+		)
+		)   
+	)
 
-$ cat /etc/lighttpd/lighttpd.conf
+	$ cat /etc/lighttpd/lighttpd.conf
 
-  server.document-root = "/var/http/"
+	server.document-root = "/var/http/"
 
-  server.port = 80
-  server.username = "http"
-  server.groupname = "http"
-  server.pid-file = "/var/run/lighttpd.pid"
+	server.port = 80
+	server.username = "http"
+	server.groupname = "http"
+	server.pid-file = "/var/run/lighttpd.pid"
 
-  mimetype.assign = (
-    ".html" => "text/html", 
-    ".txt" => "text/plain",
-    ".jpg" => "image/jpeg",
-    ".png" => "image/png",
-    ".js" => "text/javascript",
-    ".css" => "text/css"
-  )
-  index-file.names = ( "index.html", "index.php" )
-  include "conf.d/fastcgi.conf"
+	mimetype.assign = (
+	".html" => "text/html", 
+	".txt" => "text/plain",
+	".jpg" => "image/jpeg",
+	".png" => "image/png",
+	".js" => "text/javascript",
+	".css" => "text/css"
+	)
+	index-file.names = ( "index.html", "index.php" )
+	include "conf.d/fastcgi.conf"
 
-3. Install bmffd to a directory which lighttpd can read
+3. Set up mysql table for user authentication
 
-$ cd /var/http/
-$ git clone https://bigmike.sne.jp/git/bmffd.git
+	This is necessary only if you will be restricting access to trusted users
 
-4. Put files inside share/
-- or mount a drive to share/
-- or mount a network drive to share/
-- or symlink share/ to /dev/random
+	First, intall mysql (mariadb on arch)
+	$ pacman -S mariadb
+	$ service mysql start # openrc
+	or
+	$ systemctl start mysql
 
-- the possibilities are endless!
+	and configure mysql so you can log in and manage the databases
 
-5. Start lighttpd
-$ service start lighttpd
-or 
-$ systemctl start lighttpd
+	Next, populate a SQL table "onsen" in a database "bigmike" using the following steps
 
-6. Point your browser to http://localhost/filemanager.php
+	$ mysql -u root -p
+	Enter password:
+	> CREATE DATABASE bigmike;
+	> USE bigmike;
+	> CREATE TABLE onsen (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT DEFAULT null,
+		username VARCHAR(20) DEFAULT,
+		password VARCHAR(128),
+		signup_date DATE DEFAULT CURDATE(),
+		last_login DATE DEFAULT CURDATE(),
+		locked CHAR(1) 'n',
+		failed_logins INT(11) DEFAULT 0,
+		pref_css VARCHAR(64) DEFAULT 'original';
 
-If you encounter any bugs, contact me via
-- http://howler.us.to/swt
+	Now, create a user
+	> INSERT INTO onsen (`username`, `password`) VALUES
+		("USERNAME", "SHA-512 HASHED PASSWORD");
+	Please use a SHA-512 hashed password, otherwise you will be very confused and
+	your login will not work.
+
+4. Install mysqli for PHP
+
+	This is how we will verify logins
+
+	Uncomment the following line in /etc/php/php.ini
+	;extension=mysqli.so
+
+5. Install bmffd to a directory which lighttpd can read
+
+	$ cd /var/http/
+	$ git clone https://bigmike.sne.jp/git/bmffd.git
+
+6. Put files inside share/
+
+	- or mount a drive to share/
+	- or mount a network drive to share/
+	- or symlink share/ to /dev/random
+
+	- the possibilities are endless!
+
+7. Start lighttpd
+
+	$ service start lighttpd
+	or 
+	$ systemctl start lighttpd
+
+8. Point your browser to http://localhost/filemanager.php
+
+	If you encounter any bugs, contact me via
+	- http://howler.us.to/swt

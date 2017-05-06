@@ -34,9 +34,18 @@ function previousFile()
 	}
 	return;
 }
+// Currently returns the first picture it finds in the contents array
+function guessAlbumArt()
+{
+	for (i = 0; i < contents.length && getMimetype(contents[i]) != "image"; i++);
+	if (i < contents.length)
+		return "share" + currDir + contents[i];
+	return;
+}
 // triggered by onClick of a picture in the gallery
 function zoomImage(element)
 {
+	document.removeEventListener('keyup', doc_hotkeys);
 	div = document.getElementById(element);
 	div.style.position = "absolute";
 	div.style.right = "0";
@@ -68,6 +77,7 @@ function zoomImage(element)
 // triggered by onClick of a zoomed-in picture in the gallery
 function unzoomImage(element)
 {
+	document.addEventListener('keyup', doc_hotkeys, false);
 	div = document.getElementById(element);
 	div.style.position = "";
 	div.style.top = "";
@@ -115,6 +125,23 @@ function updateVideo()
 	document.getElementById("video").style.cursor = "pointer";
 	return;
 }
+// create a video in the "content" div and fill it out
+function updateAudio()
+{
+	document.getElementById("content").innerHTML = '<div id="songinfo"><div style="float:left;width:50%;" id="info">&nbsp</div><img style="float:left;width:50%" id="albumart"></img><audio controls id="audio"></audio>'
+	document.getElementById("songinfo").style.height = "90%";
+	var art = guessAlbumArt();
+	if (art)
+		document.getElementById("albumart").src = art;
+	else
+		document.getElementById("albumart").src = "https://uguu.se/404.gif";
+	document.getElementById("audio").src = "share" + currDir + currFile;
+	document.getElementById("audio").style.display = "block";
+	document.getElementById("audio").style.width = "100%";
+	document.getElementById("audio").style.height = "10%";
+	document.getElementById("albumart").style.cursor = "initial";
+	return;
+}
 // create a link in the "content" div and fill it out
 function updateLink()
 {
@@ -143,6 +170,11 @@ function getMimetype(filename)
 		case "mp4":
 		case "webm":
 			return "video";
+		case "mp3":
+		case "flac":
+		case "m4a":
+		case "wav":
+			return "audio";
 		default:
 			return "unsupported";
 	}
@@ -164,6 +196,9 @@ function update() {
 			break;
 		case "video":
 			updateVideo();
+			break;
+		case "audio":
+			updateAudio();
 			break;
 		default:
 			updateLink();

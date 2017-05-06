@@ -1,16 +1,14 @@
 <?php
 include "includes/core.php";
 
+if (CONFIG_REQUIRE_AUTHENTICATION)
+        include "includes/auth.php";
+
 $dir = "/";
 if (isset($_GET["dir"]))
 	$dir = $_GET["dir"];
 if ($dir != "/")
 	$dir .+ "/";
-
-if (is_file("share"."$dir")) {
-	sendAnime("share"."$dir");
-	return;
-}
 
 // Creates links to all files in a passed directory
 function ls($dir)
@@ -47,12 +45,12 @@ function ls($dir)
 <HTML>
 <head>
 	<?php include("./includes/head.php") ?>
-	<title>○ bmffd — <?php echo "$dir"?></title>
+	<title>bmffd — <?php echo "$dir"?></title>
 </head>
 <body>
 <div id="logout">
-	<a href="/">home</a></br>
-	<a href="userprefs.php">user preferences</a>
+	<a href="index.php">home</a></br>
+	<a href="logout.php">logout</a>
 </div>
 <h1 style="text-align:center;"><?php echo "$dir" ?></h1>
 
