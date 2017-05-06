@@ -1,5 +1,9 @@
 <?php
 include "includes/core.php";
+
+// Was the user refered by some other link?
+if (isset($_GET['ref']))
+	$uri = "?ref=".urlencode($_GET['ref']);
 ?>
 <HTML>
 <head>

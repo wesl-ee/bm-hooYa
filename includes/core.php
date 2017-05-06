@@ -6,32 +6,6 @@ session_start();
 // load the user configuration file
 include "includes/config.php";
 
-// Set up variables that will define the page's style depending
-// on the pref_css PHP session variable
-switch($_SESSION['pref_css']) {
-	case "classic":
-		$curr_css="classic";
-		$stylesheet="css/style_suckless.css";
-		$mascot="img/rei.png";
-		break;
-	case "gold":
-		$curr_css="gold";
-		$stylesheet="css/style_suckless_gold.css";
-		$mascot="img/yui.png";
-		$motd="ゆゆ式";
-		break;
-	case "wu_tang":
-		$curr_css="wu_tang";
-		$stylesheet="css/style_suckless_wutang.css";
-		$mascot="img/ghost.png";
-		$motd="Daily reminder: Protect ya neck";
-		break;
-	default:
-		$curr_css="classic";
-		$stylesheet="css/style_suckless.css";
-		$mascot="img/rei.png";
-}
-
 // function definitions
 
 // updates php session variable pref_css

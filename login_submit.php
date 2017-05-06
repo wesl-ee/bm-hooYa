@@ -81,23 +81,14 @@ function login()
 		if ($sql_failed_logins > 0)
 			$out .= "</br>There were ".$sql_failed_logins." failed login attempts since the last successful login";
 		return $out;
-/*		$_SESSION['user_id'] = 0;
-		$_SESSION['username'] = "nakomi";
-		$out = "Welcome home nakomi!</br>";
-		return $out;*/
-
 	}
 }
 $out = login();
 ?>
 <HTML>
 <head>
-	<!-- Japanese text will not show if we don't explicitly use utf-8-->
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<!-- style.css is meant to be a site-wide style-sheet -->
-<!--	<link rel="stylesheet" href="/style_suckless.css"/>-->
-	<?php include($_SERVER['DOCUMENT_ROOT']."/head.php") ?>
-	<link rel="stylesheet" href=<?php echo $stylesheet?>>
+	<?php include("./includes/head.php") ?>
+	<title>bmffd — login</title>
 </head>
 <BODY>
 <h1 style="text-align:center;">the bath house</h1>

@@ -33,5 +33,6 @@ Welcome to the user center!</br>
 <a href="userprefs.php">User Preferences</a>
 </div>
 </div>
+<img id="mascot" src=<?php echo $mascot;?>>
 </body>
 </HTML>

@@ -11,7 +11,7 @@ function nextFile()
 		i++;
 	currFile = contents[i];
 	update();
-	var newURL = document.URL.split("?")[0] + "?dir=" + encodeURIComponent(currDir + currFile);
+	var newURL = document.URL.split("?")[0] + "?dir=" + encodeURI(currDir + currFile);
 	if (window.history.replaceState) {
 		window.history.replaceState(currFile, currFile, newURL);
 	}
@@ -28,7 +28,7 @@ function previousFile()
 		i--;
 	currFile = contents[i];
 	update();
-	var newURL = document.URL.split("?")[0] + "?dir=" + encodeURIComponent(currDir + currFile);
+	var newURL = document.URL.split("?")[0] + "?dir=" + encodeURI(currDir + currFile);
 	if (window.history.replaceState) {
 		window.history.replaceState(currFile, currFile, newURL);
 	}
@@ -146,7 +146,7 @@ function updateAudio()
 function updateLink()
 {
 	document.getElementById("content").innerHTML = '<a id="dlink">download this file!</br>⬇</a>';
-	document.getElementById("dlink").href = encodeURIComponent("share" + currDir + currFile);
+	document.getElementById("dlink").href = encodeURI("share" + currDir + currFile);
 	document.getElementById("dlink").style.top = "50%";
 	document.getElementById("dlink").style.position = "relative";
 	document.getElementById("dlink").style.transform = "translateY(-50%)";
@@ -169,6 +169,9 @@ function getMimetype(filename)
 			return "image";
 		case "mp4":
 		case "webm":
+		case "avi":
+		case "wmv":
+		case "mpg":
 			return "video";
 		case "mp3":
 		case "flac":
