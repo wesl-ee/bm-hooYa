@@ -35,9 +35,9 @@ function previousFile()
 	return;
 }
 // triggered by onClick of a picture in the gallery
-function zoomImage()
+function zoomImage(element)
 {
-	div = document.getElementById("picture");
+	div = document.getElementById(element);
 	div.style.position = "absolute";
 	div.style.right = "0";
 	div.style.left = "0";
@@ -45,7 +45,7 @@ function zoomImage()
 	div.style.zIndex = "999";
 	div.style.maxHeight = "initial";
 	div.style.cursor = "zoom-out";
-	div.onclick = function() { unzoomImage() };
+	div.onclick = function() { unzoomImage("picture") };
 
 	div = document.getElementById("galleryFrame");
 	div.style.backgroundColor = "inherit";
@@ -66,9 +66,9 @@ function zoomImage()
 	return;
 }
 // triggered by onClick of a zoomed-in picture in the gallery
-function unzoomImage()
+function unzoomImage(element)
 {
-	div = document.getElementById("picture");
+	div = document.getElementById(element);
 	div.style.position = "";
 	div.style.top = "";
 	div.style.right = "";
@@ -78,7 +78,7 @@ function unzoomImage()
 	div.style.zIndex = "";
 	div.style.maxHeight = "100%";
 	div.style.cursor = "zoom-in";
-	div.onclick = function() { zoomImage() };
+	div.onclick = function() { zoomImage("picture") };
 
 	div = document.getElementById("galleryFrame");
 	div.style.backgroundColor = "";
@@ -103,7 +103,7 @@ function updateImage()
 {
 	document.getElementById("content").innerHTML = '<img id="picture"></img>';
 	document.getElementById("picture").src = "share" + currDir + currFile;
-	document.getElementById("picture").onclick = function() { zoomImage() };
+	document.getElementById("picture").onclick = function() { zoomImage("picture") };
 	document.getElementById("picture").style.cursor = "zoom-in";
 	return;
 }
@@ -171,5 +171,21 @@ function update() {
 	}
 	return;
 }
+function doc_hotkeys(e) {
+	switch(e.keyCode) {
+		case 39:
+		case 72:
+			nextFile();
+			break;
+		case 37:
+		case 76:
+			previousFile();
+			break;
+		case 32:
+			// toggle zoom coming soon
+	}
+}
+
+document.addEventListener('keyup', doc_hotkeys, false);
 
 window.onload = update;
