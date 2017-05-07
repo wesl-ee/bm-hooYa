@@ -83,7 +83,7 @@ function ls($dir)
 		<p>
 		<?php
 		// Handle requests that try to break out of the /bmffd/share/ directory
-		if (strpos(realpath("share".$dir), realpath(dirname(__FILE__)."bmffd/share")) === false) {
+		if (strpos(realpath("share".$dir), realpath(dirname(__FILE__)."/share")) === false) {
 			return;
 		}
 
