@@ -20,11 +20,10 @@ header("Refresh: 1; url=userprefs.php");
 <div class="centeredEntry">
 <?php
 if (isset($_POST['pref_css'])) {
-	$_SESSION['pref_css'] = $_POST['pref_css'];
+	$pref_css = $_POST['pref_css'];
 }
-$pref_css = $_SESSION['pref_css'];
 
-if (updateUserStyle($pref_css)) {
+if (updateUserStyle($_SESSION['username'], $pref_css)) {
 	echo "User style was updated successfully!";
 }
 else {
