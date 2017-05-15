@@ -84,10 +84,10 @@ a:hover {
         border-radius: 25px 25px 25px 25px;
 }
 input[type=text] {
-	opacity: 0.5;
+	opacity: 0.9;
 }
 input[type=password] {
-	opacity: 0.5;
+	opacity: 0.9;
 }
 
 h1 {

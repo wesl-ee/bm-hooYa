@@ -1,10 +1,10 @@
 body {
-	background-color: #FAFDFF;
-	color: #3E3F40;
+	background-color: #FFFFFF;
+	color: #B0475A;
 }
 #logout, #galleryFrame, #frame {
-	background-color: #FEFFDD;
-	color: #3E3F40;
+	background-color: #CC0000;
+	color: #FFFFFF;
 }
 @font-face {
 	font-family: ProggySquare;
@@ -75,10 +75,10 @@ a:hover {
         border-radius: 25px 25px 25px 25px;
 }
 input[type=text] {
-	opacity: 0.9;
+	opacity: 0.5;
 }
 input[type=password] {
-	opacity: 0.9;
+	opacity: 0.5;
 }
 
 h1 {
@@ -113,10 +113,10 @@ h1 {
 	max-height:100%;
 	border-collapse:collapse;
 	border-radius:25px 25px 25px 25px;
-	cursor: pointer;
 }
 .gallery #next, .gallery #previous {
 	text-align: center;
+	font-size: 1.5em;
 	cursor: pointer;
 	width:10%;
 	height:100%;
@@ -125,12 +125,12 @@ h1 {
 	-ms-user-select: none; /* IE10+ */
 }
 .gallery #next {
-	border: 1px solid #3E3F40;
 	margin-right: -2px;
+	border: 1px solid #B0475A;
 	border-radius: 0px 25px 25px 0px;
 }
 .gallery #previous {
-	border: 1px solid #3E3F40;
+	border: 1px solid #B0475A;
 	margin-left: -2px;
 	border-radius: 25px 0px 0px 25px;
 }

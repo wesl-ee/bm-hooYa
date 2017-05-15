@@ -146,11 +146,21 @@ function updateAudio()
 function updateLink()
 {
 	document.getElementById("content").innerHTML = '<a id="dlink">download this file!</br>⬇</a>';
-	document.getElementById("dlink").href = encodeURI("share" + currDir + currFile);
+	document.getElementById("dlink").href = "download.php?dir=" + encodeURIComponent(currDir + currFile) + "&PHPSESSID=" + getCookie("PHPSESSID");
 	document.getElementById("dlink").style.top = "50%";
 	document.getElementById("dlink").style.position = "relative";
 	document.getElementById("dlink").style.transform = "translateY(-50%)";
 	return;
+}
+function getCookie(cname) {
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1);
+		if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+	}
+	return "";
 }
 // returns the trailing piece of a filename past the last "."
 function getExtension(filename)

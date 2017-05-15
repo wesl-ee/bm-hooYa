@@ -78,14 +78,14 @@ ARCH LINUX INSTALL INSTRUCTIONS
 	Enter password:
 	> CREATE DATABASE bigmike;
 	> USE bigmike;
-	> CREATE TABLE onsen (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT DEFAULT null,
-		username VARCHAR(20) DEFAULT,
+	> CREATE TABLE onsen (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		username VARCHAR(20),
 		password VARCHAR(128),
-		signup_date DATE DEFAULT CURDATE(),
-		last_login DATE DEFAULT CURDATE(),
+		signup_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+		last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
 		locked CHAR(1) 'n',
 		failed_logins INT(11) DEFAULT 0,
-		pref_css VARCHAR(64) DEFAULT 'original';
+		pref_css VARCHAR(64) DEFAULT 'original');
 
 	Now, create a user
 	> INSERT INTO onsen (`username`, `password`) VALUES

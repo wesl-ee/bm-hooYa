@@ -16,16 +16,14 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
         <a href="logout.php">logout</a>
 </div>
 
-<h1 style="text-align:center;">お帰りなさい, <?php echo $_SESSION['username'];?></h1>
+<h1 style="text-align:center;"><?php echo($motd . ", " . $_SESSION['username']);?></h1>
 <div id="frame">
 <div class="upperLeft">
 <a href="/">« back</a>
 </div>
-<div style="text-align:center;">
+<div style="text-align:center;padding-bottom:20px;">
 Welcome to the user center!</br>
-<span style="text-decoration:underline;"><?php echo $motd?></span>
 </div>
-
 <div style="float:left;width:50%;text-align:center;">
 <a href="filemanager.php">File manager</a>
 </div>

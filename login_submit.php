@@ -25,13 +25,18 @@ function login()
 
 		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 		if ($conn->connect_error) {
-			$out = "I cannot access your account";
+			$out = "It looks like the SQL database is offline";
 			return $out;
 		}
 
 		// First check if the account you're trying to log in to is locked
-		$cmd = "SELECT `id`, `username`, `password`, `failed_logins`, `last_login`, `locked`, `pref_css` FROM `" + CONFIG_DB_TABLE + "` WHERE `username`='$onsen_username'";
+		$cmd = "SELECT `id`, `username`, `password`, `failed_logins`, `last_login`, `locked`, `pref_css` FROM `" . CONFIG_DB_TABLE . "` WHERE `username`='$onsen_username'";
 		$result=$conn->query($cmd);
+		if (!$result) {
+			$out = "Something went wrong with your request. . . email someone who can fix it";
+			$out .= "Query: $cmd";
+			return $out;
+		}
 		$row = $result->fetch_assoc();
 		$sql_id = $row["id"];
 		$sql_username = $row["username"];
@@ -71,8 +76,8 @@ function login()
 		}
 
 		// Set the last_login date to today
-		$today = date("Y-n-j");
-		$cmd = "UPDATE `" + CONFIG_DB_TABLE + "` SET `last_login`='$today' WHERE `username`='$sql_username'";
+		$today = date("Y-m-d H:i:s");
+		$cmd = "UPDATE `" . CONFIG_DB_TABLE . "` SET `last_login`='$today' WHERE `username`='$sql_username'";
 		$conn->query($cmd);
 
 		// Set the User ID, effectively logging the user in
