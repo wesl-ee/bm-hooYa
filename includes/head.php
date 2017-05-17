@@ -4,26 +4,26 @@
 switch($_SESSION['pref_css']) {
 	case "classic":
 		$curr_css="classic";
-		$stylesheet="css/style_suckless.css";
-		$mascot="img/rei.png";
+		$stylesheet=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless.css";
+		$mascot=CONFIG_DOCUMENT_ROOT_PATH."img/rei.png";
 		$motd="お帰りなさい";
 		break;
 	case "gold":
 		$curr_css="gold";
-		$stylesheet="css/style_suckless_gold.css";
-		$mascot="img/yui.png";
+		$stylesheet=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_gold.css";
+		$mascot=CONFIG_DOCUMENT_ROOT_PATH."img/yui.png";
 		$motd="おかえりなさい";
 		break;
 	case "wu_tang":
 		$curr_css="wu_tang";
-		$stylesheet="css/style_suckless_wutang.css";
-		$mascot="img/ghost.png";
+		$stylesheet=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_wutang.css";
+		$mascot=CONFIG_DOCUMENT_ROOT_PATH."img/ghost.png";
 		$motd="Protect ya neck";
 		break;
 	case "red":
 		$curr_css="red";
-		$stylesheet="css/style_suckless_red.css";
-		$mascot="img/mao.png";
+		$stylesheet=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_red.css";
+		$mascot=CONFIG_DOCUMENT_ROOT_PATH."img/mao.png";
 		$motd="为人民服务";
 		break;
 	default:

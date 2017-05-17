@@ -59,10 +59,9 @@ a:hover {
 	display: block;
 	position: absolute;
 	margin: 0;
-	max-width:25%;
-	max-height:50%;
+	max-width:20%;
 	bottom: 0px;
-	right: 10%
+	right: 5%
 }
 #mascot:hover {
         filter: none;
