@@ -64,34 +64,35 @@ ARCH LINUX INSTALL INSTRUCTIONS
 
 	This is necessary only if you will be restricting access to trusted users
 
-	First, intall mysql (mariadb on arch)
+	First, intall an implementation of mysql
 	$ pacman -S mariadb
 	$ service mysql start # openrc
 	or
-	$ systemctl start mysql
+	$ systemctl start mysql # InitialD
 
 	and configure mysql so you can log in and manage the databases
 
-	Next, populate a SQL table "onsen" in a database "bigmike" using the following steps
+	Next, populate a SQL table in a using the following steps
 
 	$ mysql -u root -p
 	Enter password:
-	> CREATE DATABASE bigmike;
-	> USE bigmike;
-	> CREATE TABLE onsen (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	> CREATE DATABASE my_database;
+	> USE my_database; # Of course replace this with your preferred db name
+	> CREATE TABLE my_table (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		username VARCHAR(20),
 		password VARCHAR(128),
 		signup_date DATETIME DEFAULT CURRENT_TIMESTAMP,
 		last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
 		locked CHAR(1) 'n',
 		failed_logins INT(11) DEFAULT 0,
-		pref_css VARCHAR(64) DEFAULT 'original');
+		pref_css VARCHAR(64) DEFAULT 'default');
 
 	Now, create a user
 	> INSERT INTO onsen (`username`, `password`) VALUES
-		("USERNAME", "SHA-512 HASHED PASSWORD");
-	Please use a SHA-512 hashed password, otherwise you will be very confused and
-	your login will not work.
+		("USERNAME", "SHA512-CRYPT HASHED PASSWORD");
+	Please use a SHA-512 hashed and salted password, otherwise you will
+	be very confused and your login will not work. You can generate
+	one using generate_passwd.php.
 
 4. Install mysqli for PHP
 
@@ -121,5 +122,5 @@ ARCH LINUX INSTALL INSTRUCTIONS
 
 8. Point your browser to http://localhost/filemanager.php
 
-	If you encounter any bugs, contact me via
-	- http://howler.us.to/swt
+	If you encounter any bugs, contact me at
+	- webmaster@bigmike.sne.jp

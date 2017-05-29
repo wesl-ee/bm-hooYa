@@ -17,11 +17,16 @@ bmffd currently ships with these features:
 	contain music files or only images. this is born of the needs of
 	bigmike.sne.jp and the definition of a "zippable folder" will likely
 	change
-- image gallery
-	if a directory contains only images, that folder may be viewed as a
-	gallery using the super_simple_image_viewer_v3.js. this js is
-	planned to be deprecated in favor of js I will write myself becuase
-	I am reading a javascript book I bought at a booksale at university.
+- file gallery
+	Clicking on any file in the filemanager opens it in the gallery.
+	The gallery can currently display audio and video files, but being
+	able to display txt files is planned for the development.
+- optional user authentication
+	Including includes/auth.php at the top of a file forces the user to
+	log in to access the page. The authentication references a SQL table
+	which is defined in includes/config.php
+- per-deployment configuration
+	per-deployment settings are defined in includes/config.php
 
 these features are planned for bmffd:
 
@@ -30,10 +35,3 @@ these features are planned for bmffd:
 	debug and develop. In future builds, bmffd will ship with a
 	search function which lets you search for any file tagged with your
 	query. only local users will be trusted to add/remove tags.
-- optional user verification
-	as is the case on bigmike.sne.jp/onsen, I have a SQL table of
-	users who are allowed to access bmffd. integrating this into the git
-	repo is a non-issue, I just need the motivation to do it.
-- configuration
-	planned implementation of a /includes/config.php will aid
-	administrators in deployment of bmffd

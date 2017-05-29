@@ -3,10 +3,10 @@
 // Yes, this site uses sessions! Please enable cookies!
 session_start();
 
-// load the user configuration file
-include "includes/config.php";
+// deployment-specific configuration
+include(dirname(__FILE__)."/config.php");
 
-// function definitions
+//function definitions
 
 // updates the user's current style and stashes that into a SQL table
 function updateUserStyle($username, $css)
@@ -114,5 +114,18 @@ function getFiles($dir)
 		}
 	}
 	return $array;
+}
+// Generates a random hex string, mostly for generating a salt
+function randomHex($len) {
+	$chars = 'abcdef01234567890';
+	for ($i = 0; $i < $len; $i++)
+		$hex .= $chars[rand(0, strlen($chars) - 1)];
+	return $hex;
+}
+function lwrite($file, $msg) {
+	$fd = fopen($file, "a");
+	fwrite($fd, @date('[d/M/Y:H:i:s]').' '.$msg.PHP_EOL);
+	fclose($fd);
+	return;
 }
 ?>
