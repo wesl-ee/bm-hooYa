@@ -56,7 +56,7 @@ function zoomImage(element)
 	div.style.cursor = "zoom-out";
 	div.onclick = function() { unzoomImage("picture") };
 
-	div = document.getElementById("galleryFrame");
+	div = document.getElementById("right_frame");
 	div.style.backgroundColor = "inherit";
 	div.style.color = "inherit";
 
@@ -90,7 +90,7 @@ function unzoomImage(element)
 	div.style.cursor = "zoom-in";
 	div.onclick = function() { zoomImage("picture") };
 
-	div = document.getElementById("galleryFrame");
+	div = document.getElementById("right_frame");
 	div.style.backgroundColor = "";
 	div.style.color = "";
 
@@ -103,16 +103,13 @@ function unzoomImage(element)
 	div = document.getElementById("logout");
 	div.style.display = "";
 
-	div = document.getElementById("title");
-	div.style.color = "initial";
-
 	return;
 }
 // create an image in the "content" div and fill it out
 function updateImage()
 {
 	document.getElementById("content").innerHTML = '<img id="picture"></img>';
-	document.getElementById("picture").src = "share" + currDir + currFile;
+	document.getElementById("picture").src = "download.php?dir=" + currDir + currFile;
 	document.getElementById("picture").onclick = function() { zoomImage("picture") };
 	document.getElementById("picture").style.cursor = "zoom-in";
 	return;
@@ -120,8 +117,11 @@ function updateImage()
 // create a video in the "content" div and fill it out
 function updateVideo()
 {
-	document.getElementById("content").innerHTML = '<video id="video" controls loop></video>';
-	document.getElementById("video").src = "share" + currDir + currFile;
+	document.getElementById("content").innerHTML = '<video id="video" controls loop preload="auto"></video>';
+	var source = document.createElement('source');
+	source.setAttribute('src', 'download.php?dir=' + currDir + currFile)
+	video.appendChild(source);
+//	document.getElementById("video").setAttribute('src', "download.php?dir=" + currDir + currFile);
 	document.getElementById("video").style.cursor = "pointer";
 	return;
 }
@@ -133,9 +133,7 @@ function updateAudio()
 	var art = guessAlbumArt();
 	if (art)
 		document.getElementById("albumart").src = art;
-	else
-		document.getElementById("albumart").src = "https://uguu.se/404.gif";
-	document.getElementById("audio").src = "share" + currDir + currFile;
+	document.getElementById("audio").src = "download.php?dir=" + currDir + currFile;
 	document.getElementById("audio").style.display = "block";
 	document.getElementById("audio").style.width = "100%";
 	document.getElementById("audio").style.height = "10%";

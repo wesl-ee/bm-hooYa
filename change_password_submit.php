@@ -3,29 +3,30 @@ include "includes/core.php";
 // Changes current user's POSTED password
 function change_password()
 {
-	if (!isset($_POST['onsen_curr_password'], $_POST['onsen_new_password'], $_POST['onsen_confirm_password'])) return 'Please enter all fields!';
+	if (!isset($_POST['onsen_curr_password'], $_POST['onsen_new_password'], $_POST['onsen_confirm_password']))
+		return 'Please enter all fields!';
+	if ($_POST['onsen_new_password'] != $_POST['onsen_confirm_password'])
+		return 'New passwords do not match';
+	if (strlen($_POST['onsen_new_password']) > 50)
+		return 'Invalid length for new password~';
 
-	if ($_POST['onsen_new_password'] != $_POST['onsen_confirm_password']) return 'New passwords do not match';
-
-	if (strlen($_POST['onsen_new_password']) > 50) return 'Invalid length for new password~';
-
-	if (ctype_alnum($_POST['onsen_new_password']) != true) return 'Only alphanumeric characters please~';
-
+	// Fetch and filter the user's form data
+	$onsen_username=$_SESSION['username'];
 	$onsen_curr_password = filter_var($_POST['onsen_curr_password'], FILTER_SANITIZE_STRING);
 	$onsen_new_password = filter_var($_POST['onsen_new_password'], FILTER_SANITIZE_STRING);
 
-	$onsen_username = $_SESSION['username'];
-	$onsen_curr_password = hash("sha512", $onsen_curr_password, FALSE);
-	$onsen_new_password = hash("sha512", $onsen_new_password, FALSE);
+	// Hash the new password according to SHA512-CRYPT specification
+	$salt = randomHex(16);
+	$hash = crypt($onsen_new_password, '$6$'.$salt.'$');
 
+	// SQL connection
 	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 	if ($conn->connect_error) {
 		$out = "It looks like the SQL database is offline";
 		return $out;
 	}
 
-	// First check if the account you're trying to log in to is locked
-	$cmd = "SELECT `id`, `username`, `password`, `failed_logins`, `last_login`, `locked`, `pref_css` FROM `" . CONFIG_DB_TABLE . "` WHERE `username`='$onsen_username'";
+	$cmd = "SELECT `id`, `username`, `failed_logins`, `last_login`, `locked`, `pref_css` FROM " . CONFIG_DB_TABLE . " WHERE `username`='$onsen_username'";
 	$result=$conn->query($cmd);
 	if (!$result) {
 		$out = "Something went wrong with your request. . . email someone who can fix it";
@@ -51,10 +52,15 @@ function change_password()
 		$out = "Your account is locked, please try again in a few minutes~";
 		return $out;
 	}
+
 	// Handling incorrect passwords
-	if ($sql_password != $onsen_curr_password) {
+	// UNCOMMENT ONCE DONE WITH SSHA-512 ROLLOVER
+	if (!password_verify($onsen_curr_password, $sql_password)) {
 		return "Your password is incorrect!";
 	}
+	$salt = randomHex(16);
+	$onsen_new_password = crypt($onsen_new_password, '$6$'.$salt.'$');
+	$onsen_username = $_SESSION['username'];
 	$cmd = "UPDATE `onsen` SET `password`='$onsen_new_password' WHERE `username`='$sql_username'";
 	$conn->query($cmd);
 
@@ -67,16 +73,20 @@ $out = change_password();
 	<?php include("./includes/head.php") ?>
 	<title>bmffd — change password</title>
 </head>
-<BODY>
-<h1 style="text-align:center;">the bath house</h1>
-<div id="frame">
-<a href="change_password.php">« back</a>
-<p>
-<?php
-	echo($out."</br>");
-?>
-</p>
+<body>
+<div id="container">
+<div id="left_frame">
+	<img id="mascot" src=<?php echo $mascot;?>>
 </div>
-<img id="mascot" src=<?php echo $mascot;?>>
+	<div id="right_frame">
+	<h1 style="text-align:center;">the bath house</h1>
+	<a href="change_password.php">« back</a>
+	<p>
+	<?php
+		echo($out."</br>");
+	?>
+	</p>
+	</div>
+</div>
 </body>
 </HTML>

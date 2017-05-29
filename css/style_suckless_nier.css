@@ -1,14 +1,14 @@
 body {
-	background-color: #FFFFFF;
-	color: #B0475A;
+	background-color: #d1cdb7;
+	color: #454138;
 }
 #logout, #galleryFrame, #right_frame {
-	background-color: #CC0000;
-	color: #FFFFFF;
+	background-color: #bab5a1;
+	color: #454138;
 }
-a {
-	cursor: pointer;
-	color: #FFFFFF;
+body {
+	font-family: helvetica, sans-serif;
+	font-weight: lighter;
 }
 body {
 	font-family: 'MS PGothic';
@@ -68,8 +68,8 @@ a {
 	text-decoration: underline;
 }
 a:hover {
-	cursor: pointer;
 	color: #5ABFCF;
+	cursor: pointer;
 }
 #mascot {
 	position: absolute;
@@ -125,6 +125,7 @@ a:hover {
 .gallery #next {
 	margin-right: -5px;
 	border-radius: 0px 25px 25px 0px;
+	
 }
 .gallery #previous {
 	margin-left: -5px;
@@ -150,5 +151,5 @@ select {
         overflow: hidden;
 }
 ::-webkit-scrollbar {
-        width: 0px;
+	width: 0px;
 }

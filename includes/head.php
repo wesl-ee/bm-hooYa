@@ -26,10 +26,24 @@ switch($_SESSION['pref_css']) {
 		$mascot=CONFIG_DOCUMENT_ROOT_PATH."img/mao.png";
 		$motd="为人民服务";
 		break;
+	case "nier":
+		$curr_css="nier";
+		$stylesheet=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_nier.css";
+		$mascot=CONFIG_DOCUMENT_ROOT_PATH."img/2B.png";
+		$motd="おかえりなさい";
+		break;
+	case "yys":
 	default:
-		$curr_css="classic";
-		$stylesheet="css/style_suckless.css";
-		$mascot="/bmffd/img/rei.png";
+		$curr_css="yys";
+		$stylesheet=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";
+		$mascot=CONFIG_DOCUMENT_ROOT_PATH."img/yuzuko.png";
+		$motd="よぉ";
+		break;
+	case "default":
+//	default:
+		$curr_css="default";
+		$stylesheet=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_default.css";
+		$motd="Welcome home";
 }
 $_SESSION['last_activity'] = new DateTime();
 ?>

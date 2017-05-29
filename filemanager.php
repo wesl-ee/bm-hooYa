@@ -18,44 +18,43 @@ function ls($dir)
 	// properly
 	if ($dir == "/" && empty($contents))
 		return FALSE;
-
 	// No ../ for root folder
 	if ($dir !== "/") {
 		$parent = dirname("$dir");
 		if ($parent == "/")
-			echo("<a href=?dir=".urlencode("$parent").">..</a></br>");
+			echo("<a onClick='window.location=\"?dir=".urlencode("$parent")."\"'>« back</a></br>");
 		else
-			echo("<a href=?dir=".urlencode("$parent")."/>..</a></br>");
+			echo("<a onClick='window.location=\"?dir=".urlencode("$parent")."/\"'>« back</a></br>");
 	}
-
 	foreach ($contents as $item) {
 		if (is_file("share"."$dir/$item"))
-			echo("<a href='gallery.php?dir=".urlencode("$dir").urlencode("$item")."'>$item</a></br>");
+			echo("<a onClick='window.location=\"gallery.php?dir=".urlencode("$dir").urlencode("$item")."\"'>$item</a></br>");
 		else
-			echo("<a href='?dir=".urlencode("$dir").urlencode("$item")."/"."'>$item/</a></br>");
+			echo("<a onClick='window.location=\"?dir=".urlencode("$dir").urlencode("$item")."/\"'>$item/</a></br>");
 	}
 	return TRUE;
 }
-
 ?>
 
-<!-- TODO
-	H1 overflow and onsen overflow hidden ellipsis
--->
 <HTML>
 <head>
 	<?php include("./includes/head.php") ?>
 	<title>bmffd — <?php echo "$dir"?></title>
 </head>
 <body>
-<div id="logout">
-	<a href="index.php">home</a></br>
-	<a href="logout.php">logout</a>
+<div id="container">
+<div id="left_frame">
+	<div id="logout">
+		<a href="index.php">home</a></br>
+		<a href="logout.php">logout</a>
+	</div>
+	<img id="mascot" src=<?php echo $mascot;?>>
 </div>
-<h1 style="text-align:center;"><?php echo "$dir" ?></h1>
-
-<div id="frame">
-	<div class="title">
+<div id="right_frame">
+	<div id="title">
+	<h3><?php echo "$dir" ?></h3>
+	</div>
+	<div id="header">
 	<div style="float:left;width:33%;">
 		&nbsp;
 	</div>
@@ -75,12 +74,10 @@ function ls($dir)
 		}
 		echo(human_filesize(dirSize("share".$dir)));
 		?>
-
 	</div>
 	</div>
 
 	<div class="fileList">
-		<p>
 		<?php
 		// Handle requests that try to break out of the /bmffd/share/ directory
 		if (strpos(realpath("share".$dir), realpath(dirname(__FILE__)."/share")) === false) {
@@ -92,10 +89,8 @@ function ls($dir)
 			return;
 		}
 		?>
-
-	</p>
+	</div>
 </div>
-
 </div>
 </body>
 </HTML>

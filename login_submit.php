@@ -9,13 +9,9 @@ function login()
 
 	elseif (strlen($_POST['onsen_username']) > 20 || strlen($_POST['onsen_password']) > 50) return 'Invalid length for username or password~';
 
-	elseif (ctype_alnum($_POST['onsen_username']) != true || ctype_alnum($_POST['onsen_password']) != true) return 'Only alphanumeric characters please~';
-
 	else {
 		$onsen_username = filter_var($_POST['onsen_username'], FILTER_SANITIZE_STRING);
 		$onsen_password = filter_var($_POST['onsen_password'], FILTER_SANITIZE_STRING);
-
-		$onsen_password = hash("sha512", $onsen_password, FALSE);
 
 		$mysql_hostname = CONFIG_DB_SERVER;
 		$mysql_username = CONFIG_DB_USERNAME;
@@ -25,6 +21,7 @@ function login()
 
 		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 		if ($conn->connect_error) {
+			lwrite(CONFIG_AUTHLOG_FILE, "Could not connect to SQL database for user ".$onsen_username);
 			$out = "It looks like the SQL database is offline";
 			return $out;
 		}
@@ -33,6 +30,7 @@ function login()
 		$cmd = "SELECT `id`, `username`, `password`, `failed_logins`, `last_login`, `locked`, `pref_css` FROM `" . CONFIG_DB_TABLE . "` WHERE `username`='$onsen_username'";
 		$result=$conn->query($cmd);
 		if (!$result) {
+			lwrite(CONFIG_AUTHLOG_FILE, "Could not query SQL database for user ".$onsen_username);
 			$out = "Something went wrong with your request. . . email someone who can fix it";
 			$out .= "Query: $cmd";
 			return $out;
@@ -48,32 +46,35 @@ function login()
 
 		// Handling incorrect usernames
 		if ($result->num_rows === 0) {
+			lwrite(CONFIG_AUTHLOG_FILE, "Failed log-in attempt for non-existent user ".$onsen_username);
 			$out = "I cannot find an account like that!";
 			return $out;
 		}
 		// Handling locked accounts
 		if ($sql_locked == "y") {
+			lwrite(CONFIG_AUTHLOG_FILE, "Failed log-in attempt for locked user ".$onsen_username);
 			$out = "Your account is locked, please try again in a few minutes~";
 			return $out;
 		}
 		// Handling incorrect passwords
-		if ($sql_password != $onsen_password) {
+
+		$salt = substr($sql_password, 3-mb_strlen($sql_password), -129);
+		if (!password_verify($onsen_password, $sql_password)) {
+			lwrite(CONFIG_AUTHLOG_FILE, "Failed log-in attempt for ".$onsen_username." from ".$_SERVER['REMOTE_ADDR']);
 			$failed_logins = $row["failed_logins"]+1;
 			$out = "You have failed to log in $failed_logins times";
 			$cmd = "UPDATE `onsen` SET `failed_logins`='$failed_logins' WHERE `username`='$sql_username'";
 			$conn->query($cmd);
 			return $out;
 		}
+
+		lwrite(CONFIG_AUTHLOG_FILE, "Successful login for ".$sql_username." from ". $_SERVER['REMOTE_ADDR']);
 		// Set the number of failed logins to 0
 		$cmd = "UPDATE `onsen` SET `failed_logins`=0 WHERE `username`='$sql_username'";
 		$conn->query($cmd);
 
 		// Set preferred css style
-		// Default to the Wu-Tang Style
 		$_SESSION['pref_css'] = $sql_pref_css;
-		if (empty($sql_pref_css)) {
-			$_SESSION['pref_css'] = "original";
-		}
 
 		// Set the last_login date to today
 		$today = date("Y-m-d H:i:s");
@@ -97,8 +98,12 @@ $out = login();
 	<title>bmffd — login</title>
 </head>
 <BODY>
+<div id="container">
+<div id="left_frame">
+<img id="mascot" src=<?php echo $mascot;?>>
+</div>
+<div id="right_frame">
 <h1 style="text-align:center;">the bath house</h1>
-<div id="frame">
 <p>
 <?php
 	echo($out."</br>");
@@ -114,6 +119,7 @@ $out = login();
 ?>
 </p>
 </div>
-<img id="mascot" src=<?php echo $mascot;?>>
+
+</div>
 </body>
 </HTML>

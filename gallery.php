@@ -12,10 +12,9 @@ $parentdir = dirname($dir);
 if ($parentdir != "/")
 	$parentdir .= "/";
 
-// Handle requests that try to break out of the /onsen/bakesta/ directory
-if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/share") === false)) {
+// Handle requests that try to break out of the share/ directory
+if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/share") === false))
 	die();
-}
 ?>
 <HTML>
 <head>
@@ -29,41 +28,45 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 	<title>bmffd — <?php echo $parentdir ?></title>
 </head>
 <body>
-<h1 style="text-align:center;"><?php echo $parentdir;?></h1>
-
-<div id="logout">
-        <a href="index.php">home</a></br>
-        <a href="logout.php">logout</a>
-</div>
-
-<div id="galleryFrame">
-<div id="title">
-	<div style="float:left;width:33%;">
-		<a style="text-align:left;" href="filemanager.php?dir=<?php echo urlencode($parentdir);?>">
-		« back to file manager
-		</a>
-	</div>
-	<div id="caption" style="float:left;width:33%;text-align:center;max-width:100%;">
-		<?php echo $initialPicture ?>
-	</div>
-	<div style="float:left;width:33%;text-align:right;">
-		view tags
+<div id="container">
+<div id="left_frame">
+	<div id="logout">
+		<a href="index.php">home</a></br>
+		<a href="logout.php">logout</a>
 	</div>
 </div>
-<div class="gallery">
-	<div id="previous" style="float:left" onClick="previousFile()">
-	◀
-	</div>
 
-	<div id="content" style="float:left;width:80%;text-align:center;height:100%;">
-	&nbsp;
+<div id="right_frame" style="padding-bottom: 0px;">
+	<div id="title">
+	<h3><?php echo $parentdir;?></h3>
 	</div>
+	<div id="header">
 
-	<div id="next" style="float:left;" onClick="nextFile()">
-	▶
+		<div style="float:left;width:33%;">
+			<a style="text-align:left;" href="filemanager.php?dir=<?php echo urlencode($parentdir);?>">
+			« back to file manager
+			</a>
+		</div>
+		<div id="caption" style="float:left;width:33%;text-align:center;max-width:100%;">
+			<?php echo $initialPicture ?>
+		</div>
+		<div style="float:left;width:33%;text-align:right;">
+			<a href="download.php?dir=<?php echo urlencode($dir);?>">download</a>
+		</div>
+	</div>
+	<div class="gallery" style="height:80%;">
+		<div id="previous" style="float:left" onClick="previousFile()">
+		◀
+		</div>
+
+		<div id="content" style="float:left;width:80%;text-align:center;mex-height:100%;max-width:100%;">
+		&nbsp;
+		</div>
+
+		<div id="next" style="float:left;" onClick="nextFile()">
+		▶
 	</div>
 </div>
 </div>
-
 </body>
 </HTML>

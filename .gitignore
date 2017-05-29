@@ -1,5 +1,3 @@
 share/*
+includes/core.php
 !share/sample.png
-
-extras
-includes/config.php

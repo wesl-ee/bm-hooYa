@@ -12,14 +12,15 @@ if (isset($_GET['ref']))
 	<link rel="stylesheet" href=<?php echo $stylesheet?>>
 </head>
 <body>
-<h1 style="text-align:center;">the bath house</h1>
-<div id="frame">
+<div id="container">
+<div id="left_frame">
+<img id="mascot" src=<?php echo $mascot;?>>
+</div>
+<div id="right_frame">
+<h1 style="text-align:center;">password changes</h1>
 <div class="entry">
 <p>
-<a href="userprefs.php">« back</a>
-</p>
-<p>
-password change form
+	<a href="userprefs.php">« back</a>
 </p>
 <form action="change_password_submit.php" method="post">
 	<label for="onsen_curr_password">Current password</label></br>
@@ -28,10 +29,10 @@ password change form
 	<input type="password" id="onsen_new_password" name="onsen_new_password" maxlength="50" /></br>
 	<label for="onsen_confirm_password">Confirm New Password</label></br>
 	<input type="password" id="onsen_confirm_password" name="onsen_confirm_password" maxlength="50" /></br></br>
-	<input type="submit" value="Change password»" />
+	<input type="submit" value="Change password »" />
 </form>
 </div>
 </div>
-<img id="mascot" src=<?php echo $mascot;?>>
+</div>
 </body>
 </HTML>

@@ -1,55 +1,77 @@
 body {
-	background-color: #FAFDFF;
+	background-color: #fbfaf8;
 	color: #3E3F40;
 }
-#logout, #galleryFrame, #frame {
+#logout, #galleryFrame, #right_frame {
 	background-color: #FEFFDD;
 	color: #3E3F40;
 }
-@font-face {
-	font-family: ProggySquare;
-	src: url('ProggySquare.ttf');
-}
 body {
-	font-family: ProggySquare;
+	font-family: 'MS PGothic';
+	font-size: 16px;
 }
 .fileList {
         text-align: left;
         width: 100%;
-        position:relative;
-        line-height:120%;
+	height: auto;
+	line-height: 150%;
         white-space: nowrap;
-        overflow: hidden;
+	overflow: hidden;
+        overflow-y: scroll;
 }
-#frame {
-        width: 50%;
-        margin: auto;
+#right_frame {
+	position: relative;
+	float: left;
+	width:70%;
+	overflow-y: scroll;
+	max-height: inherit;
+	border-radius: 0px 0px 20px 20px;
+	padding-left: 20px;
+	padding-bottom: 20px;
+	box-sizing: border-box;
+}
+#left_frame {
+	position: relative;
+	margin-right: -20px;
+	float: left;
+	height: 100%;
+	width: 30%;
+	overflow: hidden;
+}
+#container {
+	position: absolute;
+	top: 0;
 	left: 0;
-	right: 0;
-        border-radius: 25px;
-        border-collapse:collapse;
-        border: 0px solid black;
-        padding: 10px;
-	padding-bottom: 25px;
-	position:absolute;
+	width: 100%;
+	height: 100%;
+	max-height: 100%;
+	min-height: 100%;
+	max-width: 100%;
+	min-width: 100%;
 }
 #logout {
+	position:relative;
 	border-radius: 0px 0px 25px 25px;
-	padding: 5px 45px 15px 45px;
-	position: absolute;
+	padding-bottom: 10px;
+	padding-top: 10px;
 	top: 0px;
-	right: 10%;
+	margin: auto;
+	width: 50%;
 	text-align:center;
 }
 a {
-	color: inherit;
-	text-decoration: none;
-	
+	text-decoration: underline;
+	cursor: pointer;
+	color: #3F4037;
 }
 a:hover {
 	color: #5ABFCF;
 }
 #mascot {
+	position: absolute;
+	bottom: 0;
+	max-width: 100%;
+	max-height: 80%;
 	filter:none;
         -webkit-filter: grayscale(100%);
         -moz-filter:    grayscale(100%);
@@ -57,12 +79,6 @@ a:hover {
         -o-filter:      grayscale(100%);
         transition: all 300ms ease;
 	display: block;
-	position: absolute;
-	margin: 0;
-	max-width:25%;
-	max-height:50%;
-	bottom: 0px;
-	right: 10%
 }
 #mascot:hover {
         filter: none;
@@ -71,41 +87,17 @@ a:hover {
         -ms-filter:     grayscale(0%);
         -o-filter:      grayscale(0%);
 }
-#footer input[type=submit] {
-        border-radius: 25px 25px 25px 25px;
-}
-input[type=text] {
-	opacity: 0.9;
-}
-input[type=password] {
-	opacity: 0.9;
-}
-
-h1 {
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
-#galleryFrame {
-	width: 75%;
-	height: 75%;
-        margin: auto;
-        border-radius: 25px;
-        border-collapse:collapse;
-        border: 0px solid black;
-        padding: 10px;
-	padding-bottom: 25px;
-	overflow: hidden;
-	display:block;
-}
 #title {
-	display:block;
 	overflow: hidden;
-	height:50px;
+}
+#header {
+	height:10%;
 }
 .gallery {
-	height: 90%;
+	max-height: 80%;
 }
 .gallery img, .gallery video {
+	height: 90%;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -119,19 +111,19 @@ h1 {
 	text-align: center;
 	cursor: pointer;
 	width:10%;
-	height:100%;
+	height: 90%;
+	margin: -1px;
+	border: 1px solid #3E3F40;
 	-webkit-user-select: none; /* Chrome/Safari */        
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
 }
 .gallery #next {
-	border: 1px solid #3E3F40;
-	margin-right: -2px;
+	margin-right: -5px;
 	border-radius: 0px 25px 25px 0px;
 }
 .gallery #previous {
-	border: 1px solid #3E3F40;
-	margin-left: -2px;
+	margin-left: -5px;
 	border-radius: 25px 0px 0px 25px;
 }
 img {
@@ -145,13 +137,14 @@ img {
 	image-orientation: from-image;
 }
 input,select {
-	background-color: #FFFFFF;
+	background-color: #F7F7F7;
         font-family: inherit;
-        height:1.5em;
-	border-style: none;
+	border: 1px solid black;
 }
 select {
-        width: 150px;
-	background-color: #FFFFFF;
+        width: 100px;
         overflow: hidden;
+}
+::-webkit-scrollbar {
+        width: 0px;
 }

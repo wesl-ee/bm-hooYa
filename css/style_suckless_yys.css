@@ -1,14 +1,11 @@
 body {
-	background-color: #FFFFFF;
-	color: #B0475A;
+	background-color: #fbfaf8;
+	color: #7372a0;
 }
 #logout, #galleryFrame, #right_frame {
-	background-color: #CC0000;
-	color: #FFFFFF;
-}
-a {
-	cursor: pointer;
-	color: #FFFFFF;
+	background-color: inherit;
+	border: 1px solid black;
+	color: #7372a0;
 }
 body {
 	font-family: 'MS PGothic';
@@ -36,7 +33,6 @@ body {
 }
 #left_frame {
 	position: relative;
-	margin-right: -20px;
 	float: left;
 	height: 100%;
 	width: 30%;
@@ -64,8 +60,8 @@ body {
 	text-align:center;
 }
 a {
-	color: inherit;
 	text-decoration: underline;
+	color: inherit;
 }
 a:hover {
 	cursor: pointer;
@@ -125,6 +121,7 @@ a:hover {
 .gallery #next {
 	margin-right: -5px;
 	border-radius: 0px 25px 25px 0px;
+	
 }
 .gallery #previous {
 	margin-left: -5px;
