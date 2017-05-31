@@ -1,9 +1,9 @@
 <?php
 include "includes/core.php";
-
 // If you're not properly authenticated then kick the user back to login.php
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include "includes/auth.php";
+
 ?>
 <HTML>
 <head>
@@ -14,9 +14,16 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 <div id="container">
 <div id="left_frame">
 	<div id="logout">
-		<a href="index.php">home</a></br>
-		<a href="logout.php">logout</a>
-	</div>
+		<?php
+		if (isset($_SESSION['username'])) {
+			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'">home</a></br>');
+			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'logout.php">logout</a>');
+		}
+		else {
+			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'login.php?ref='.$_SERVER['REQUEST_URI'].'">login</a>');
+		}
+	        ?>
+        </div>
 	<img id="mascot" src=<?php echo $mascot;?>>
 </div>
 
@@ -29,11 +36,14 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	Welcome to the user center!</br>
 	</div>
 	<div style="margin-bottom:30px;">
-	<div style="float:left;width:50%;text-align:center;">
+	<div style="float:left;width:33%;text-align:center;">
 		<a href="filemanager.php">File manager</a>
 	</div>
-	<div style="float:left;width:50%;text-align:center;">
-		<a href="userprefs.php">User Preferences</a>
+	<div style="float:left;width:33%;text-align:center">
+		<a href="userprefs.php">User preferences</a>
+	</div>
+	<div style="float:left;width:33%;text-align:center;">
+		<a href="message_pile/">Message pile</a>
 	</div>
 	</div>
 </div>

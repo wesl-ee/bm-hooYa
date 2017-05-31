@@ -28,6 +28,7 @@ body {
 	max-height: inherit;
 	border-radius: 0px 0px 20px 20px;
 	padding-left: 20px;
+	padding-right: 20px;
 	padding-bottom: 20px;
 	box-sizing: border-box;
 }
@@ -137,7 +138,7 @@ img {
 	-webkit-touch-callout: none;
 	image-orientation: from-image;
 }
-input,select {
+input,select,textarea {
 	background-color: #F7F7F7;
         font-family: inherit;
 	border: 1px solid black;

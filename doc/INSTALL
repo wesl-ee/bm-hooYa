@@ -78,6 +78,7 @@ ARCH LINUX INSTALL INSTRUCTIONS
 	Enter password:
 	> CREATE DATABASE my_database;
 	> USE my_database; # Of course replace this with your preferred db name
+	# For user authentication
 	> CREATE TABLE my_table (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		username VARCHAR(20),
 		password VARCHAR(128),
@@ -86,6 +87,13 @@ ARCH LINUX INSTALL INSTRUCTIONS
 		locked CHAR(1) 'n',
 		failed_logins INT(11) DEFAULT 0,
 		pref_css VARCHAR(64) DEFAULT 'default');
+	# A wall for users to report bugs
+	> CREATE TABLE message_pile (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+		username VARCHAR(20) DEFAULT NULL,
+		head VARCHAR(50) DEFAULT "Untitled",
+		body VARCHAR(1000) DEFAULT NULL
+		resolved CHAR DEFAULT 'y');
 
 	Now, create a user
 	> INSERT INTO onsen (`username`, `password`) VALUES

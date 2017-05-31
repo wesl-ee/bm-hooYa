@@ -137,6 +137,10 @@ function updateAudio()
 	document.getElementById("audio").style.display = "block";
 	document.getElementById("audio").style.width = "100%";
 	document.getElementById("audio").style.height = "10%";
+	document.getElementById("audio").onended = function() {
+		nextFile();
+		document.getElementById("audio").autoplay = true;
+	};
 	document.getElementById("albumart").style.cursor = "initial";
 	return;
 }

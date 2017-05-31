@@ -31,8 +31,15 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 <div id="container">
 <div id="left_frame">
 	<div id="logout">
-		<a href="index.php">home</a></br>
-		<a href="logout.php">logout</a>
+		<?php
+		if (isset($_SESSION['username'])) {
+			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'">home</a></br>');
+			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'">logout.php">logout</a>');
+		}
+		else {
+			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'login.php?ref='.$_SERVER['REQUEST_URI'].'">login</a>');
+		}
+		?>
 	</div>
 </div>
 

@@ -27,6 +27,7 @@ body {
 	overflow-y: scroll;
 	max-height: inherit;
 	border-radius: 0px 0px 20px 20px;
+	padding-right: 20px;
 	padding-left: 20px;
 	padding-bottom: 20px;
 	box-sizing: border-box;

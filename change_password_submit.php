@@ -26,7 +26,7 @@ function change_password()
 		return $out;
 	}
 
-	$cmd = "SELECT `id`, `username`, `failed_logins`, `last_login`, `locked`, `pref_css` FROM " . CONFIG_DB_TABLE . " WHERE `username`='$onsen_username'";
+	$cmd = "SELECT `id`, `password`, `username`, `failed_logins`, `last_login`, `locked`, `pref_css` FROM " . CONFIG_DB_TABLE . " WHERE `username`='$onsen_username'";
 	$result=$conn->query($cmd);
 	if (!$result) {
 		$out = "Something went wrong with your request. . . email someone who can fix it";
