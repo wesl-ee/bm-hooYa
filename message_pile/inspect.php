@@ -17,7 +17,7 @@ if ($result->num_rows === 0) {
 $row = $result->fetch_assoc();
 ?>
 <head>
-	<?php include("../includes/head.php") ?>
+	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — message #<?php echo $id?></title>
 </head>
 <body>
@@ -34,7 +34,7 @@ $row = $result->fetch_assoc();
 		}
 		?>
 	</div>
-	<img id="mascot" src=<?php echo $mascot;?>>
+	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame" style="padding-right:20px;">
 <div id="title">

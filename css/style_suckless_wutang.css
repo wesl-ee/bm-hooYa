@@ -96,6 +96,7 @@ a:hover {
 	display: block;
 }
 #title {
+	height: 10%;
 	max-height: 10%;
 }
 #header {

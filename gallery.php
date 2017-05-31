@@ -2,7 +2,7 @@
 include "includes/core.php";
 
 if (CONFIG_REQUIRE_AUTHENTICATION)
-        include "includes/auth.php";
+        include CONFIG_ROOT_PATH."includes/auth.php";
 
 if (!isset($_GET["dir"]))
 	die();
@@ -34,7 +34,7 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 		<?php
 		if (isset($_SESSION['username'])) {
 			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'">home</a></br>');
-			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'">logout.php">logout</a>');
+			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'"logout.php">logout</a>');
 		}
 		else {
 			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'login.php?ref='.$_SERVER['REQUEST_URI'].'">login</a>');

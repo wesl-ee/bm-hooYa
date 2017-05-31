@@ -4,7 +4,7 @@ include "../includes/core.php";
 
 ?>
 <head>
-	<?php include "../includes/head.php" ?>
+	<?php include CONFIG_ROOT_PATH."includes/head.php" ?>
 	<title>bmffd — message pile</title>
 </head>
 <body>
@@ -21,11 +21,14 @@ include "../includes/core.php";
 		}
 		?>
 	</div>
-	<img id="mascot" src=<?php echo $mascot;?>>
+	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
 <div id="title">
-	<h1>Message pile,</h1><h3>a place to report bugs, and bitch</h3>
+	<h1>Message pile</h1>
+</div>
+<div id="title">
+	<h3>a place to report bugs, and bitch</h3>
 </div>
 <div id="header" style="margin-right:20px;">
 	<div style="width:33%;float:left;"><a href="../">« back</a></div>

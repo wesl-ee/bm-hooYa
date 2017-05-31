@@ -2,7 +2,7 @@
 include "../includes/core.php";
 // If you're not properly authenticated then kick the user back to login.php
 if (CONFIG_REQUIRE_AUTHENTICATION)
-        include "../includes/auth.php";
+	include CONFIG_ROOT_PATH."includes/auth.php";
 
 if (isset($_POST['head']) && isset($_POST['body'])) {
 	if (isset($_SESSION['username']))
@@ -24,7 +24,7 @@ if (isset($_POST['head']) && isset($_POST['body'])) {
 ?>
 <HTML>
 <head>
-	<?php include("../includes/head.php") ?>
+	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — add to pile</title>
 
 </head>
@@ -42,7 +42,7 @@ if (isset($_POST['head']) && isset($_POST['body'])) {
 		}
 		?>
 	</div>
-	<img id="mascot" src=<?php echo $mascot;?>>
+	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
 <div id="title">

@@ -2,7 +2,7 @@
 include "includes/core.php";
 
 if (CONFIG_REQUIRE_AUTHENTICATION)
-        include "includes/auth.php";
+        include CONFIG_ROOT_PATH."includes/auth.php";
 
 $dir = "/";
 if (isset($_GET["dir"]))
@@ -38,7 +38,7 @@ function ls($dir)
 
 <HTML>
 <head>
-	<?php include("./includes/head.php") ?>
+	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — <?php echo "$dir"?></title>
 </head>
 <body>
@@ -55,7 +55,7 @@ function ls($dir)
 		}
 		?>
 	</div>
-	<img id="mascot" src=<?php echo $mascot;?>>
+	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
 	<div id="title">

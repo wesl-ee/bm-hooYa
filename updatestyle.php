@@ -6,7 +6,7 @@ header("Refresh: 1; url=userprefs.php");
 
 ?>
 <head>
-	<?php include("includes/head.php") ?>
+	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — preferences</title>
 </head>
 <body>

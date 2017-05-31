@@ -94,13 +94,13 @@ $out = login();
 ?>
 <HTML>
 <head>
-	<?php include("./includes/head.php") ?>
+	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — login</title>
 </head>
 <BODY>
 <div id="container">
 <div id="left_frame">
-<img id="mascot" src=<?php echo $mascot;?>>
+<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
 <h1 style="text-align:center;">the bath house</h1>

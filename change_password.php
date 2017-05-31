@@ -7,9 +7,8 @@ if (isset($_GET['ref']))
 ?>
 <HTML>
 <head>
-	<?php include("./includes/head.php") ?>
+	<?php include(CONFIG_ROOT_PATH."includes/head.php") ?>
 	<title>bmffd — login</title>
-	<link rel="stylesheet" href=<?php echo $stylesheet?>>
 </head>
 <body>
 <div id="container">
@@ -25,7 +24,7 @@ if (isset($_GET['ref']))
 		}
 		?>
 	</div>
-<img id="mascot" src=<?php echo $mascot;?>>
+<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
 <h1 style="text-align:center;">password changes</h1>

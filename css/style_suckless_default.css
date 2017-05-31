@@ -90,6 +90,7 @@ a:hover {
         -o-filter:      grayscale(0%);
 }
 #title {
+	height: 10%;
 	overflow: hidden;
 }
 #header {
