@@ -1,10 +1,11 @@
-<HTML>
+<!DOCTYPE html>
 <?php
 include "includes/core.php";
 
 header("Refresh: 1; url=userprefs.php");
 
 ?>
+<HTML>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — preferences</title>

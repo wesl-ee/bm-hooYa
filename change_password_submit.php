@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 include "includes/core.php";
 // Changes current user's POSTED password

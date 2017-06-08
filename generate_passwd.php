@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php include $_SERVER['DOCUMENT_ROOT']."/bmffd/includes/core.php"; ?>
 <HTML>
 <head>

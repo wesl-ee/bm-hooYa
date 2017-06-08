@@ -81,8 +81,6 @@ body {
 	text-align:center;
 }
 a {
-	color: inherit;
-	cursot: pointer;
 	text-decoration: underline;
 }
 a:hover {

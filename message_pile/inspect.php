@@ -1,4 +1,4 @@
-<HTML>
+<!DOCTYPE html>
 <?php
 include "../includes/core.php";
 
@@ -16,6 +16,7 @@ if ($result->num_rows === 0) {
 }
 $row = $result->fetch_assoc();
 ?>
+<HTML>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — message #<?php echo $id?></title>

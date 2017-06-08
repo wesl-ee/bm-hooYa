@@ -186,6 +186,7 @@ function getMimetype(filename)
 		case "mpg":
 			return "video";
 		case "mp3":
+		case "ogg":
 		case "flac":
 		case "m4a":
 		case "wav":

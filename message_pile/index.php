@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <HTML>
 <?php
 include "../includes/core.php";

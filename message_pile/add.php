@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 include "../includes/core.php";
 // If you're not properly authenticated then kick the user back to login.php

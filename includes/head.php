@@ -35,11 +35,14 @@ switch($_SESSION['pref_css']) {
 	case "yys":
 		$_SESSION['mascot']=CONFIG_DOCUMENT_ROOT_PATH."img/yuzuko.png";
 		$_SESSION['curr_css']="yys";
-		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";		$mascot="";
+		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";
 		$_SESSION['motd']="よぉ";
 		break;
+	case "none":
 	default:
-		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";		$mascot="";
+		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";
+		$_SESSION['mascot']="";
+		$_SESSION['curr_css']="none";
 		$_SESSION['motd']="よぉ";
 		break;
 }

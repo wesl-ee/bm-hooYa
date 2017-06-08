@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 include "includes/core.php";
 
@@ -20,10 +21,10 @@ if (isset($_GET['ref']))
 <div id="title">
 <h1 style="text-align:center;">the bath house</h1>
 </div>
-<div class="entry">
-<p>
-<a href="../">« back</a>
-</p>
+<div id="header">
+	<div style="width:50%;float:left;"><a href="../">« back</a></div>
+	<div style="width:50%;float:left;text-align:right;"><a href="acc_create.php">create an account</a></div>
+</div>
 <p>
 Please log in ～
 </p>
@@ -36,7 +37,6 @@ echo('<form action="login_submit.php'.$uri.'" method="post">');
 	<input type="password" id="onsen_password" name="onsen_password" maxlength="50" /></br></br>
 	<input type="submit" value="Login»" />
 </form>
-</div>
 </div>
 </div>
 

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 include "includes/core.php";
 // If you're not properly authenticated then kick the user back to login.php
@@ -36,16 +37,19 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	Welcome to the user center!</br>
 	</div>
 	<div style="margin-bottom:30px;">
-	<div style="float:left;width:33%;text-align:center;">
+	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
 		<a href="filemanager.php">File manager</a>
 	</div>
 
-	<div style="float:left;width:33%;text-align:center;">
+	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
 		<a href="message_pile/">Message pile</a>
 	</div>
-	<div style="float:left;width:33%;text-align:center">
+	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
 		<a href="userprefs.php">User preferences</a>
 	</div>
+	<div style="float:left;width:33%;text-align:center">&nbsp</div>
+	<div style="float:left;width:33%;text-align:center"><a href="users.php">User directory</a></div>
+	<div style="float:left;width:33%;text-align:center">&nbsp</div>
 	</div>
 </div>
 </div>

@@ -3,3 +3,4 @@ includes/config.php
 !share/sample.png
 log/access.log
 log/auth.log
+otp_challenge
