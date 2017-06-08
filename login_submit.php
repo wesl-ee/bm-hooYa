@@ -46,13 +46,13 @@ function login()
 
 		// Handling incorrect usernames
 		if ($result->num_rows === 0) {
-			lwrite(CONFIG_AUTHLOG_FILE, "Failed log-in attempt for non-existent user ".$onsen_username);
+			lwrite(CONFIG_AUTHLOG_FILE, "Failed log-in attempt for non-existent user ".$onsen_username." from ".$_SERVER['REMOTE_ADDR']);
 			$out = "I cannot find an account like that!";
 			return $out;
 		}
 		// Handling locked accounts
 		if ($sql_locked == "y") {
-			lwrite(CONFIG_AUTHLOG_FILE, "Failed log-in attempt for locked user ".$onsen_username);
+			lwrite(CONFIG_AUTHLOG_FILE, "Failed log-in attempt for locked user ".$onsen_username." from ".$_SERVER['REMOTE_ADDR']);
 			$out = "Your account is locked, please try again in a few minutes~";
 			return $out;
 		}

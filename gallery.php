@@ -62,17 +62,16 @@ if (strpos(realpath("share".$dir), realpath($_SERVER['DOCUMENT_ROOT']."/bmffd/sh
 			<a href="download.php?dir=<?php echo urlencode($dir);?>">download</a>
 		</div>
 	</div>
-	<div class="gallery" style="height:80%;">
-		<div id="previous" style="float:left" onClick="previousFile()">
+	<div class="gallery">
+		<div id="previous" style="float:left;width:10%;" onClick="previousFile()">
 		◀
 		</div>
-
-		<div id="content" style="float:left;width:80%;text-align:center;mex-height:100%;max-width:100%;">
+		<div id="content" style="float:left;width:80%;text-align:center;">
 		&nbsp;
 		</div>
-
-		<div id="next" style="float:left;" onClick="nextFile()">
+		<div id="next" style="float:left;width:10%;" onClick="nextFile()">
 		▶
+		</div>
 	</div>
 </div>
 </div>

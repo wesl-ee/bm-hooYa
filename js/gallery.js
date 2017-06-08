@@ -47,10 +47,10 @@ function zoomImage(element)
 {
 	document.removeEventListener('keyup', doc_hotkeys);
 	div = document.getElementById(element);
-	div.style.position = "absolute";
+//	div.style.position = "absolute";
 	div.style.right = "0";
 	div.style.left = "0";
-	div.style.height = "auto";
+	div.parentNode.style.width = "100%";
 	div.style.zIndex = "999";
 	div.style.maxHeight = "initial";
 	div.style.cursor = "zoom-out";
@@ -89,6 +89,7 @@ function unzoomImage(element)
 	div.style.maxHeight = "100%";
 	div.style.cursor = "zoom-in";
 	div.onclick = function() { zoomImage("picture") };
+	div.parentNode.style.width = "80%";
 
 	div = document.getElementById("right_frame");
 	div.style.backgroundColor = "";
