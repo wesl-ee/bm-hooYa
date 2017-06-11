@@ -1,0 +1,286 @@
+#!/usr/bin/perl -w
+use strict;
+use XML::LibXML;
+use Curses;
+use XML::LibXML::PrettyPrint;
+use Digest::MD5::File 'file_md5_base64';
+use Cwd 'abs_path';
+
+use bmfft_db qw (&bmfft_update_db);
+
+# Pass the directory you want to checkout as an argument
+# Protip: must have a .tags.xml in the root of the directory
+# otherwise you must generate one using gen_xml
+my $directory = shift;
+my $tagfile = shift;
+if (!$tagfile || !$directory) {
+	print "Usage: ./bmfft (directory) (tagfile)\n";
+	exit -1;
+}
+$directory = abs_path($directory);
+$tagfile = abs_path($tagfile);
+
+# Initialize the screen
+my $curses = new Curses;
+
+initscr;
+start_color();
+noecho;
+cbreak;
+keypad(1);
+curs_set(0);
+
+# Initialize colors
+init_pair(1, COLOR_WHITE, COLOR_BLUE);
+init_pair(2, COLOR_BLACK, COLOR_WHITE);
+
+# Create aa new boxed window for displaying the current
+# directory contents
+my $bwin = subwin(getmaxy()-1, getmaxx(), 1, 0);
+box($bwin, 0, 0);
+my $fwin = newwin(getmaxy()-3, getmaxx()-2, 2, 1);
+
+refresh();
+
+# Browse a bunch of items, navigating by the 'j' and 'k'
+# keys. Returns a two-element array which contains
+# 	1.) The selected element's index
+# 	2.) The key pressed on the selected element
+# ofc 'h' and 'j' do not fire becuase they navigate the
+# menu ;)
+sub browse {
+	my $c;
+	my $selecteditem = 0;
+	my $page = 0;
+	my $head = shift;
+	my @listing = @_;
+	clear;
+	# Loop for browsing contents
+	do {
+		# Make sure that the titlebar is there
+		attron(A_REVERSE);
+		addstr(0, 0, $head);
+		attroff(A_REVERSE);
+		box($bwin, 0, 0);
+
+		# Lower boundary check
+		if ($selecteditem < 0) {
+			$selecteditem = 0;
+		}
+		# Upper boundary check
+		elsif ($selecteditem > @listing-1) {
+			$selecteditem = @listing-1;
+		}
+
+		# Display the current directory's contents, putting a * beside
+		# the selected file
+		for my $i ($page*getmaxy($fwin)..$page*getmaxy($fwin)+getmaxy($fwin)-1) {
+			if ($i >= @listing) {
+				last;
+			}
+			if ($selecteditem == $i) {
+				addstr($fwin, $i%getmaxy($fwin), 0, "*");
+			}
+			addstr($fwin, $i%getmaxy($fwin), 2, $listing[$i]);
+		}
+		# Update changes, wait for user input
+		refresh();
+		$c = getch($fwin);
+
+		# The user wants to backtrack one file
+		if ($c eq 'k') {
+			addstr($fwin, $selecteditem%getmaxy($fwin), 0, ' ');
+			$selecteditem--;
+			# Should we go back one page?
+			if ($selecteditem < $page*getmaxy($fwin) && $page > 0) {
+				clear($fwin);
+				$page -= 1;
+			}
+		}
+		# The user wants to advance one file
+		elsif ($c eq 'j') {
+			addstr($fwin, $selecteditem%getmaxy($fwin), 0, ' ');
+			$selecteditem++;
+			# Should we advance the page?
+			if ($selecteditem > $page*getmaxy($fwin)+getmaxy($fwin)-1 && @listing > $page*getmaxy($fwin)+getmaxy($fwin)-1) {
+				clear($fwin);
+				$page += 1;
+			}
+		}
+		# The user wants to advance one page
+		elsif ($c eq 'J') {
+			# Only if we're not on the last page!
+			if (@listing > $page*getmaxy($fwin)+getmaxy($fwin)-1) {
+				$selecteditem += getmaxy($fwin);
+				clear($fwin);
+				$page += 1;
+			}
+		}
+		# The user wants to backtrack one page
+		elsif ($c eq 'K') {
+			if ($page > 0) {
+			# Only if we're not on the first page!
+				$selecteditem -= getmaxy($fwin);
+				clear($fwin);
+				$page -= 1;
+			}
+		}
+		else {
+			return ($selecteditem, $c);
+		}
+	} while ($c);
+}
+# Bring up the tag editing sub-window
+sub edit_tags
+{
+	# Create the dialog
+	my $tagwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+	# Make a cute border and bg color
+	box($tagwin, 0, 0);
+	bkgd($tagwin, COLOR_PAIR(1));
+
+	# Create a tile/header
+#	my $header = "Tags for " . @listing[$_[0]];
+#	addstr($tagwin, 0, (getmaxx($tagwin)-length($header))/2, $header);
+	addstr($tagwin, 2, 1, "Features coming soon!");
+	refresh($tagwin);
+	getch();
+	clear($tagwin);
+	delwin($tagwin);
+}
+# Display a cute alert!
+sub alert
+{
+	# Create the dialog
+	my $tagwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+	my $message = $_[0];
+	my $title = " ".$_[1]." ";
+	box($tagwin, 0, 0);
+	bkgd($tagwin, COLOR_PAIR(1));
+
+	# Create a tile/header
+	if ($title) {
+		addstr($tagwin, 0, (getmaxx($tagwin)-length($title))/2, $title);
+	}
+	addstr($tagwin, (getmaxy($tagwin)/2), (getmaxx($tagwin)-length($message))/2, $message);
+	refresh($tagwin);
+	getch();
+	clear($tagwin);
+	delwin($tagwin);
+}
+sub help_menu
+{
+	# Create the dialog
+	my $helpwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+	# Make a cute border and bg color
+	box($helpwin, 0, 0);
+	bkgd($helpwin, COLOR_PAIR(1));
+
+	# Create a tile/header
+	my $header = " bmfft help ";
+	addstr($helpwin, 0, (getmaxx($helpwin)-length($header))/2, $header);
+	# Help entries. . . soon to be read from a help file in doc/
+	addstr($helpwin, 2, (getmaxx($helpwin)-length("h - left"))/2, "h - left");
+	addstr($helpwin, 3, (getmaxx($helpwin)-length("j - down"))/2, "j - down");
+	addstr($helpwin, 4, (getmaxx($helpwin)-length("k - up"))/2, "k - up");
+	addstr($helpwin, 5, (getmaxx($helpwin)-length("l - right"))/2, "l - right");
+	addstr($helpwin, 6, (getmaxx($helpwin)-length("e - edit tag"))/2, "e - edit tag");
+	addstr($helpwin, 7, (getmaxx($helpwin)-length("q - quit"))/2, "q - quit");
+	addstr($helpwin, 8, (getmaxx($helpwin)-length("? - help menu"))/2, "? - help menu");
+	refresh($helpwin);
+	getch();
+	# Temporary until I figure out how to cleanly restore the window
+	# underneath
+	clear;
+	delwin($helpwin);
+}
+sub tag_search
+{
+	my $QUERYLEN = 50;
+	my $query;
+	my $message = " bmfft search ";
+	addstr(0, (getmaxx()-length($message))/2, $message);
+	$message = "HooYa!";
+	addstr(getmaxy()/3-1, (getmaxx()-length($message))/2, $message);
+	attrset(A_REVERSE);
+	foreach (getmaxx()/2-($QUERYLEN/2)..getmaxx()/2+($QUERYLEN/2)) {
+		addch(getmaxy()/3, $_, ' ');
+	}
+	my $c;
+	move(getmaxy()/3, getmaxx()/2-($QUERYLEN/2));
+	# Eventually bounds-check as the user enters characters
+	echo;
+	$query = getstring();
+	noecho;
+	split /,/, $query;
+#	do {
+#		$c = getch();
+#		if ($c eq '\c?') {
+#			addch($c);
+#		}
+#	} while ($c ne '\R');
+}
+sub human_filesize
+{
+        my $size = shift;
+        #TiB
+        if ($size > 1099511627776) { return sprintf("%.2f TiB", $size / 1099511627776); }
+        # GiB
+        elsif ($size > 1073741824) { return sprintf("%.2f GiB", $size / 1073741824); }
+        # MiB
+        elsif ($size > 1048576) { return sprintf("%.2f MiB", $size / 1048576); }
+        # KiB
+        elsif ($size > 1024) { return sprintf("%.2f KiB", $size / 1024); }
+        # Bytes
+        else {return "$size byte" . ($size == 1 ? "" : "s"); }
+}
+
+# Greet the user!
+my $greetwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+my $message;
+# Make a cute border and bg color
+box($greetwin, 0, 0);
+bkgd($greetwin, COLOR_PAIR(1));
+
+# Create a tile/header
+my $header = " welcome to bmfft ";
+addstr($greetwin, 0, (getmaxx($greetwin)-length($header))/2, $header);
+addstr($greetwin, 1, (getmaxx($greetwin)-length('bmfft stands for big mike\'s fancy file tagger!'))/2, 'bmfft stands for big mike\'s fancy file tagger!');
+my $i;
+my $size;
+find ( sub {$i++ if -f; $size += -s if -f}, $directory);
+$message = "Generating MD5 hashes for $i files (".human_filesize($size).")";
+addstr($greetwin, getmaxy($greetwin)/2, (getmaxx($greetwin)-length($message))/2, $message);
+$message = "Please wait. . .";
+addstr($greetwin, getmaxy($greetwin)/2+1, (getmaxx($greetwin)-length($message))/2, $message);
+addstr($greetwin, getmaxy($greetwin)-2, (getmaxx($greetwin)-length('send complaints to nakomi@bigmike.sne.jp'))/2, 'send complaints to nakomi@bigmike.sne.jp');
+refresh($greetwin);
+&bmfft_update_db($directory, $tagfile);
+clear($greetwin);
+box($greetwin, 0, 0);
+bkgd($greetwin, COLOR_PAIR(1));
+addstr($greetwin, getmaxy($greetwin)/2, (getmaxx($greetwin)-length('okaeri!'))/2, 'okaeri!');
+addstr($greetwin, getmaxy($greetwin)-3, (getmaxx($greetwin)-length('any key continues. . .'))/2, 'any key continues. . .');
+refresh($greetwin);
+
+#if (!-e $rootdir."/.tags.db") {
+#	alert "Could not find that .xml file", "Well fuck!";
+#	endwin;
+#	die;
+#}
+
+addstr($greetwin, getmaxy($greetwin)-1, (getmaxx($greetwin)-length(" any key continues "))/2, " any key continues ");
+if (getch() eq "?") {
+	&help_menu;
+}
+clear($greetwin);
+bkgd($greetwin, COLOR_PAIR(0));
+delwin($greetwin);
+my @tags = &tag_search;
+my %items;
+foreach (@tags) {
+	%items = (%items, bmfft_searchtag($tagfile, $_));
+}
+browse("Files that match " . join(",", @tags), keys %items);
+endwin;
+exit;

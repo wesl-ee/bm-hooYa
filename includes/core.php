@@ -70,7 +70,6 @@ function isAPictureFile($filename)
 	if ($extension == "png") return true;
 	if ($extension == "jpg") return true;
 	if ($extension == "jpeg") return true;
-	if ($extension == "webm") return true;
 	if ($extension == "jpe") return true;
 	if ($extension == "gif") return true;
 	return false;
