@@ -1,5 +1,5 @@
 <?php
-define("CONFIG_TAG_DB", "/var/git/bmffd/bmfft/tags.db");
+define("CONFIG_TAG_DB", "/var/http/bmffd/bmfft/tags.db");
 if (isset($_GET['key']) && isset($_GET['tags'])) {
 	foreach (bmfft_getattr($_GET['key'], 'tags') as $key => $value)
 		$tags[] = $value;
@@ -8,7 +8,7 @@ if (isset($_GET['key']) && isset($_GET['tags'])) {
 }
 function bmfft_searchtag($tag)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$key = dba_firstkey($dbh);
 	while ($key !== false) {
 		$value = dba_fetch($key, $dbh);
@@ -26,14 +26,14 @@ function bmfft_searchtag($tag)
 }
 function bmfft_gettags($key)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$value = $dba_fetch($key, $dbh);
 	dba_close($dbh);
 	return json_decode($value)['tags'];
 }
 function bmfft_addtags($key, $newtags)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$value = dba_fetch($key, $dbh);
 	dba_close($dbh);
 	$value = json_decode($value, true);
@@ -46,7 +46,7 @@ function bmfft_addtags($key, $newtags)
 }
 function bmfft_getrandom($count)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$skip = rand(0, bmfft_info(){'files'});
 	dba_firstkey($dbh);
 	while (--$skip-$count) {
@@ -61,7 +61,7 @@ function bmfft_getrandom($count)
 }
 function bmfft_getattr($key, $attr)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$value = dba_fetch($key, $dbh);
 	$value = json_decode($value, true);
 	dba_close($dbh);
@@ -69,7 +69,7 @@ function bmfft_getattr($key, $attr)
 }
 function bmfft_setattr($key, $attr, $data)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'wd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'wd', 'gdbm');
 	$value = dba_fetch($key, $dbh);
 	$value = json_decode($value, true);
 	$value[$attr] = $data;
@@ -84,14 +84,14 @@ function bmfft_name($key)
 }
 function bmfft_exists($key)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$e = dba_exists($key, $dbh);
 	dba_close($dbh);
 	return $e;
 }
 function bmfft_info()
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'db4');
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$key = dba_firstkey($dbh);
 	$size = 0;
 	for ($i = 0; $key; $i++) {

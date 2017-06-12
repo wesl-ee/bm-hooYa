@@ -25,7 +25,7 @@ function add_tags(key)
 	d.write('<div style="width:100%">');
 		d.write('<div style="width:33%;float:left;"><a href="#" onClick="window.close()">close</a></div>');
 		d.write('<div style="width:33%;float:left;text-align:center;">&nbsp</div>');
-		d.write('<div style="width:33%;float:left;text-align:right;"><a href="guidlelines.php">tagging guidelines</a></div>');
+		d.write('<div style="width:33%;float:left;text-align:right;"><a href="guidelines.php">tagging guidelines</a></div>');
 	d.write('</div>');
 	d.write('<div id="header" style="text-align:center;"></div>');
 	d.write('<div style="width:100%;text-align:center">');

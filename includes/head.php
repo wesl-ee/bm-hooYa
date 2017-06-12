@@ -24,8 +24,9 @@ switch($_SESSION['pref_css']) {
 		$_SESSION['motd']="为人民服务";
 		break;
 	case "default":
-		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_default.css";
+		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";
 		$_SESSION['motd']="Welcome home";
+		$_SESSION['mascot']="";
 		break;
 	case "nier":
 		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_nier.css";

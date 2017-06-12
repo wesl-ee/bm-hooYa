@@ -4,6 +4,7 @@ use strict;
 use Exporter;
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 use BerkeleyDB;
+use GDBM_File;
 use Data::Dumper;
 # SQLite soon. . .
 #use DBI;
@@ -22,16 +23,19 @@ sub bmfft_update_db
 {
 	my $directory = shift or die;
 	my $dbfile = shift or die;
-	my $dbh = new BerkeleyDB::Hash(
-		-Filename => $dbfile,
-		-Flags => DB_CREATE
-	) or die;
+	my %hash;
+	tie %hash, 'GDBM_File', $dbfile, &GDBM_WRCREAT, 0640;
+#	my $dbh = new BerkeleyDB::Btree(
+#		-Filename => $dbfile,
+#		-Flags => DB_CREATE
+#	) or die;
 	find ( sub {
 		if (-f) {
 			my $key = file_md5_base64($File::Find::name);
-			if ($dbh->db_exists($key) != DB_NOTFOUND) {
-				my $json;
-				$dbh->db_get($key, $json);
+#			if ($dbh->db_exists($key) != DB_NOTFOUND) {
+			if ($hash{$key}) {
+				my $json = $hash{$key};
+#				$dbh->db_get($key, $json);
 				my $path = decode_json($json)->{'path'};
 				if ($File::Find::name ne $path) {
 #					print "Not adding ".$File::Find::name." as it's a duplicate of $path,\n";
@@ -45,9 +49,11 @@ sub bmfft_update_db
 				size => -s $File::Find::name
 			);
 			my $json = encode_json(\%value);
-			$dbh->db_put($key, encode_json(\%value));
+#			$dbh->db_put($key, encode_json(\%value));
+			$hash{$key} = encode_json(\%value);
 			}
 		},$directory);
+	untie(%hash);
 }
 # IN
 #	@_ = (TAG_TO_SEARCH_FOR)
@@ -58,7 +64,7 @@ sub bmfft_searchtag
 	my %matches;
 	my $tagfile = shift or die;
 	my $query = shift or die;
-	my $dbh = new BerkeleyDB::Hash(
+	my $dbh = new BerkeleyDB::Btree(
 		-Filename => $tagfile,
 		-Flags => DB_CREATE
 	) or die;
@@ -74,7 +80,7 @@ sub bmfft_gettags
 {
 	my $tagfile = shift or die;
 	my $hash = shift or die;
-	my $dbh = new BerkeleyDB::Hash(
+	my $dbh = new BerkeleyDB::Btree(
 		-Filename => $tagfile,
 		-Flags => DB_CREATE
 	) or die;
@@ -90,7 +96,7 @@ sub bmfft_addtags
 	my $newtags = shift or die;
 
 	my %tags;
-	my $dbh = new BerkeleyDB::Hash(
+	my $dbh = new BerkeleyDB::Btree(
 		-Filename => $tagfile,
 		-Flags => DB_CREATE
 	) or die;

@@ -122,7 +122,6 @@ function updateVideo()
 	var source = document.createElement('source');
 	source.setAttribute('src', 'download.php?dir=' + currDir + currFile)
 	video.appendChild(source);
-//	document.getElementById("video").setAttribute('src', "download.php?dir=" + currDir + currFile);
 	document.getElementById("video").style.cursor = "pointer";
 	return;
 }
@@ -149,7 +148,7 @@ function updateAudio()
 function updateLink()
 {
 	document.getElementById("content").innerHTML = '<a id="dlink">download this file!</br>⬇</a>';
-	document.getElementById("dlink").href = "download.php?dir=" + encodeURIComponent(currDir + currFile) + "&PHPSESSID=" + getCookie("PHPSESSID");
+	document.getElementById("dlink").href = "download.php?dir=" + encodeURI(currDir + currFile) + "&PHPSESSID=" + getCookie("PHPSESSID");
 	document.getElementById("dlink").style.top = "50%";
 	document.getElementById("dlink").style.position = "relative";
 	document.getElementById("dlink").style.transform = "translateY(-50%)";

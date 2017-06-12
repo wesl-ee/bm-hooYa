@@ -31,15 +31,15 @@ include "bmfft_db.php";
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 	</div>
-	<div class="gallery"style="column-count:4;column-fill:balance;column-gap:10px;">
+	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
 	<?php
-	$keys = bmfft_getrandom(50);
+	$keys = bmfft_getrandom(10);
 	foreach ($keys as $key) {
 		print '<img ';
-		print 'onClick="location.href=\'view.php?key='.rawurlencode($key).'\'"';
+		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print 'src="download.php?key='.rawurlencode($key).'&t=img"';
-		print 'title="'.bmfft_getattr($key, 'path').'">';
+		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
 		print '</img>';
 	}
 	?>

@@ -40,19 +40,19 @@ if (isset($_POST['tags'])) {
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame" style="height:100%;">
-	<div id="title">
+	<div id="title" style="height:10%;">
 		<h1><?php echo bmfft_name($key); ?></h1>
 	</div>
-	<div id="header">
-		<div style="width:33%;float:left;"><a href="#" onClick="window.history.back()">back</a></div>
+	<div id="header" style="height:10%;">
+		<div style="width:33%;float:left;"><a href="#" onClick="window.close()">close</a></div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;overflow:hidden;"><a href="#" onClick="view_tags('<?php print $key ?>')">view tags</a></div>
 	</div>
-	<div class="gallery" style="height:100%;">
+	<div class="gallery" style="height:80%;">
 	<?php
 		print '<img onClick="add_tags(\''.$key.'\')" ';
 		print 'src="download.php?key='.rawurlencode($key).'"';
-		print 'style="height:100%;">';
+		print 'style="max-height:100%;">';
 		print '</img>';
 	?>
 	</div>

@@ -37,7 +37,7 @@ include "bmfft_db.php";
 	</form>
 <!--	Yeah maybe when I add 'size' and 'files' entries to the DB so I
 don't need to query it every fucking time I can uncomment this, but otherwise
-it's a waste of everyone's time
+it's a waste of everyone's time-->
 	<div style="width:100%;text-align:center;">
 		<?php print("now serving ");
 		$info = bmfft_info();
@@ -46,7 +46,7 @@ it's a waste of everyone's time
 		print human_filesize($info['size']);
 		print ")";
 		?>
-	</div>-->
+	</div>
 </div>
 </div>
 </body>

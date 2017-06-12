@@ -38,7 +38,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	</div>
 	<div style="margin-bottom:30px;">
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
-		<a href="filemanager.php">File manager</a>
+<!--		hooYa!-->
 	</div>
 
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
@@ -47,9 +47,11 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
 		<a href="userprefs.php">User preferences</a>
 	</div>
-	<div style="float:left;width:33%;text-align:center">&nbsp</div>
+	<div style="float:left;width:33%;text-align:center"><a href="new.php">Recent curations</a></div>
 	<div style="float:left;width:33%;text-align:center"><a href="users.php">User directory</a></div>
-	<div style="float:left;width:33%;text-align:center">&nbsp</div>
+	<div style="float:left;width:33%;text-align:center">
+		<a href="filemanager.php">File manager</a>
+	</div>
 	</div>
 </div>
 </div>

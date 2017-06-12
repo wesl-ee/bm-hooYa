@@ -25,6 +25,8 @@
 <input type="submit" value="Sign me up!"/>
 </form>
 <?php if (isset($_POST['onsen_username']) && isset($_POST['onsen_otp']) && isset($_POST['onsen_password'])){
+	$onsen_username = filter_var($_POST['onsen_username'], FILTER_SANITIZE_STRING);
+	$onsen_password = filter_var($_POST['onsen_password'], FILTER_SANITIZE_STRING);
 	$fh = fopen("./otp_challenge", "r") or die("Not accepting new accounts right now!");
 	$realotp = fgets($fh);
 	fclose($fh);
@@ -40,7 +42,7 @@
 	$mysql_dbname = CONFIG_DB_DATABASE;
 	$mysql_table = CONFIG_DB_TABLE;
 	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
-	$cmd = "SELECT `username` FROM `" . CONFIG_DB_TABLE . "` WHERE `username`='".$_POST['onsen_username']."'";
+	$cmd = "SELECT `username` FROM `" . CONFIG_DB_TABLE . "` WHERE `username`='".$onsen_username."'";
 	$result=$conn->query($cmd);
 	if ($result->num_rows !== 0)
 	{
@@ -48,7 +50,7 @@
 		return;
 	}
 	$salt = randomHex(16);
-	$hash = $_POST['onsen_password'];
+	$hash = $onsen_password;
 	$hash = crypt($hash, '$6$'.$salt.'$');
 	$salted_password = $hash;
 	$cmd = "INSERT INTO " . CONFIG_DB_TABLE . " (username, password) VALUES ('" . $_POST['onsen_username']."','".$salted_password."')";
@@ -56,7 +58,7 @@
 	$fh = fopen("./otp_challenge", "w") or die("Not accepting new accounts right now!");
 	$realotp = fwrite($fh, $_POST['onsen_otp']);
 	fclose($fh);
-	lwrite(CONFIG_AUTHLOG_FILE, $_SERVER['REMOTE_IP']." created an account with the username ".$_POST['onsen_username']);
+	lwrite(CONFIG_AUTHLOG_FILE, $_SERVER['REMOTE_IP']." created an account with the username ".$onsen_username);
 	print 'Created your account!';
 }
 ?>

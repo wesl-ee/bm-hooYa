@@ -11,11 +11,11 @@ body {
 }
 
 @font-face {
-	font-family: MPlus;
-	src: url('JF-Dot-MPlusS10.ttf');
+	font-family: Proggy;
+	src: url('/css/bmffd/ProggySquare.ttf');
 }
 body {
-	font-family: MPlus;
+	font-family: Proggy;
 	background-image: url("/css/wutang.png");
 	background-repeat:no-repeat;
 	background-position: center;

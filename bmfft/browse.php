@@ -37,15 +37,17 @@ $q = explode(' ', $q);
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 	</div>
-	<div style="column-count:4;column-fill:balance;column-gap:10px;">
+	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
 	<?php
 	foreach ($q as $searchtag) {
 		$keys = bmfft_searchtag($searchtag);
 	}
 	foreach ($keys as $key) {
-		print '<img onClick="#" style="display:block;margin-bottom:10px;width:100%;"';
+		print '<img ';
+		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
+		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print 'src="download.php?key='.rawurlencode($key).'&t=img"';
-		print 'title="'.bmfft_getattr($key, 'path').'">';
+		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
 		print '</img>';
 	}
 	?>
