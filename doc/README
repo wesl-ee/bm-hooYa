@@ -27,11 +27,6 @@ bmffd currently ships with these features:
 	which is defined in includes/config.php
 - per-deployment configuration
 	per-deployment settings are defined in includes/config.php
-
-these features are planned for bmffd:
-
 - file tagging
-	I am very excited to implement a file tagger that I helping to
-	debug and develop. In future builds, bmffd will ship with a
-	search function which lets you search for any file tagged with your
-	query. only local users will be trusted to add/remove tags.
+	bmfft now fills the file tagger niche, plans to obsolete file
+	gallery

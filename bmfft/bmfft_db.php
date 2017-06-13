@@ -1,5 +1,5 @@
 <?php
-
+include_once '../includes/config.php';
 # AJAX handler goes here because I haven't set aside a file to do that yet
 if (isset($_GET['key']) && isset($_GET['tags'])) {
 	foreach (bmfft_getattr($_GET['key'], 'tags') as $key => $value) {

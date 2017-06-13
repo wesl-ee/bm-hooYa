@@ -35,17 +35,19 @@ include "bmfft_db.php";
 		<div style="width:50%;float:left;text-align:right;font-weight:bold;">tag</div>
 		<div style="width:50%;float:left;text-align:center;font-weight:bold;">count</div>
 	</div>
-	<div style="width:100%;">
+	<div style="width:100%;display:table;">
 	<?php
 	// Definitely organize this into pages, like we did with browse.php
 	$heat = bmfft_tagheat();
 	arsort($heat);
 	foreach (array_keys($heat) as $tag) {
-		print '<div style="width:50%;float:left;text-align:right;"><a href="browse.php?q='.rawurlencode($tag).'">&nbsp';
+		print '<div style="display:table-row;overflow-auto;">';
+		print '<div style="width:50%;float:left;text-align:right;display:table-cell;"><a href="browse.php?q='.rawurlencode($tag).'">';
 		print $tag;
 		print '</a></div>';
-		print '<div style="width:50%;float:left;text-align:center;">&nbsp';
+		print '<div style="width:50%;float:left;text-align:center;display:table-cell;">&nbsp';
 		print $heat[$tag];
+		print '</div>';
 		print '</div>';
 	}
 	?>
