@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <?php
 include "../includes/core.php";
-if (CONFIG_REQUIRE_AUTHENTICATION)
-        include CONFIG_ROOT_PATH."includes/auth.php";
+#if (CONFIG_REQUIRE_AUTHENTICATION)
+#        include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
 
 if (!isset($_GET['key']))
@@ -10,7 +10,19 @@ if (!isset($_GET['key']))
 $key = rawurldecode($_GET['key']);
 if (isset($_POST['tags'])) {
 	$tags = explode(" ", $_POST['tags']);
-	bmfft_setattr($key, 'tags', $tags);
+	$tags = array_filter($tags);
+	if (isset($_SESSION['username'])) {
+		$mysql_hostname = CONFIG_DB_SERVER;
+		$mysql_username = CONFIG_DB_USERNAME;
+		$mysql_password = CONFIG_DB_PASSWORD;
+		$mysql_dbname = CONFIG_DB_DATABASE;
+		$mysql_table = CONFIG_DB_TABLE;
+		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
+		$new_tags =  count($tags) - count(bmfft_getattr($key, 'tags'));
+		$cmd = 'UPDATE `'. $mysql_table .'` SET `tags_added` = `tags_added` + ' . $new_tags . ' WHERE `username`="' . $_SESSION['username'] . '"';
+		$conn->query($cmd);
+	}
+	bmfft_settags($key, $tags);
 	echo '<script>window.close()</script>';
 	die();
 }
@@ -53,7 +65,7 @@ if (isset($_POST['tags'])) {
 		print '<img onClick="add_tags(\''.$key.'\')" ';
 		print 'src="download.php?key='.rawurlencode($key).'"';
 		print 'style="max-height:100%;">';
-		print '</img>';
+		print '&nbsp</img>';
 	?>
 	</div>
 </div>

@@ -20,7 +20,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 <a href='.'>« back</a>
 </div>
 <div style="width:33%;float:left;font-weight:bold;">username</div>
-<div style="width:33%;float:left;font-weight:bold;">css</div>
+<div style="width:33%;float:left;font-weight:bold;">tags added</div>
 <div style="width:33%;float:left;font-weight:bold;">join date</div>
 <div style="width:100%;float:left;">&nbsp</div>
 <?php
@@ -30,11 +30,11 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	$mysql_dbname = CONFIG_DB_DATABASE;
 	$mysql_table = CONFIG_DB_TABLE;
 	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
-	$cmd = "SELECT `username`, `signup_date`, `pref_css`, `domain` FROM `" . CONFIG_DB_TABLE . "` ORDER BY signup_date DESC";
+	$cmd = "SELECT `username`, `signup_date`, `tags_added`, `pref_css`, `domain` FROM `" . CONFIG_DB_TABLE . "` ORDER BY tags_added DESC";
 	$result=$conn->query($cmd);
 	foreach ($result as $row) {
 		print '<div style="width:33%;float:left;"><a href="mailto:'.$row["username"].'@'.$row["domain"].'" >'.$row["username"].'</a></div>';
-		print '<div style="width:33%;float:left;">'.$row["pref_css"].'</div>';
+		print '<div style="width:33%;float:left;">'.$row["tags_added"].'</div>';
 		print '<div style="width:33%;float:left;">'.explode(' ', $row["signup_date"])[0].'</div>';
 	}
 ?>

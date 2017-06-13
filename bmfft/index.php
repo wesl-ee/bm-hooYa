@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <?php
 include "../includes/core.php";
-if (CONFIG_REQUIRE_AUTHENTICATION)
-        include CONFIG_ROOT_PATH."includes/auth.php";
+#if (CONFIG_REQUIRE_AUTHENTICATION)
+#        include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
 ?>
 <html>
@@ -27,8 +27,10 @@ include "bmfft_db.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="header" style="text-align:right;">
-		<a href="random.php">random</a>
+	<div id="header">
+		<div style="width:33%;float:left;"><a href="random.php">random ten</a></div>
+		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
+		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="window.open('m.php')">browsing music</a></div>
 	</div>
 	<div style="width:100%;"><img src="hooya.png" style="width:30%;margin:auto;display:block;"></img></div>
 	<form style="width:100%;" action="browse.php" method="get" >
@@ -46,6 +48,9 @@ it's a waste of everyone's time-->
 		print human_filesize($info['size']);
 		print ")";
 		?>
+	</div>
+	<div style="width:100%;text-align:center;">
+		<a href="popular.php">check out our popular tags!</a>
 	</div>
 </div>
 </div>

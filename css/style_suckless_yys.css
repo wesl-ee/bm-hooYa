@@ -103,7 +103,7 @@ a:hover {
 	margin-right: auto;
 	max-width:100%;
 	border-collapse:collapse;
-	border-radius:25px 25px 25px 25px;
+	border-radius:10px 10px 10px 10px;
 	cursor: pointer;
 }
 .gallery #next, .gallery #previous {

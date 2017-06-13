@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <?php
 include "../includes/core.php";
-if (CONFIG_REQUIRE_AUTHENTICATION)
-        include CONFIG_ROOT_PATH."includes/auth.php";
+#if (CONFIG_REQUIRE_AUTHENTICATION)
+#        include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
 if (!isset($_GET['q']))
 	die();
@@ -39,16 +39,32 @@ $q = explode(' ', $q);
 	</div>
 	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
 	<?php
+	$page = 0;
+	if (isset($_GET['page']))
+		$page = $_GET['page'];
+
 	foreach ($q as $searchtag) {
 		$keys = bmfft_searchtag($searchtag);
 	}
-	foreach ($keys as $key) {
+	$thispage = array_slice($keys, $page*10, 10);
+	foreach ($thispage as $key) {
 		print '<img ';
 		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print 'src="download.php?key='.rawurlencode($key).'&t=img"';
 		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
-		print '</img>';
+		print '&nbsp</img>';
+	}
+	?>
+	</div>
+	<div style="text-align:center;">
+	<?php
+	for ($i=0; $i < (count($keys)/10); $i++) {
+		print '<a ';
+		print 'href="?q='.$_GET['q'].'&page='.$i.'"';
+		if ($i == $page)
+			print 'style="font-weight:bold;"';
+		print '>'.$i.'</a> ';
 	}
 	?>
 	</div>

@@ -4,12 +4,14 @@ function add_tags(key)
 	var d = w.document;
 	var xhttp = new XMLHttpRequest();
 	var existing_tags;
-	xhttp.open("GET", "bmfft_db.php?key="+key+"&tags", true);
+	xhttp.open("GET", "bmfft_db.php?key="+encodeURIComponent(key)+"&tags", true);
         xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 		existing_tags = JSON.parse(this.responseText);
 		if (existing_tags) {
-			d.getElementById('tags').value=existing_tags;
+			d.getElementById('tags').value=existing_tags.join(' ') + ' ';
+			d.getElementById('tags').focus();
+			d.getElementById('tags').selectionStart = d.getElementById('tags').selectionEnd = d.getElementById('tags').value.length;
 		}
 		else {
 			d.getElementById('header').innerHTML = '<h1>Wow!</h1>You can be the first one to tag ' + key + '!';
@@ -30,7 +32,7 @@ function add_tags(key)
 	d.write('<div id="header" style="text-align:center;"></div>');
 	d.write('<div style="width:100%;text-align:center">');
 	d.write('Enter relevant, space-seperated tags<br/>');
-	d.write('<form action="view.php?key='+key+'" method="post">');
+	d.write('<form action="view.php?key='+encodeURIComponent(key)+'" method="post">');
 	d.write('<input id="tags" style="width:100%;" type="text" name="tags"></input><br/>');
 	d.write('<input type="submit" value="行こう！">');
 	d.write('</form>');
@@ -46,7 +48,7 @@ function view_tags(key)
 	var w = window.open("", "viewing tags for file", "resizable,status,width=625,height=400");
 	var d = w.document;
 	var xhttp = new XMLHttpRequest();
-	xhttp.open("GET", "bmfft_db.php?key="+key+"&tags=foo", true);
+	xhttp.open("GET", "bmfft_db.php?key="+encodeURIComponent(key)+"&tags", true);
         xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 		tags = JSON.parse(this.responseText);

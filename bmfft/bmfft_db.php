@@ -1,8 +1,9 @@
 <?php
 define("CONFIG_TAG_DB", "/var/http/bmffd/bmfft/tags.db");
 if (isset($_GET['key']) && isset($_GET['tags'])) {
-	foreach (bmfft_getattr($_GET['key'], 'tags') as $key => $value)
-		$tags[] = $value;
+	foreach (bmfft_getattr($_GET['key'], 'tags') as $key => $value) {
+		$tags[] = $key;
+	}
 	print json_encode($tags);
 	return;
 }
@@ -13,7 +14,7 @@ function bmfft_searchtag($tag)
 	while ($key !== false) {
 		$value = dba_fetch($key, $dbh);
 		$value = json_decode($value, true);
-		foreach($value['tags'] as $a)
+		foreach($value['tags'] as $a => $b)
 		{
 			if ($a == $tag) {
 				$results[] = $key;
@@ -31,18 +32,13 @@ function bmfft_gettags($key)
 	dba_close($dbh);
 	return json_decode($value)['tags'];
 }
-function bmfft_addtags($key, $newtags)
+function bmfft_settags($key, $tags)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
-	$value = dba_fetch($key, $dbh);
-	dba_close($dbh);
-	$value = json_decode($value, true);
-	$tags = $value['tags'];
-	foreach ($newtags as $newtag) {
-		$tags[$newtag] = 1;
+	foreach ($tags as $tag) {
+		$hash_tags[$tag] = 1;
 	}
-	$value['tags'] = $tags;
-	bmfft_setattr($key, 'tags', $tags);
+//	$value['tags'] = $tags;
+	bmfft_setattr($key, 'tags', $hash_tags);
 }
 function bmfft_getrandom($count)
 {
@@ -103,5 +99,17 @@ function bmfft_info()
 		'size' => $size,
 		'files' => $i,
 	);
+}
+function bmfft_tagheat()
+{
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
+	$key = dba_firstkey($dbh);
+	while ($key !== false) {
+		$value = dba_fetch($key, $dbh);
+		$value = json_decode($value, true);
+		foreach($value['tags'] as $key => $value) $heat[$key]++;
+		$key = dba_nextkey($dbh);
+	}
+	return $heat;
 }
 ?>

@@ -8,7 +8,7 @@ include "bmfft_db.php";
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa!<?php echo "$dir"?></title>
+	<title>bmffd — hooYa!</title>
 </head>
 <body>
 <div id="container">
@@ -27,20 +27,25 @@ include "bmfft_db.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="title"><h1>random ten</h1></div>
+	<div id="title"><h1>popular tags</h1></div>
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
-		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
+		<div style="width:100%;float:left;"><a href=".">back to search</a></div>
 	</div>
-	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
+	<div id="header" style="padding-bottom:30px;">
+		<div style="width:50%;float:left;text-align:right;font-weight:bold;">tag</div>
+		<div style="width:50%;float:left;text-align:center;font-weight:bold;">count</div>
+	</div>
+	<div style="width:100%;">
 	<?php
-	$keys = bmfft_getrandom(10);
-	foreach ($keys as $key) {
-		print '<img ';
-		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
-		print ' style="display:block;margin-bottom:10px;width:100%;"';
-		print 'src="download.php?key='.rawurlencode($key).'&t=img"';
-		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
-		print '&nbsp</img>';
+	$heat = bmfft_tagheat();
+	arsort($heat);
+	foreach (array_keys($heat) as $tag) {
+		print '<div style="width:50%;float:left;text-align:right;"><a href="browse.php?q='.rawurlencode($tag).'">&nbsp';
+		print $tag;
+		print '</a></div>';
+		print '<div style="width:50%;float:left;text-align:center;">&nbsp';
+		print $heat[$tag];
+		print '</div>';
 	}
 	?>
 	</div>

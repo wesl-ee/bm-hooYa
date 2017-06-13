@@ -24,18 +24,15 @@ sub bmfft_update_db
 	my $directory = shift or die;
 	my $dbfile = shift or die;
 	my %hash;
-	tie %hash, 'GDBM_File', $dbfile, &GDBM_WRCREAT, 0640;
-#	my $dbh = new BerkeleyDB::Btree(
-#		-Filename => $dbfile,
-#		-Flags => DB_CREATE
-#	) or die;
+
 	find ( sub {
 		if (-f) {
+			tie %hash, 'GDBM_File', $dbfile, &GDBM_WRCREAT, 0640;
 			my $key = file_md5_base64($File::Find::name);
-#			if ($dbh->db_exists($key) != DB_NOTFOUND) {
+			untie(%hash);
+			
 			if ($hash{$key}) {
 				my $json = $hash{$key};
-#				$dbh->db_get($key, $json);
 				my $path = decode_json($json)->{'path'};
 				if ($File::Find::name ne $path) {
 #					print "Not adding ".$File::Find::name." as it's a duplicate of $path,\n";
@@ -48,12 +45,164 @@ sub bmfft_update_db
 				path => $File::Find::name,
 				size => -s $File::Find::name
 			);
+
 			my $json = encode_json(\%value);
-#			$dbh->db_put($key, encode_json(\%value));
+			tie %hash, 'GDBM_File', $dbfile, &GDBM_WRCREAT, 0640;
 			$hash{$key} = encode_json(\%value);
+			untie(%hash);
+			if (index($File::Find::name, 'Amaama to Inazuma') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:amaama_to_inazuma' => 1});
 			}
-		},$directory);
-	untie(%hash);
+			if (index($File::Find::name, 'Amanchi') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:amanchu' => 1});
+			}
+			if (index($File::Find::name, 'Angel Beats') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:angel_beats' => 1});
+			}
+			if (index($File::Find::name, 'Anitore') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:anitore' => 1});
+			}
+			if (index($File::Find::name, 'Ano Natsu de Matteru') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:ano_natsu_de_matteru' => 1});
+			}
+			if (index($File::Find::name, 'Aria') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:aria' => 1});
+			}
+			if (index($File::Find::name, 'Bakemonogatari') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:monogatari' => 1});
+			}
+			if (index($File::Find::name, 'Bakuon!!') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:bakuon' => 1});
+			}
+			if (index($File::Find::name, 'Dagashi Kashi') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:dagashi_kashi' => 1});
+			}
+			if (index($File::Find::name, 'Evangelion') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:neon_genesis_evangelion' => 1});
+			}
+			if (index($File::Find::name, 'Fate') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:fate' => 1});
+			}
+			if (index($File::Find::name, 'Girlish Number') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:girlish_number' => 1});
+			}
+			if (index($File::Find::name, 'GochiUsa') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:gochuumon_wa_usagi_desu_ka' => 1});
+			}
+			if (index($File::Find::name, 'Haifuri') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:high_school_fleet' => 1});
+			}
+			if (index($File::Find::name, 'Haruhi') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:suzumiya_haruhi_no_yuuutsu' => 1});
+			}
+			if (index($File::Find::name, 'Hibike') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:hibike_euphonium' => 1});
+			}
+			if (index($File::Find::name, 'Hidamari Sketch') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:hidamari_sketch' => 1});
+			}
+			if (index($File::Find::name, 'Ika Musume') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:ika_musume' => 1});
+			}
+			if (index($File::Find::name, 'im@s') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:idolmaster' => 1});
+			}
+			if (index($File::Find::name, 'Initial D') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:initial_d' => 1});
+			}
+			if (index($File::Find::name, 'Kantai Collection') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:kantai_collection' => 1});
+			}
+			if (index($File::Find::name, 'Katawa Shoujo') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:katawa_shoujo' => 1});
+			}
+			if (index($File::Find::name, 'Kill la Kill') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:kill_la_kill' => 1});
+			}
+			if (index($File::Find::name, 'K-On') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:k-on' => 1});
+			}
+			if (index($File::Find::name, 'Konosuba') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:kono_subarashii_sekai_ni_shukufuku_wo' => 1});
+			}
+			if (index($File::Find::name, 'Kuma Miko') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:kuma_miko' => 1});
+			}
+			if (index($File::Find::name, 'Lain') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:serial_experiemnts_lain' => 1});
+			}
+			if (index($File::Find::name, 'Love Live!') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:love_live' => 1});
+			}
+			if (index($File::Find::name, 'Magica') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:puella_magi_madoka_magica' => 1});
+			}
+			if (index($File::Find::name, 'ME') != -1) {
+				bmfft_addtags($dbfile, $key, {'windows_me' => 1});
+			}
+			if (index($File::Find::name, 'Musigen no Phantom World') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:musaigen_no_phantom_world' => 1});
+			}
+			if (index($File::Find::name, 'New Game') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:new_game' => 1});
+			}
+			if (index($File::Find::name, 'Nichijou') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:nichijou' => 1});
+			}
+			if (index($File::Find::name, 'Nonon') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:non_non_biyori' => 1});
+			}
+			if (index($File::Find::name, 'Ojisan') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:ojisan_to_marshmallow' => 1});
+			}
+			if (index($File::Find::name, 'Pan de Peace') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:pan_de_peace' => 1});
+			}
+			if (index($File::Find::name, 'Panzer') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:girls_und_panzer' => 1});
+			}
+			if (index($File::Find::name, 'rezero') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:re:zero' => 1});
+			}
+			if (index($File::Find::name, 'Rolling Girls') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:rolling_girls' => 1});
+			}
+			if (index($File::Find::name, 'Sailor Moon') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:sailor_moon' => 1});
+			}
+			if (index($File::Find::name, 'Sakamoto') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:sakamoto_desu_ga' => 1});
+			}
+			if (index($File::Find::name, 'Shelter') != -1) {
+				bmfft_addtags($dbfile, $key, {'porter_robinson' => 1});
+			}
+			if (index($File::Find::name, 'Tamako') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:tamako_market' => 1});
+			}
+			if (index($File::Find::name, 'Tanaka') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:tanaka-kun_wa_itsumo_kedaruge' => 1});
+			}
+			if (index($File::Find::name, 'touhou') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:touhou' => 1});
+			}
+			if (index($File::Find::name, 'Umaru') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:himouto!_umaru_chan' => 1});
+			}
+			if (index($File::Find::name, 'Vocaloid') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:vocaloid' => 1});
+			}
+			if (index($File::Find::name, 'Yama no Susume') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:yama_no_susume' => 1});
+			}
+			if (index($File::Find::name, 'Yuyushiki') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:yuyushiki' => 1});
+			}
+			if (index($File::Find::name, 'Yuyuyu') != -1) {
+				bmfft_addtags($dbfile, $key, {'series:yuuki_yuuna_wa_yuusha_de_aru' => 1});
+			}
+		}
+	},$directory);
+
 }
 # IN
 #	@_ = (TAG_TO_SEARCH_FOR)
@@ -92,26 +241,25 @@ sub bmfft_gettags
 sub bmfft_addtags
 {
 	my $tagfile = shift or die;
-	my $hash = shift or die;
+	my $key = shift or die;
 	my $newtags = shift or die;
 
 	my %tags;
-	my $dbh = new BerkeleyDB::Btree(
-		-Filename => $tagfile,
-		-Flags => DB_CREATE
-	) or die;
-	my $val;
-	$dbh->db_get($hash, $val);
-	die if !defined $val;
-	$val = decode_json($val);
-	$a = $val->{'tags'};
+	my %hash;
+	tie %hash, 'GDBM_File', $tagfile, &GDBM_WRCREAT, 0640;
+
+	my $value = $hash{$key};
+	die if !defined $value;
+	$value = decode_json($value);
+	$a = $value->{'tags'};
 	%tags = %$newtags;
 	if ($a) {
 		%tags = (%$newtags, %$a);
 	}
-	$val->{'tags'} = \%tags;
+	$value->{'tags'} = \%tags;
 	
-	$val = encode_json($val);
-	$dbh->db_put($hash, $val);
+	$value = encode_json($value);
+	$hash{$key} = $value;
+	untie(%hash);
 }
 1;
