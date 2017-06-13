@@ -4,12 +4,12 @@ include "../includes/core.php";
 #if (CONFIG_REQUIRE_AUTHENTICATION)
 #        include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
+
 if (!isset($_GET['q']))
 	die();
-$q = $_GET['q'];
 // Split the query into search tags
+$q = $_GET['q'];
 $q = explode(' ', $q);
-
 ?>
 <html>
 <head>
@@ -39,15 +39,20 @@ $q = explode(' ', $q);
 	</div>
 	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
 	<?php
+	// Choose the page that is displayed
 	$page = 0;
 	if (isset($_GET['page']))
 		$page = $_GET['page'];
 
+	// This can be improved to be a better search algorithm someday
+	// Actually this is very bad but I can't be bothered now
 	foreach ($q as $searchtag) {
 		$keys = bmfft_searchtag($searchtag);
 	}
-	$thispage = array_slice($keys, $page*10, 10);
-	foreach ($thispage as $key) {
+	// Take the current page's slice of the array to be the results
+	// And mark them up nicely
+	$results = array_slice($keys, $page*10, 10);
+	foreach ($results as $key) {
 		print '<img ';
 		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
@@ -59,6 +64,8 @@ $q = explode(' ', $q);
 	</div>
 	<div style="text-align:center;">
 	<?php
+	// This is the page nav at the bottom
+	// Can definitely be made prettier~
 	for ($i=0; $i < (count($keys)/10); $i++) {
 		print '<a ';
 		print 'href="?q='.$_GET['q'].'&page='.$i.'"';

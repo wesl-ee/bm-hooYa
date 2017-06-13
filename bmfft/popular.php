@@ -37,6 +37,7 @@ include "bmfft_db.php";
 	</div>
 	<div style="width:100%;">
 	<?php
+	// Definitely organize this into pages, like we did with browse.php
 	$heat = bmfft_tagheat();
 	arsort($heat);
 	foreach (array_keys($heat) as $tag) {

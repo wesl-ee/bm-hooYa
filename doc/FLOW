@@ -1,0 +1,151 @@
+Here's a break-down of how the site works
+
+First, it's obvious that a user may be logged in or not. Being in a state of
+having logged in is tracked by $_SESSION['id'], which is pulled in by the
+login page. This corresponds to the user's ID in the SQL table, which I
+cover momentarily.
+
+SECTION DATABASES
+Currently, I use mySQL to track logged-in user information. The table
+(currently) looks like this
+
+MariaDB [bigmike]> DESCRIBE onsen;
++--------------------------+--------------+------+-----+-------------------+----------------+
+| Field                    | Type         | Null | Key | Default           | Extra          |
++--------------------------+--------------+------+-----+-------------------+----------------+
+| id                       | int(11)      | NO   | PRI | NULL              | auto_increment |
+| username                 | varchar(20)  | YES  |     | NULL              |                |
+| password                 | varchar(128) | YES  |     | NULL              |                |
+| signup_date              | datetime     | YES  |     | CURRENT_TIMESTAMP |                |
+| last_login               | datetime     | YES  |     | CURRENT_TIMESTAMP |                |
+| locked                   | char(1)      | YES  |     | n                 |                |
+| failed_logins            | int(11)      | YES  |     | 0                 |                |
+| pref_css                 | varchar(64)  | YES  |     | original          |                |
+| domain                   | varchar(40)  | YES  |     | bigmike.sne.jp    |                |
+| tags_added               | int(11)      | YES  |     | 0                 |                |
++--------------------------+--------------+------+-----+-------------------+----------------+
+I will describe each field briefly:
+id
+	A user's ID. Kind of arbitrary, but you only have one if you're
+	online, so I store it in $_SESSION to keep track of that
+username
+	max-length 20 character handle
+password
+	SHA512-CRYPT+HASH formatted password. Can be generated using
+	generate_passwd.php or using the *nix mkpasswd utility by the
+	following:
+	> mkpasswd -m sha512 USER_PASSWORD
+	SHA512-CRYPT+HASH passwords are always stored like
+	$6$(USER_SALT)$(sha512hash(USER_PASSWORD+USER_SALT))
+	and USER_PASSWORD is never stored plain-text
+signup_date
+	This has no use other than bragging rights
+last_login
+	Not a very useful field but just read back to the user on log-in
+locked
+	If set to anything other than 'n', the user will not be able to log
+	in. However if the user is already logged in. . .
+failed_logins
+	Tracks failed login attempts, resets on success
+pref_css
+	Holds a user's preferred CSS value for persistence across logouts
+domain
+	Currently a feature for the e-mail server I host on the same domain.
+	This _can_ be omitted if you have no e-mail server, but it is
+	referenced in users.php so do not forget to change that. But why
+	wouldn't you want to run a mail-server when our password scheme
+	integrates so nicely w/ Postfix (indeed, this is why I used the
+	current scheme)
+tags_added
+	high-score for tagging files, intended to create a friendly
+	competition among users that want to see the site succeed.
+
+SECTION FILESHARING
+
+The original intent of bigmike's fancy file distribution was only to
+distribute anime in a way that avoided using a Samba share with OpenVPN keys,
+obviously bmffd has grown to so much more. However, the ability to share
+files is still central to the whole idea.
+
+There are (2) projects on-going in bmfft focused on sharing files.
+Historicaly, the first was the filemanager (named at the time as 'bmffd'
+however that's now the project name). The filemanager simply traversed a
+folder titled 'share/' in the bmffd root, and served files from there for
+download. Eventually, a gallery was added s.t. videos and pictures were easy
+to scroll through.
+
+SUBSECTION hooYa!
+
+The second and most recent and exciting project to come up is hooYa! (internally bmfft,
+or big mike's fancy file tagger). bmfft uses tags to index files on the
+localhost, and makes no allusion to their directory structure except when
+serving files to download. Users can search, add, and edit tags for files
+indexed by bmfft. The bmfft backend is serviced by a GNU Database Manager (gdbm)
+file, which is a key->value DB. The key is the file's MD5sum, while the
+value is a JSON-encoded hash of information. Some neat fields are listed
+here, but any more may be added with little penalty to existing structure:
+
+$key->$value{'path'}
+	Full path to the file whose hash is $key. This means that when you
+	move files around, you need to update the database. This is not a
+	feature yet but will appear in due-time.
+$key->$value{'tags'}
+	Hash of tags associated w/ $key. An example looks like
+		(
+		'series:puella_magi_madoka_magica' => 1,
+		'character:akemi_homura' => 1
+		);
+	This could be an array for simplicity, but the hash makes lookups so
+	much faster.
+$key->$value{'lewd'}
+	Not-yet-implemented boolean value
+$key->$value{'size'}
+	Size in bytes of the file
+$key->$value{'name'}
+	Probably redundant field when path could simply be queried but w/e
+
+bmfft can be initialized by running the bmfft Perl utility, which is the
+only way to generate and update the DB as of currently.
+
+SECTION MESSAGE PILE
+
+A little place for users to submit bugs. Sort of a rushed development, but
+uses a SQL table message_pile to hold messages
+
+MariaDB [bigmike]> describe message_pile;
++-----------+---------------+------+-----+-------------------+----------------+
+| Field     | Type          | Null | Key | Default           | Extra          |
++-----------+---------------+------+-----+-------------------+----------------+
+| id        | int(11)       | NO   | PRI | NULL              | auto_increment |
+| timestamp | datetime      | YES  |     | CURRENT_TIMESTAMP |                |
+| username  | varchar(20)   | YES  |     | NULL              |                |
+| head      | varchar(50)   | YES  |     | Untitled          |                |
+| body      | varchar(1000) | YES  |     | NULL              |                |
+| resolved  | char(1)       | YES  |     | n                 |                |
++-----------+---------------+------+-----+-------------------+----------------+
+All fields are pretty self-explanatory. resolved is set to 'y' when the
+issue should be marked as not-an-issue-anymore. Currently the only way to do
+that is through the database, but soon we will have access controls on the
+site so it could be managed there.
+
+SECTION USER CSS
+User customization is a big part of bmffd. As mentioned earlier in DATABASES,
+pref_css in the SQL table holds the users preferred css, which can be
+changed anytime in user_preferences.php.
+
+If you want to install a new CSS, find a mascot (preferably a transparent render)
+and draft a .css file based on an existing CSS. Then create another block in
+the includes/head.php switch statement to define your $_SESSION['session'],
+$_SESSION['stylesheet'], and $_SESSION['motd'], it's that simple!
+
+SECTION ONE-TIME ACCOUNT CREATION
+
+Running ./otp outputs a list of 100 one-time passwords that can be used
+against the generated otp-challenge file. Save the stdout, it cannot be
+recovered if you lose it! And if you do, simply run ./otp again. The
+one-time password works on a hash-chain. Essentially, the program generates
+the 100th hash in the chain, then asks the user for the 99th hash, which
+would be hard to brute-force on its own. If the user-provided 99th hash can
+be hashed to yield the 100th hash, the user is allowed to create an account
+and the server then stores the 99th hash as its one-time password challenge.
+Pretty neat stuff!

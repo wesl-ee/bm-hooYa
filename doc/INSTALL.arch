@@ -86,7 +86,8 @@ ARCH LINUX INSTALL INSTRUCTIONS
 		last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
 		locked CHAR(1) 'n',
 		failed_logins INT(11) DEFAULT 0,
-		pref_css VARCHAR(64) DEFAULT 'default');
+		pref_css VARCHAR(64) DEFAULT 'default',
+		tags_added INT(11) DEFAULT 0);
 	# A wall for users to report bugs
 	> CREATE TABLE message_pile (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -1,17 +1,21 @@
 <!DOCTYPE HTML>
 <?php
 include "../includes/core.php";
-#if (CONFIG_REQUIRE_AUTHENTICATION)
-#        include CONFIG_ROOT_PATH."includes/auth.php";
+//if (CONFIG_REQUIRE_AUTHENTICATION)
+//        include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
 
 if (!isset($_GET['key']))
 	die();
+// Submitting new tags gets done here, but maybe it would
+// better be held on the new page that will keep our AJAX
+// processing as well?
 $key = rawurldecode($_GET['key']);
 if (isset($_POST['tags'])) {
 	$tags = explode(" ", $_POST['tags']);
+	// array_filter out empty tags
 	$tags = array_filter($tags);
-	if (isset($_SESSION['username'])) {
+	if (isset($_SESSION['id'])) {
 		$mysql_hostname = CONFIG_DB_SERVER;
 		$mysql_username = CONFIG_DB_USERNAME;
 		$mysql_password = CONFIG_DB_PASSWORD;
@@ -19,10 +23,14 @@ if (isset($_POST['tags'])) {
 		$mysql_table = CONFIG_DB_TABLE;
 		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 		$new_tags =  count($tags) - count(bmfft_getattr($key, 'tags'));
+		// Keep a high-score count for every logged-in user!
 		$cmd = 'UPDATE `'. $mysql_table .'` SET `tags_added` = `tags_added` + ' . $new_tags . ' WHERE `username`="' . $_SESSION['username'] . '"';
 		$conn->query($cmd);
 	}
+	// Submit changes to the DB and keep logs in any case
+	lwrite(CONFIG_ACCESS_LOG, 'Added tags '.$tags.' from '.$_SERVER['REMOTE_ADDR'].' '.$_SESSION['username']);
 	bmfft_settags($key, $tags);
+	// Quick js to close the new window
 	echo '<script>window.close()</script>';
 	die();
 }

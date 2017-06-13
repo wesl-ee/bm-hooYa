@@ -38,7 +38,7 @@ include "bmfft_db.php";
 		<input type="submit" style="margin:auto;display:block;margin-bottom:10px;" value="いこう！"></input>
 	</form>
 <!--	Yeah maybe when I add 'size' and 'files' entries to the DB so I
-don't need to query it every fucking time I can uncomment this, but otherwise
+don't need to query it every fucking time I can stop using this,
 it's a waste of everyone's time-->
 	<div style="width:100%;text-align:center;">
 		<?php print("now serving ");

@@ -4,6 +4,9 @@ function add_tags(key)
 	var d = w.document;
 	var xhttp = new XMLHttpRequest();
 	var existing_tags;
+	// Rudimentary AJAX for getting existing tags
+	// Eventually we will have a suggestion function which reacts on-input
+	// and brings tags as you type, to make it easier on people who tag!
 	xhttp.open("GET", "bmfft_db.php?key="+encodeURIComponent(key)+"&tags", true);
         xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -14,12 +17,15 @@ function add_tags(key)
 			d.getElementById('tags').selectionStart = d.getElementById('tags').selectionEnd = d.getElementById('tags').value.length;
 		}
 		else {
+			d.getElementById('tags').focus();
 			d.getElementById('header').innerHTML = '<h1>Wow!</h1>You can be the first one to tag ' + key + '!';
 		}
 		}
 	};
 	xhttp.send();
 
+	// I read this style in a 1998 javascript book so please mail me
+	// if there is a better way to mark this up~
 	d.write('<html>');
 	d.write('<head>');
 	d.write('</head>');
@@ -48,6 +54,7 @@ function view_tags(key)
 	var w = window.open("", "viewing tags for file", "resizable,status,width=625,height=400");
 	var d = w.document;
 	var xhttp = new XMLHttpRequest();
+	// More rudimentary AJAX communication w/ the site
 	xhttp.open("GET", "bmfft_db.php?key="+encodeURIComponent(key)+"&tags", true);
         xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -63,7 +70,9 @@ function view_tags(key)
 		}
 	};
 	xhttp.send();
-
+	// I want some way to include the user's style in this. . . so
+	// maybe I will just write another page and fill it in with
+	// the AJAX data
 	d.write('<html>');
 	d.write('<head>');
 	d.write('</head>');
