@@ -1,5 +1,6 @@
 <?php
-define("CONFIG_TAG_DB", "/var/http/bmffd/bmfft/tags.db");
+
+# AJAX handler goes here because I haven't set aside a file to do that yet
 if (isset($_GET['key']) && isset($_GET['tags'])) {
 	foreach (bmfft_getattr($_GET['key'], 'tags') as $key => $value) {
 		$tags[] = $key;
@@ -7,6 +8,9 @@ if (isset($_GET['key']) && isset($_GET['tags'])) {
 	print json_encode($tags);
 	return;
 }
+
+# Passed a tag, search the database for all MD5sums associated
+# with that tag
 function bmfft_searchtag($tag)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
@@ -25,6 +29,9 @@ function bmfft_searchtag($tag)
 	dba_close($dbh);
 	return $results;
 }
+# Passed an MD5sum, return all its tags
+# This function is just pretty convenient and can be
+# removed someday
 function bmfft_gettags($key)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
@@ -32,14 +39,19 @@ function bmfft_gettags($key)
 	dba_close($dbh);
 	return json_decode($value)['tags'];
 }
+# Passed an MD5sum and some tags in an array, create the tagging hash
+# So if you're passed ('ass') this function constructs ('ass' => 1)
+# and sets that as the tag component of the value in the key->value db
+# This makes searching tags for a given file super-fast!
 function bmfft_settags($key, $tags)
 {
 	foreach ($tags as $tag) {
 		$hash_tags[$tag] = 1;
 	}
-//	$value['tags'] = $tags;
 	bmfft_setattr($key, 'tags', $hash_tags);
 }
+# Just a neat function for fun, spits out $count hashes
+# from a random part of the database
 function bmfft_getrandom($count)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
@@ -55,6 +67,8 @@ function bmfft_getrandom($count)
 	dba_close($dbh);
 	return $hashes;
 }
+# Returns the value associated with an attribute that's
+# part of a given item in the database
 function bmfft_getattr($key, $attr)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
@@ -63,6 +77,8 @@ function bmfft_getattr($key, $attr)
 	dba_close($dbh);
 	return $value[$attr];
 }
+# Sets an attribute in the database given its MD5sum, the attribute
+# name, and w/e data we want to associate with that attribute
 function bmfft_setattr($key, $attr, $data)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'wd', 'gdbm');
@@ -74,17 +90,15 @@ function bmfft_setattr($key, $attr, $data)
 	dba_sync($dbh);
 	dba_close($dbh);
 }
+# Simple function to get the name of an item. Currently just
+# returns the filename as it was picked up by the Perl script
+# on initialization
 function bmfft_name($key)
 {
 	return basename(bmfft_getattr($key, 'path'));
 }
-function bmfft_exists($key)
-{
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
-	$e = dba_exists($key, $dbh);
-	dba_close($dbh);
-	return $e;
-}
+# Returns some info about the database (this will later be stored
+# inside the DB so it needn't be calculated everytime
 function bmfft_info()
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
@@ -100,6 +114,7 @@ function bmfft_info()
 		'files' => $i,
 	);
 }
+# Returns an unsorted association of tags->tag_counts
 function bmfft_tagheat()
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');

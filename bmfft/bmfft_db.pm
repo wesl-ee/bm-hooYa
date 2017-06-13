@@ -35,7 +35,8 @@ sub bmfft_update_db
 				my $json = $hash{$key};
 				my $path = decode_json($json)->{'path'};
 				if ($File::Find::name ne $path) {
-#					print "Not adding ".$File::Find::name." as it's a duplicate of $path,\n";
+				# If you want to delete double-files, do that
+				# here
 					return;
 				}
 				else { return }
@@ -50,6 +51,7 @@ sub bmfft_update_db
 			tie %hash, 'GDBM_File', $dbfile, &GDBM_WRCREAT, 0640;
 			$hash{$key} = encode_json(\%value);
 			untie(%hash);
+			# Quick way to tag all my pictures on the initial run, left for legacy
 			if (index($File::Find::name, 'Amaama to Inazuma') != -1) {
 				bmfft_addtags($dbfile, $key, {'series:amaama_to_inazuma' => 1});
 			}
@@ -204,6 +206,7 @@ sub bmfft_update_db
 	},$directory);
 
 }
+# THESE FUNCTIONS MAY OR MAY NOT WORK AS IS, USE AT OWN PERIL
 # IN
 #	@_ = (TAG_TO_SEARCH_FOR)
 # OUT
