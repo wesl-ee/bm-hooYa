@@ -88,12 +88,12 @@ a:hover {
         -ms-filter:     grayscale(0%);
         -o-filter:      grayscale(0%);
 }
-#title {
+#title, #header {
 	height: 10%;
+	max-height:10%;
 	overflow: hidden;
-}
-#header {
-	height:10%;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 }
 .gallery {
 	max-height: 80%;

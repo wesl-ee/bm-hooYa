@@ -32,8 +32,8 @@ include "bmfft_db.php";
 		<div style="width:100%;float:left;"><a href=".">back to search</a></div>
 	</div>
 	<div id="header" style="padding-bottom:30px;">
-		<div style="width:50%;float:left;text-align:right;font-weight:bold;">tag</div>
-		<div style="width:50%;float:left;text-align:center;font-weight:bold;">count</div>
+		<div style="width:80%;float:left;text-align:right;font-weight:bold;">tag</div>
+		<div style="width:20%;float:left;text-align:center;font-weight:bold;">count</div>
 	</div>
 	<div style="width:100%;display:table;">
 	<?php
@@ -42,10 +42,10 @@ include "bmfft_db.php";
 	arsort($heat);
 	foreach (array_keys($heat) as $tag) {
 		print '<div style="display:table-row;overflow-auto;">';
-		print '<div style="width:50%;float:left;text-align:right;display:table-cell;"><a href="browse.php?q='.rawurlencode($tag).'">';
+		print '<div style="width:80%;float:left;text-align:right;display:table-cell;text-overflow:ellipsis;overflow:hidden;"><a href="browse.php?q='.rawurlencode($tag).'">';
 		print $tag;
 		print '</a></div>';
-		print '<div style="width:50%;float:left;text-align:center;display:table-cell;">&nbsp';
+		print '<div style="width:20%;float:left;text-align:center;display:table-cell;text-overflow:ellipsis;overflow:hidden;">&nbsp';
 		print $heat[$tag];
 		print '</div>';
 		print '</div>';

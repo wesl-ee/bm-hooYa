@@ -93,14 +93,12 @@ a:hover {
 	max-height: 80%;
 	display: block;
 }
-#title {
+#title, #header {
 	height: 10%;
-	max-height: 10%;
-}
-#header {
-	height: 10%;
-	max-height: 10%;
+	max-height:10%;
 	overflow: hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 }
 .gallery {
 	max-height: 80%;
