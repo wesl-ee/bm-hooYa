@@ -7,7 +7,7 @@ if (!isset($_GET['key']))
 	die();
 $key = rawurldecode($_GET['key']);
 $content_type = $_GET['t'];
-$file_type = bmfft_getattr($key, 'filetype');
+$ftype = bmfft_getfiletype($key);
 
 // TODO: Deny access if $file is not in the db
 // TODO: Detect file type (e.g. audio, image) using the db
@@ -22,10 +22,6 @@ $file_type = bmfft_getattr($key, 'filetype');
  */
 if (($file = bmfft_getattr($key, 'path')) === false)
 	$file = dirname(__FILE__).'404.jpg';
-// This is the weirdest error but sometimes mime_content_type returns
-// null for me even on real files
-if (mime_content_type($file) === false)
-	$file = dirname(__FILE__).'/404.jpg';
 
 switch($content_type) {
 case 'audio':
@@ -35,11 +31,11 @@ case 'video':
 	$file = dirname(__FILE__).'/404.jpg';
 	break;
 case 'img':
-	if (!isAPicturefile(bmfft_name($key))) {
+	if ($ftype !== 'image') {
 		$file = dirname(__FILE__).'/404.jpg';
 	}
-	break;
 }
+
 header('Content-Type:'.mime_content_type($file));
 header('Content-Disposition: attachment; filename="' . basename($file) . '"');
 header('X-Sendfile: '.$file);

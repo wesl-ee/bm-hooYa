@@ -15,20 +15,22 @@ if (isset($_POST['tags'])) {
 	$tags = explode(" ", $_POST['tags']);
 	// array_filter out empty tags
 	$tags = array_filter($tags);
-	if (isset($_SESSION['id'])) {
+	$new_tags =  count($tags) - count(bmfft_getattr($key, 'tags'));
+	if (isset($_SESSION['user_id'])) {
 		$mysql_hostname = CONFIG_DB_SERVER;
 		$mysql_username = CONFIG_DB_USERNAME;
 		$mysql_password = CONFIG_DB_PASSWORD;
 		$mysql_dbname = CONFIG_DB_DATABASE;
 		$mysql_table = CONFIG_DB_TABLE;
 		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
-		$new_tags =  count($tags) - count(bmfft_getattr($key, 'tags'));
 		// Keep a high-score count for every logged-in user!
 		$cmd = 'UPDATE `'. $mysql_table .'` SET `tags_added` = `tags_added` + ' . $new_tags . ' WHERE `username`="' . $_SESSION['username'] . '"';
 		$conn->query($cmd);
 	}
 	// Submit changes to the DB and keep logs in any case
-	lwrite(CONFIG_ACCESS_LOG, 'Added tags '.$tags.' from '.$_SERVER['REMOTE_ADDR'].' '.$_SESSION['username']);
+	if ($new_tags > 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' added tags from '.$_SERVER['REMOTE_ADDR']);
+	elseif ($new_tags < 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' removed tags from '.$_SERVER['REMOTE_ADDR']);
+
 	bmfft_settags($key, $tags);
 	// Quick js to close the new window
 	echo '<script>window.close()</script>';
@@ -70,10 +72,26 @@ if (isset($_POST['tags'])) {
 	</div>
 	<div class="gallery" style="height:80%;">
 	<?php
+		// Vary the output based on the filetype, how smart!
+		$ftype = bmfft_getfiletype($key);
+		if ($ftype == 'image') {
 		print '<img onClick="add_tags(\''.$key.'\')" ';
 		print 'src="download.php?key='.rawurlencode($key).'"';
 		print 'style="max-height:100%;">';
 		print '&nbsp</img>';
+		}
+		elseif ($ftype == 'video') {
+		print '<video onClick="add_tags(\''.$key.'\')" ';
+		print 'style="max-height:100%;" autoplay loop controls>';
+		print '<source src="download.php?key='.rawurlencode($key).'" ';
+		print 'type="'.bmfft_getattr($key, 'mimetype').'"';
+		print '</source>';
+		print 'Your browser cannot play this video~';
+		print '</video>';
+		}
+		else {
+		print '<img src="404.jpg" style="max-height:100%;">';
+		}
 	?>
 	</div>
 </div>

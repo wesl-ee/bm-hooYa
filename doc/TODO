@@ -1,5 +1,6 @@
 things to do
 
-- custom video player controls using javascript
-- custom audio player controls using javascript
-- develop some client-side code to read a txt file from the server
+- custom video player controls
+- custom audio player controls
+- write DB locking into the Perl script
+- levenshtein fuzzy searching

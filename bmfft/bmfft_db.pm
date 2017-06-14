@@ -10,6 +10,7 @@ use Data::Dumper;
 #use DBI;
 use JSON::XS;
 use File::Find;
+use File::MimeInfo 'mimetype';
 #use Getopt::Std;
 use Digest::MD5::File qw /file_md5_base64/;
 $VERSION     = 1.00;
@@ -29,26 +30,32 @@ sub bmfft_update_db
 		if (-f) {
 			tie %hash, 'GDBM_File', $dbfile, &GDBM_WRCREAT, 0640;
 			my $key = file_md5_base64($File::Find::name);
-			untie(%hash);
-			
+			my %value;
 			if ($hash{$key}) {
-				my $json = $hash{$key};
-				my $path = decode_json($json)->{'path'};
-				if ($File::Find::name ne $path) {
+				%value = %{decode_json($hash{$key})};
+			}
+			$value{'name'} = $_;
+			$value{'path'} = $File::Find::name;
+			$value{'size'} = -s $File::Find::name;
+			$value{'mimetype'} = mimetype($File::Find::name);
+
+#			if ($hash{$key}) {
+#				my $json = $hash{$key};
+#				my $path = decode_json($json)->{'path'};
+#				if (decode_json($hash{$key})->{'tags'}) {
+#					%value = ( tags => decode_json($hash{$key})->{'tags'} );
+#				}
+#				if ($File::Find::name ne $path) {
 				# If you want to delete double-files, do that
 				# here
-					return;
-				}
-				else { return }
-			}
-			my %value = (
-				name => $_,
-				path => $File::Find::name,
-				size => -s $File::Find::name
-			);
+#					return;
+#				}
+#				else { return }
+#			}
+
+
 
 			my $json = encode_json(\%value);
-			tie %hash, 'GDBM_File', $dbfile, &GDBM_WRCREAT, 0640;
 			$hash{$key} = encode_json(\%value);
 			untie(%hash);
 			# Quick way to tag all my pictures on the initial run, left for legacy

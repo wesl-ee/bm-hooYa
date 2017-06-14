@@ -127,4 +127,8 @@ function bmfft_tagheat()
 	}
 	return $heat;
 }
+function bmfft_getfiletype($key)
+{
+	return explode('/', bmfft_getattr($key, 'mimetype'))[0];
+}
 ?>

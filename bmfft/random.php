@@ -30,6 +30,8 @@ include "bmfft_db.php";
 	<div id="title"><h1>random ten</h1></div>
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
+		<div style="width:33%;float:left;">&nbsp</div>
+		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="location.reload()">more!</a></div>
 	</div>
 	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
 	<?php

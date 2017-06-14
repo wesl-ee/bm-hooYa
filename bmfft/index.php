@@ -34,7 +34,7 @@ include "bmfft_db.php";
 	</div>
 	<div style="width:100%;"><img src="hooya.png" style="width:30%;margin:auto;display:block;"></img></div>
 	<form style="width:100%;" action="browse.php" method="get" >
-		<input type="text" style="width:50%;display:block;margin:auto;margin-bottom:10px;" name="q"></input>
+		<input type="text" style="width:50%;display:block;margin:auto;margin-bottom:10px;" name="q" placeholder="character:devil_homura"></input>
 		<input type="submit" style="margin:auto;display:block;margin-bottom:10px;" value="いこう！"></input>
 	</form>
 <!--	Yeah maybe when I add 'size' and 'files' entries to the DB so I
