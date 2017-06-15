@@ -3,6 +3,7 @@ body {
 	color: #FFF18B;
 }
 #logout, #galleryFrame, #right_frame {
+	border: 1px solid black;
 	background-color: #FFF18B;
 	color: #3E3F40;
 }
@@ -11,11 +12,11 @@ body {
 }
 
 @font-face {
-	font-family: Proggy;
-	src: url('/css/bmffd/ProggySquare.ttf');
+	font-family: MPlus;
+	src: url('/bmffd/css/JF-Dot-MPlusS10.ttf');
 }
 body {
-	font-family: Proggy;
+	font-family: MPlus;
 	background-image: url("/css/wutang.png");
 	background-repeat:no-repeat;
 	background-position: center;
@@ -24,10 +25,9 @@ body {
 }
 a {
 	cursor: pointer;
-	color: #0c2a66;
+	color: inherit;
 }
 body {
-	font-family: 'MS PGothic';
 	font-size: 16px;
 }
 .fileList {

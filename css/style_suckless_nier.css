@@ -3,6 +3,7 @@ body {
 	color: #454138;
 }
 #logout, #galleryFrame, #right_frame {
+	border: 1px solid black;
 	background-color: #bab5a1;
 	color: #454138;
 }

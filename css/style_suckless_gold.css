@@ -4,6 +4,7 @@ body {
 }
 #logout, #galleryFrame, #right_frame {
 	background-color: #FEFFDD;
+	border: 1px solid black;
 	color: #3E3F40;
 }
 body {

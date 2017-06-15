@@ -32,7 +32,14 @@ include "bmfft_db.php";
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="window.open('m.php')">browsing music</a></div>
 	</div>
-	<div style="width:100%;"><img src="hooya.png" style="width:30%;margin:auto;display:block;"></img></div>
+	<div style="width:100%;padding-bottom:20px;text-align:center;">
+		<span style="color:#4c90f6;font-size:500%;">h</span>
+		<span style="color:#ed4d3c;font-size:500%;">o</span>
+		<span style="color:#fbc403;font-size:500%;">o</span>
+		<span style="color:#4c90f6;font-size:500%;">y</span>
+		<span style="color:#3bb15d;font-size:500%;">a</span>
+		<span style="color:#ed4d3c;font-size:500%;">!</span>
+	</div>
 	<form style="width:100%;" action="browse.php" method="get" >
 		<input type="text" style="width:50%;display:block;margin:auto;margin-bottom:10px;" name="q" placeholder="character:devil_homura"></input>
 		<input type="submit" style="margin:auto;display:block;margin-bottom:10px;" value="いこう！"></input>

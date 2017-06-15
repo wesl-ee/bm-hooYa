@@ -138,7 +138,7 @@ sub bmfft_update_db
 				bmfft_addtags($dbfile, $key, {'series:kuma_miko' => 1});
 			}
 			if (index($File::Find::name, 'Lain') != -1) {
-				bmfft_addtags($dbfile, $key, {'series:serial_experiemnts_lain' => 1});
+				bmfft_addtags($dbfile, $key, {'series:serial_experiments_lain' => 1});
 			}
 			if (index($File::Find::name, 'Love Live!') != -1) {
 				bmfft_addtags($dbfile, $key, {'series:love_live' => 1});

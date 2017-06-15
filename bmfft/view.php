@@ -75,19 +75,20 @@ if (isset($_POST['tags'])) {
 		// Vary the output based on the filetype, how smart!
 		$ftype = bmfft_getfiletype($key);
 		if ($ftype == 'image') {
-		print '<img onClick="add_tags(\''.$key.'\')" ';
+		print '<img id="content" onClick="add_tags(\''.$key.'\')" ';
 		print 'src="download.php?key='.rawurlencode($key).'"';
 		print 'style="max-height:100%;">';
 		print '&nbsp</img>';
 		}
 		elseif ($ftype == 'video') {
-		print '<video onClick="add_tags(\''.$key.'\')" ';
+		print '<video id="content" onClick="add_tags(\''.$key.'\')" ';
 		print 'style="max-height:100%;" autoplay loop controls>';
 		print '<source src="download.php?key='.rawurlencode($key).'" ';
 		print 'type="'.bmfft_getattr($key, 'mimetype').'"';
 		print '</source>';
 		print 'Your browser cannot play this video~';
 		print '</video>';
+		print '<script type="text/javascript">document.getElementById("content").addEventListener("click", function(event) { event.preventDefault(); });</script>"';
 		}
 		else {
 		print '<img src="404.jpg" style="max-height:100%;">';
