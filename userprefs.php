@@ -40,6 +40,7 @@ include "includes/core.php";
 		<option <?php if ($_SESSION['pref_css']=="nier") echo "selected" ?> value="nier">Nier</option>
 		<option <?php if ($_SESSION['pref_css']=="red") echo "selected" ?> value="red">Red</option>
 		<option <?php if ($_SESSION['pref_css']=="yys") echo "selected" ?> value="yys">Yuyushiki</option>
+		<option <?php if ($_SESSION['pref_css']=="worlds") echo "selected" ?> value="worlds">Worlds</option>
 		<option <?php if ($_SESSION['pref_css']=="wu_tang") echo "selected" ?> value="wu_tang">Wu-tang</option>
 		</select>
 	</div>

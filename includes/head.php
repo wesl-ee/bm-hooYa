@@ -40,11 +40,13 @@ switch($_SESSION['pref_css']) {
 		$_SESSION['motd']="よぉ";
 		break;
 	case "none":
+
+	case "worlds":
 	default:
-		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";
-		$_SESSION['mascot']="";
-		$_SESSION['curr_css']="none";
-		$_SESSION['motd']="よぉ";
+		$_SESSION['mascot']=CONFIG_DOCUMENT_ROOT_PATH."img/hand.png";
+		$_SESSION['curr_css']="yys";
+		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_worlds.css";
+		$_SESSION['motd']="we'll see creation come undone";
 		break;
 }
 $_SESSION['last_activity'] = new DateTime();
