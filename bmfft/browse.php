@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <?php
 include "../includes/core.php";
-#if (CONFIG_REQUIRE_AUTHENTICATION)
-#        include CONFIG_ROOT_PATH."includes/auth.php";
+if (CONFIG_REQUIRE_AUTHENTICATION)
+        include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
 
 if (!isset($_GET['q']))
@@ -56,7 +56,14 @@ $q = explode(' ', $q);
 		print '<img ';
 		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
-		print 'src="download.php?key='.rawurlencode($key).'&t=img"';
+		if (bmfft_getfiletype($key) =='video') {
+			if (!file_exists('th/'.bin2hex(base64_decode($key)).'.jpg'))
+				exec('ffmpegthumbnailer -i \''.bmfft_getattr($key, 'path').'\' -o th/'.bin2hex(base64_decode($key)).'.jpg');
+			print 'src="th/'.bin2hex(base64_decode($key)).'.jpg"';
+		}
+		else {
+			print 'src="download.php?key='.rawurlencode($key).'&t=img"';
+		}
 		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
 		print '&nbsp</img>';
 	}

@@ -38,7 +38,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	</div>
 	<div style="margin-bottom:30px;">
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
-		<img src="img/fire1.gif" style="height:0.5em;"></img><a href="bmfft/">hooYa</a><img src="img/fire1.gif" style="height:0.5em;"></img>
+		<a href="bmfft/">hooYa</a>
 	</div>
 
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">

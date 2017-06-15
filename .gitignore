@@ -1,6 +1,9 @@
 share/*
+bmfft/th/*
 includes/config.php
 !share/sample.png
+!bmfft/.gitignore
 log/access.log
 log/auth.log
 otp_challenge
+bmfft/tags.db

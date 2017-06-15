@@ -1,6 +1,6 @@
 <?php
 include '../includes/core.php';
-#include '../includes/auth.php';
+include '../includes/auth.php';
 include 'bmfft_db.php';
 
 if (!isset($_GET['key']))
