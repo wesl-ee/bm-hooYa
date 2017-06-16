@@ -82,18 +82,21 @@ if (isset($_POST['tags'])) {
 		}
 		elseif ($ftype == 'video') {
 		print '<video id="content" onClick="add_tags(\''.$key.'\')" ';
-		print 'style="max-height:100%;" autoplay loop controls>';
+		print 'style="max-height:90%;" autoplay loop controls>';
 		print '<source src="download.php?key='.rawurlencode($key).'" ';
 		print 'type="'.bmfft_getattr($key, 'mimetype').'"';
 		print '</source>';
 		print 'Your browser cannot play this video~';
 		print '</video>';
-		print '<script type="text/javascript">document.getElementById("content").addEventListener("click", function(event) { event.preventDefault(); });</script>"';
+		print '<script type="text/javascript">document.getElementById("content").addEventListener("click", function(event) { event.preventDefault(); });</script>';
+		print '<div><button style="height:30px;width:30px;border:none;background-size:50% 50%;background-repeat:no-repeat;background-position:center;background:url(\'../img/play.png\')";';
+		print ' id="pbutton"></button></div>';
 		}
 		else {
 		print '<img src="404.jpg" style="max-height:100%;">';
 		}
 	?>
+
 	</div>
 </div>
 </div>

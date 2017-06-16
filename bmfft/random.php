@@ -40,14 +40,7 @@ include "bmfft_db.php";
 		print '<img ';
 		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
-		if (bmfft_getfiletype($key) =='video') {
-			if (!file_exists('th/'.bin2hex(base64_decode($key)).'.jpg'))
-				exec('ffmpegthumbnailer -i \''.bmfft_getattr($key, 'path').'\' -o th/'.bin2hex(base64_decode($key)).'.jpg');
-			print 'src="th/'.bin2hex(base64_decode($key)).'.jpg"';
-		}
-		else {
-			print 'src="download.php?key='.rawurlencode($key).'&t=img"';
-		}
+		print 'src="download.php?key='.rawurlencode($key).'&t=img&thumb"';
 		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
 		print '&nbsp</img>';
 	}

@@ -32,20 +32,9 @@ include "includes/core.php";
 	<a href=".">« back</a>
 </div>
 <div style="display:table;">
-<div style="width:50%;float:left;display:table-cell;"><a href="https://bigmike.sne.jp/bmffd/filemanager.php?dir=%2FAnime%2FPuriPuri+Chii-chan%21%21/">Anime/PuriPuri Chii chan!! (weekly)</a></div>
-<div style="width:50%;float:left;display:table-cell;">06.09.2017</div>
+<div style="width:50%;float:left;display:table-cell;">Nothing added recently!</div>
+<div style="width:50%;float:left;display:table-cell;">&nbsp</div>
 
-<div style="width:50%;float:left;display:table-cell;"><a href="https://bigmike.sne.jp/bmffd/filemanager.php?dir=%2FAnime%2FAria+The+Animation+%5BBD+1080p+FLAC%5D+%5BSallySubs%5D/">Anime/Aria</a></div>
-<div style="width:50%;float:left;display:table-cell;">06.09.2017</div>
-
-<div style="width:50%;float:left;display:table-cell;"><a href="https://bigmike.sne.jp/bmffd/filemanager.php?dir=%2FAnime%2FHinako+Note/">Anime/Hinako Note (weekly)</a></div>
-<div style="width:50%;float:left;display:table-cell;">06.09.2017</div>
-
-<div style="width:50%;float:left;display:table-cell;"><a href="https://bigmike.sne.jp/bmffd/filemanager.php?dir=%2FVideo+that+isn%27t+Anime%2FYes+Man+%282008%29%2F">Movie/Yes Man (2008)</a></div>
-<div style="width:50%;float:left;display:table-cell;">06.09.2017</div>
-
-<div style="width:50%;float:left;display:table-cell;"><a href="https://bigmike.sne.jp/bmffd/filemanager.php?dir=%2FVideo+that+isn%27t+Anime%2FCrank+%282006%29+%5B1080p%5D/">Movie/Crank (2006)</a></div>
-<div style="width:50%;float:left;display:table-cell;">05.31.2017</div>
 </div>
 </div>
 </div>

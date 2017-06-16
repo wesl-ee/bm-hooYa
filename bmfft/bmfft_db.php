@@ -125,6 +125,7 @@ function bmfft_tagheat()
 		foreach($value['tags'] as $key => $value) $heat[$key]++;
 		$key = dba_nextkey($dbh);
 	}
+	dba_close($dbh);
 	return $heat;
 }
 function bmfft_getfiletype($key)
