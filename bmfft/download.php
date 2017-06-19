@@ -42,7 +42,7 @@ if (isset($_GET['thumb'])) {
 		return;
 	}
 }
-if (isset($_GET['partyhat']) {
+if (isset($_GET['partyhat'])) {
 	// Coming soon -- watch imagemagick render party hats onto thumbnails!
 }
 

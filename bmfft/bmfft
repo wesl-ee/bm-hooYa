@@ -11,13 +11,11 @@ use bmfft_db qw (&bmfft_update_db);
 # Pass the directory you want to checkout as an argument
 # Protip: must have a .tags.xml in the root of the directory
 # otherwise you must generate one using gen_xml
-my $directory = shift;
 my $tagfile = shift;
-if (!$tagfile || !$directory) {
-	print "Usage: ./bmfft (directory) (tagfile)\n";
+if (!$tagfile) {
+	print "Usage: ./bmfft (tagfile)\n";
 	exit -1;
 }
-$directory = abs_path($directory);
 $tagfile = abs_path($tagfile);
 
 # Initialize the screen
@@ -36,11 +34,8 @@ init_pair(2, COLOR_BLACK, COLOR_WHITE);
 
 # Create aa new boxed window for displaying the current
 # directory contents
-my $bwin = subwin(getmaxy()-1, getmaxx(), 1, 0);
-box($bwin, 0, 0);
-my $fwin = newwin(getmaxy()-3, getmaxx()-2, 2, 1);
-
-refresh();
+my $twin= newwin(1, getmaxx()-2, 1, 1);
+my $bwin = newwin(getmaxy()-4, getmaxx()-2, 2, 1);
 
 # Browse a bunch of items, navigating by the 'j' and 'k'
 # keys. Returns a two-element array which contains
@@ -54,14 +49,16 @@ sub browse {
 	my $page = 0;
 	my $head = shift;
 	my @listing = @_;
-	clear;
+	clear $bwin;
+	bkgd($bwin, COLOR_PAIR(0));
 	# Loop for browsing contents
 	do {
 		# Make sure that the titlebar is there
-		attron(A_REVERSE);
-		addstr(0, 0, $head);
-		attroff(A_REVERSE);
-		box($bwin, 0, 0);
+		my $message = $head." (page ".($page+1).")";
+		attron($twin, A_REVERSE);
+		addstr($twin, 0, (getmaxx($twin)-length($message))/2, $message);
+		attroff($twin, A_REVERSE);
+		refresh $twin;
 
 		# Lower boundary check
 		if ($selecteditem < 0) {
@@ -74,45 +71,45 @@ sub browse {
 
 		# Display the current directory's contents, putting a * beside
 		# the selected file
-		for my $i ($page*getmaxy($fwin)..$page*getmaxy($fwin)+getmaxy($fwin)-1) {
+		for my $i ($page*getmaxy($bwin)..$page*getmaxy($bwin)+getmaxy($bwin)-1) {
 			if ($i >= @listing) {
 				last;
 			}
 			if ($selecteditem == $i) {
-				addstr($fwin, $i%getmaxy($fwin), 0, "*");
+				addstr($bwin, $i%getmaxy($bwin), 0, "*");
 			}
-			addstr($fwin, $i%getmaxy($fwin), 2, $listing[$i]);
+			addstr($bwin, $i%getmaxy($bwin), 2, $listing[$i]);
 		}
 		# Update changes, wait for user input
-		refresh();
-		$c = getch($fwin);
+		refresh $bwin;
+		$c = getch $bwin;
 
 		# The user wants to backtrack one file
 		if ($c eq 'k') {
-			addstr($fwin, $selecteditem%getmaxy($fwin), 0, ' ');
+			addstr($bwin, $selecteditem%getmaxy($bwin), 0, ' ');
 			$selecteditem--;
 			# Should we go back one page?
-			if ($selecteditem < $page*getmaxy($fwin) && $page > 0) {
-				clear($fwin);
+			if ($selecteditem < $page*getmaxy($bwin) && $page > 0) {
+				clear $bwin;
 				$page -= 1;
 			}
 		}
 		# The user wants to advance one file
 		elsif ($c eq 'j') {
-			addstr($fwin, $selecteditem%getmaxy($fwin), 0, ' ');
+			addstr($bwin, $selecteditem%getmaxy($bwin), 0, ' ');
 			$selecteditem++;
 			# Should we advance the page?
-			if ($selecteditem > $page*getmaxy($fwin)+getmaxy($fwin)-1 && @listing > $page*getmaxy($fwin)+getmaxy($fwin)-1) {
-				clear($fwin);
+			if ($selecteditem > $page*getmaxy($bwin)+getmaxy($bwin)-1 && @listing > $page*getmaxy($bwin)+getmaxy($bwin)-1) {
+				clear $bwin;
 				$page += 1;
 			}
 		}
 		# The user wants to advance one page
 		elsif ($c eq 'J') {
 			# Only if we're not on the last page!
-			if (@listing > $page*getmaxy($fwin)+getmaxy($fwin)-1) {
-				$selecteditem += getmaxy($fwin);
-				clear($fwin);
+			if (@listing > $page*getmaxy($bwin)+getmaxy($bwin)-1) {
+				$selecteditem += getmaxy($bwin);
+				clear $bwin;
 				$page += 1;
 			}
 		}
@@ -120,21 +117,44 @@ sub browse {
 		elsif ($c eq 'K') {
 			if ($page > 0) {
 			# Only if we're not on the first page!
-				$selecteditem -= getmaxy($fwin);
-				clear($fwin);
+				$selecteditem -= getmaxy($bwin);
+				clear $bwin;
 				$page -= 1;
 			}
 		}
 		else {
+			clear $bwin; refresh $bwin;
+			clear $twin; refresh $twin;
 			return ($selecteditem, $c);
 		}
 	} while ($c);
+}
+sub choices
+{
+	my $message = shift or die;
+	my @items = @_;
+	my $win = newwin(getmaxy()-10, getmaxx()-10, 5, 5);
+	box($win, 0, 0);
+	bkgd($win, COLOR_PAIR(1));
+
+	addstr($win, 0, (getmaxx($win)-length($message))/2, $message);
+
+	for (my $i = 1; @items; $i++) {
+		my $message = shift @items;
+		addstr($win, $i+1, 2, "$i.) ".$message);
+	}
+	refresh $win;
+	my $key = getch $win;
+	clear $win;
+	bkgd($win, COLOR_PAIR(0));
+	delwin $win;
+	$key;
 }
 # Bring up the tag editing sub-window
 sub edit_tags
 {
 	# Create the dialog
-	my $tagwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+	my $tagwin = newwin(getmaxy()-20, getmaxx()-20, 10, 10);
 	# Make a cute border and bg color
 	box($tagwin, 0, 0);
 	bkgd($tagwin, COLOR_PAIR(1));
@@ -144,15 +164,15 @@ sub edit_tags
 #	addstr($tagwin, 0, (getmaxx($tagwin)-length($header))/2, $header);
 	addstr($tagwin, 2, 1, "Features coming soon!");
 	refresh($tagwin);
-	getch();
-	clear($tagwin);
+	getch $tagwin;
+	clear $tagwin;
 	delwin($tagwin);
 }
 # Display a cute alert!
 sub alert
 {
 	# Create the dialog
-	my $tagwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+	my $tagwin = newwin(getmaxy()-20, getmaxx()-20, 10, 10);
 	my $message = $_[0];
 	my $title = " ".$_[1]." ";
 	box($tagwin, 0, 0);
@@ -164,14 +184,14 @@ sub alert
 	}
 	addstr($tagwin, (getmaxy($tagwin)/2), (getmaxx($tagwin)-length($message))/2, $message);
 	refresh($tagwin);
-	getch();
-	clear($tagwin);
+	getch $tagwin;
+	clear $tagwin;
 	delwin($tagwin);
 }
 sub help_menu
 {
 	# Create the dialog
-	my $helpwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+	my $helpwin = newwin(getmaxy()-20, getmaxx()-20, 10, 10);
 	# Make a cute border and bg color
 	box($helpwin, 0, 0);
 	bkgd($helpwin, COLOR_PAIR(1));
@@ -188,31 +208,35 @@ sub help_menu
 	addstr($helpwin, 7, (getmaxx($helpwin)-length("q - quit"))/2, "q - quit");
 	addstr($helpwin, 8, (getmaxx($helpwin)-length("? - help menu"))/2, "? - help menu");
 	refresh($helpwin);
-	getch();
+	getch $helpwin;
 	# Temporary until I figure out how to cleanly restore the window
 	# underneath
-	clear;
+	clear $helpwin;
 	delwin($helpwin);
 }
-sub tag_search
+sub dialog
 {
+	my $message = shift or die;
+	addstr($bwin, getmaxy()/3-1, (getmaxx()-length($message))/2, $message);
 	my $QUERYLEN = 50;
 	my $query;
-	my $message = " bmfft search ";
-	addstr(0, (getmaxx()-length($message))/2, $message);
-	$message = "HooYa!";
-	addstr(getmaxy()/3-1, (getmaxx()-length($message))/2, $message);
-	attrset(A_REVERSE);
+	$message = " bmfft search ";
+	addstr($bwin, 0, (getmaxx()-length($message))/2, $message);
+
+	attrset($bwin, A_REVERSE);
 	foreach (getmaxx()/2-($QUERYLEN/2)..getmaxx()/2+($QUERYLEN/2)) {
-		addch(getmaxy()/3, $_, ' ');
+		addch($bwin, getmaxy()/3, $_, ' ');
 	}
 	my $c;
-	move(getmaxy()/3, getmaxx()/2-($QUERYLEN/2));
+	move($bwin, getmaxy()/3, getmaxx()/2-($QUERYLEN/2));
 	# Eventually bounds-check as the user enters characters
 	echo;
-	$query = getstring();
+	refresh;
+	$query = getstring $bwin;
+	attroff($bwin, A_REVERSE);
 	noecho;
-	split /,/, $query;
+	clear $bwin; refresh $bwin;
+	$query;
 #	do {
 #		$c = getch();
 #		if ($c eq '\c?') {
@@ -234,53 +258,89 @@ sub human_filesize
         # Bytes
         else {return "$size byte" . ($size == 1 ? "" : "s"); }
 }
-
 # Greet the user!
-my $greetwin = subwin(getmaxy()-20, getmaxx()-20, 10, 10);
+my $win = newwin(getmaxy()-10, getmaxx()-10, 5, 5);
 my $message;
 # Make a cute border and bg color
-box($greetwin, 0, 0);
-bkgd($greetwin, COLOR_PAIR(1));
+box($win, 0, 0);
+bkgd($win, COLOR_PAIR(1));
+refresh $win; 
 
 # Create a tile/header
-my $header = " welcome to bmfft ";
-addstr($greetwin, 0, (getmaxx($greetwin)-length($header))/2, $header);
-addstr($greetwin, 1, (getmaxx($greetwin)-length('bmfft stands for big mike\'s fancy file tagger!'))/2, 'bmfft stands for big mike\'s fancy file tagger!');
-my $i;
-my $size;
-find ( sub {$i++ if -f; $size += -s if -f}, $directory);
-$message = "Generating MD5 hashes for $i files (".human_filesize($size).")";
-addstr($greetwin, getmaxy($greetwin)/2, (getmaxx($greetwin)-length($message))/2, $message);
-$message = "Please wait. . .";
-addstr($greetwin, getmaxy($greetwin)/2+1, (getmaxx($greetwin)-length($message))/2, $message);
-addstr($greetwin, getmaxy($greetwin)-2, (getmaxx($greetwin)-length('send complaints to nakomi@bigmike.sne.jp'))/2, 'send complaints to nakomi@bigmike.sne.jp');
-refresh($greetwin);
-&bmfft_update_db($directory, $tagfile);
-clear($greetwin);
-box($greetwin, 0, 0);
-bkgd($greetwin, COLOR_PAIR(1));
-addstr($greetwin, getmaxy($greetwin)/2, (getmaxx($greetwin)-length('okaeri!'))/2, 'okaeri!');
-addstr($greetwin, getmaxy($greetwin)-3, (getmaxx($greetwin)-length('any key continues. . .'))/2, 'any key continues. . .');
-refresh($greetwin);
+$message = " welcome to bmfft ";
+addstr($win, 0, (getmaxx($win)-length($message))/2, $message);
+$message = 'bmfft stands for big mike\'s fancy file tagger!';
+addstr($win, 1, (getmaxx($win)-length($message))/2, $message);
+$message = 'send complaints to nakomi@bigmike.sne.jp';
+addstr($win, getmaxy($win)-2, (getmaxx($win)-length($message))/2, $message);
 
-#if (!-e $rootdir."/.tags.db") {
-#	alert "Could not find that .xml file", "Well fuck!";
-#	endwin;
-#	die;
-#}
+$message = 'any key continues. . .';
+addstr($win, getmaxy($win)-3, (getmaxx($win)-length($message))/2, $message);
+refresh $win;
 
-addstr($greetwin, getmaxy($greetwin)-1, (getmaxx($greetwin)-length(" any key continues "))/2, " any key continues ");
-if (getch() eq "?") {
-	&help_menu;
+# Wait for user to click past the greeting
+getch $win;
+clear $win;
+bkgd($win, COLOR_PAIR(0));
+delwin($win);
+
+while (1) {
+	my $c = choices(' welcome to bmfft! ', 'import files to DB', 'remove files from DB', 'update DB', 'archive all files to .tar.bz2', 'search', 'recursively tag by directory');
+
+	if ($c eq '1') {
+		my $message;
+		my $path = dialog('enter an absolute path to index');
+		if (!(-e $path)) {
+			$message = 'couldn\'t find that path!';
+			alert('ERROR!', 'Couldn\'t find path');
+			clear $bwin;
+			next;
+		}
+		$path = abs_path($path);
+		my $win = newwin(getmaxy()-10, getmaxx()-10, 5, 5);
+		box($win, 0, 0);
+		bkgd($win, COLOR_PAIR(1));
+
+		# Create a tile/header
+		$message = " updating your db ";
+		addstr($win, 0, (getmaxx($win)-length($message))/2, $message);
+
+		# Calculate database size and the number of files
+		my $i;
+		my $size;
+		refresh $win;
+		find ( sub {$i++ if -f; $size += -s if -f}, $path);
+		$message = "Generating MD5 hashes for $i files (".human_filesize($size).")";
+		addstr($win, getmaxy($win)/2, (getmaxx($win)-length($message))/2, $message);
+		$message = "Please wait. . .";
+		addstr($win, getmaxy($win)/2+1, (getmaxx($win)-length($message))/2, $message);
+		refresh $win;
+		&bmfft_update_db($path, $tagfile);
+		clear $bwin;
+		bkgd($win, COLOR_PAIR(0));
+		delwin($win);
+	}
+	if ($c eq '2') {
+	}
+	if ($c eq '3') {
+	}
+	if ($c eq '4') {
+	}
+	if ($c eq '5') {
+		# Prompt the user to search some tags
+		my @tags = split(/,/, &dialog('hooYa!'));
+		my @items;
+		foreach my $tag (@tags) {
+			foreach my $key (bmfft_searchtag($tagfile, $tag)) {
+				push @items, bmfft_getattr($tagfile, $key, 'name');
+			}
+		}
+		browse("Files that match " . join(",", @tags), @items);
+		clear $bwin;
+		bkgd($bwin, COLOR_PAIR(0));
+	}
+	if ($c eq 'q') {
+		endwin;
+		exit;
+	}
 }
-clear($greetwin);
-bkgd($greetwin, COLOR_PAIR(0));
-delwin($greetwin);
-my @tags = &tag_search;
-my %items;
-foreach (@tags) {
-	%items = (%items, bmfft_searchtag($tagfile, $_));
-}
-browse("Files that match " . join(",", @tags), keys %items);
-endwin;
-exit;

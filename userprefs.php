@@ -34,6 +34,7 @@ include "includes/core.php";
 	<div style="float:left;width:50%">
 		<form action="updatestyle.php" method="post">
 		<select name="pref_css" onchange="this.form.submit()">
+		<option <?php if ($_SESSION['pref_css']=="bigmike") echo "selected" ?> value="bigmike">Big Mike</option>
 		<option <?php if ($_SESSION['pref_css']=="classic") echo "selected" ?> value="classic">Classic</option>
 		<option <?php if ($_SESSION['pref_css']=="default") echo "selected" ?> value="default">Default</option>
 		<option <?php if ($_SESSION['pref_css']=="gold") echo "selected" ?> value="gold">Gold</option>

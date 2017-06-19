@@ -33,18 +33,21 @@ switch($_SESSION['pref_css']) {
 		$_SESSION['mascot']=CONFIG_DOCUMENT_ROOT_PATH."img/2B.png";
 		$_SESSION['motd']="おかえりなさい";
 		break;
+	case "none":
+	default:
+	case "bigmike":
+		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_bigmike.css";
+		$_SESSION['mascot']=CONFIG_DOCUMENT_ROOT_PATH."img/mike.png";
+		$_SESSION['motd']="おかえりなさい";
+		break;
 	case "yys":
 		$_SESSION['mascot']=CONFIG_DOCUMENT_ROOT_PATH."img/yuzuko.png";
-		$_SESSION['curr_css']="yys";
 		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";
 		$_SESSION['motd']="よぉ";
 		break;
 	case "none":
-
 	case "worlds":
-	default:
 		$_SESSION['mascot']=CONFIG_DOCUMENT_ROOT_PATH."img/hand.png";
-		$_SESSION['curr_css']="yys";
 		$_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_worlds.css";
 		$_SESSION['motd']="we'll see creation come undone";
 		break;

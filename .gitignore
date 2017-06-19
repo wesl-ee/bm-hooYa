@@ -1,6 +1,6 @@
 share/*
-bmfft/cache/
-!bmfft/cache/.gitignore
+bmfft/cache/*
+!bmfft/cache/.gitkeep
 includes/config.php
 !share/sample.png
 !bmfft/.gitignore
