@@ -124,4 +124,27 @@ sub bmfft_addtags
 	$hash{$key} = $value;
 	untie(%hash);
 }
+sub bmfft_remove
+{
+	my $tagfile = shift or die;
+	my $key = shift or die;
+
+	my %hash;
+	tie %hash, 'GDBM_File', $tagfile, &GDBM_WRCREAT, 0640;
+	delete $hash{$key};
+	untie %hash;
+}
+# Returns true if the key exists in the DB,
+# false otherwise
+sub bmfft_exists
+{
+	my $tagfile = shift or die;
+	my $key = shift or die;
+
+	my %hash;
+	tie %hash, 'GDBM_File', $tagfile, &GDBM_WRCREAT, 0640;
+	my $value = $hash{$key};
+	untie %hash;
+	return $value;
+}
 1;

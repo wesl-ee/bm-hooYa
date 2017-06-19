@@ -10,13 +10,18 @@ $ftype = bmfft_getfiletype($key);
 
 // Throw a 404 img if that key is not in the database
 if (($file = bmfft_getattr($key, 'path')) === false) {
-	$file = dirname(__FILE__).'404.jpg';
+	$file = dirname(__FILE__).'/404.jpg';
 	bmfft_xsendfile($file);
 	return;
 }
 
 // Handle thumbnail requests
 if (isset($_GET['thumb'])) {
+	if (bmfft_getattr($key, 'lewd')) {
+		$file = dirname(__FILE__).'/spoilers/spoiler1.png';
+		bmfft_xsendfile($file);
+		return;
+	}
 	// Take a snapshot of the video and use that as a thumbnail
 	if ($ftype == 'video') {
 		if (!file_exists('cache/'.bin2hex(base64_decode($key)).'.jpg'))

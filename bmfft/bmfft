@@ -146,7 +146,7 @@ sub choices
 	refresh $win;
 	my $key = getch $win;
 	clear $win;
-	bkgd($win, COLOR_PAIR(0));
+	bkgd($win, COLOR_PAIR(0)); refresh $win;
 	delwin $win;
 	$key;
 }
@@ -185,6 +185,7 @@ sub alert
 	addstr($tagwin, (getmaxy($tagwin)/2), (getmaxx($tagwin)-length($message))/2, $message);
 	refresh($tagwin);
 	getch $tagwin;
+	bkgd($tagwin, COLOR_PAIR(0));
 	clear $tagwin;
 	delwin($tagwin);
 }
@@ -285,7 +286,7 @@ bkgd($win, COLOR_PAIR(0));
 delwin($win);
 
 while (1) {
-	my $c = choices(' welcome to bmfft! ', 'import files to DB', 'remove files from DB', 'update DB', 'archive all files to .tar.bz2', 'search', 'recursively tag by directory');
+	my $c = choices(' welcome to bmfft! ', 'import files to DB', 'remove file from DB', 'update DB', 'archive all files to .tar.bz2', 'search', 'recursively tag by directory');
 
 	if ($c eq '1') {
 		my $message;
@@ -321,10 +322,30 @@ while (1) {
 		delwin($win);
 	}
 	if ($c eq '2') {
+		my $key = &dialog('md5 sum of the file you want to delete');
+		if (!&bmfft_exists($tagfile, $key)) {
+			&alert('that file is not indexed!', ' 404 file not found ');
+			next;
+		}
+		my $path = &bmfft_getattr($tagfile, $key, 'path');
+		&bmfft_remove($tagfile, $key);
+		if (&choices(' Delete this file from the filesystem too? ', 'Yes', 'No') eq '1') {
+			if (!unlink($path)) {
+				&alert('Could not delete '.$path, ' Permissions error ');
+			}
+			else {
+				&alert($path.' deleted!', ' Success! ');
+			}
+		}
+		else {
+		}
 	}
 	if ($c eq '3') {
+		alert('not yet implemented', 'future');
 	}
 	if ($c eq '4') {
+		my $tarfile = &dialog('please specify the .tar.bz2 file you wish to create');
+		alert('not yet implemented', 'future');
 	}
 	if ($c eq '5') {
 		# Prompt the user to search some tags
@@ -338,6 +359,9 @@ while (1) {
 		browse("Files that match " . join(",", @tags), @items);
 		clear $bwin;
 		bkgd($bwin, COLOR_PAIR(0));
+	}
+	if ($c eq '6') {
+		alert('not yet implemented', 'future');
 	}
 	if ($c eq 'q') {
 		endwin;

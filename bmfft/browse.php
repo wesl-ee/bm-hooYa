@@ -53,11 +53,11 @@ $q = explode(' ', $q);
 	// And mark them up nicely
 	$results = array_slice($keys, $page*10, 10);
 	foreach ($results as $key) {
-		print '<img ';
-		print 'onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
+		print '<img';
+		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
-		print 'src="download.php?key='.rawurlencode($key).'&thumb"';
-		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
+		print ' src="download.php?key='.rawurlencode($key).'&thumb"';
+		print ' title="'.bmfft_getattr($key, 'class').'">';
 		print '&nbsp</img>';
 	}
 	?>

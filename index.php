@@ -34,11 +34,11 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	<a href="/">« back</a>
 	</div>
 	<div style="text-align:center;padding-bottom:30px;">
-	Welcome to the user center!</br>
+	<marquee style="display:block;" behavior="slide" direction="right" scrollamount="30">like your morning coffee!</marquee>
 	</div>
 	<div style="margin-bottom:30px;">
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
-		<a href="bmfft/">hooYa</a>
+		<a href="bmfft/">hooYa!</a>
 	</div>
 
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">

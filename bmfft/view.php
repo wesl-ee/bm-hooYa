@@ -11,6 +11,14 @@ if (!isset($_GET['key']))
 // better be held on the new page that will keep our AJAX
 // processing as well?
 $key = rawurldecode($_GET['key']);
+if (isset($_POST['class'])) {
+	$class= $_POST['class'];
+	bmfft_setattr($key, 'class', $class);
+}
+if (isset($_POST['lewd'])) {
+	$lewd= $_POST['lewd'];
+	bmfft_setattr($key, 'lewd', $lewd);
+}
 if (isset($_POST['tags'])) {
 	$tags = array_filter($_POST['tags']);
 	// array_filter out empty tags
@@ -31,6 +39,8 @@ if (isset($_POST['tags'])) {
 	if ($new_tags > 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' added tags from '.$_SERVER['REMOTE_ADDR']);
 	elseif ($new_tags < 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' removed tags from '.$_SERVER['REMOTE_ADDR']);
 	bmfft_settags($key, $tags);
+}
+if (count($_POST)) {
 	// Hack to make sure the user can navigate back to the query page
 	// without actually storing the query across page navigations
 	// which would be very ugly
@@ -41,15 +51,18 @@ if (isset($_POST['tags'])) {
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmfft — <?php echo bmfft_name($key)?></title>
-	<script type="text/javascript">
+	<title>bmffd — <?php echo bmfft_name($key)?></title>
+	<script ="text/javascript">
 		function addTagField() {
+			var boxes = document.getElementById('tagform').querySelectorAll('input');
+			for (var i=0; i < boxes.length; i++)
+				// Why do you need another box when there's already an open one?
+				if (!boxes[i].value) {boxes[i].focus(); return;}
 			var input = document.createElement('input');
 			input.type='text';
 			input.name='tags[]';
+			input.style.width='100%';
 			input.style.display='block';
-			input.style.width='90%';
-			input.style.margin='auto';
 			input.style.background='transparent';
 			input.style.color='inherit';
 			input.style.marginTop='5px';
@@ -59,6 +72,7 @@ if (isset($_POST['tags'])) {
 	</script>
 </head>
 <?php
+	$mediaclass = bmfft_getattr($key, 'class');
 ?>
 <body>
 <div id="container">
@@ -74,19 +88,62 @@ if (isset($_POST['tags'])) {
 		}
 		?>
 	</div>
-	<div id="tag_frame" >
+	<div id="tag_frame" style="padding-bottom:10px;">
+	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>" style="width:90%;margin:auto;">
 	<h3 style="text-align:center;">tags</h3>
-	<form method="post" id="tagform" action="view.php?key=<?php echo rawurlencode($key)?>">
+	<div id="tagform">
 	<?php
 		foreach (array_keys(bmfft_getattr($key, 'tags')) as $tag) {
-			print '<input type="text" id="tagin" name="tags[]" value='.$tag.' style="display:block;width:90%;margin:auto;color:inherit;background:transparent;margin-top:5px;"></input>';
+			print '<input type="text" id="tagin" name="tags[]" value='.$tag.' style="display:block;width:100%;color:inherit;background:transparent;margin-top:5px;"></input>';
 		}
-	 ?>
-	<input type="submit" value="commit tag changes" style="display:block;margin:auto;margin-top:10px;display:none;">
-	</form>
+	?>
+	</div>
 	<div style="text-align:center;">
 		<a onClick="addTagField()">add a tag</a>
 	</div>
+	<h3 style="text-align:center;">extended attributes</h3>
+	<div style="width:100%;display:table;">
+		<div style="display:table-row">
+		<div style="display:table-cell;">lewd</div>
+		<div style="display:table-cell;">
+		<input type="hidden" name="lewd" value="0"> </input>
+		<input type="checkbox" name="lewd" style="float:right;" <?php if (bmfft_getattr($key, 'lewd')) echo ' checked';?>> </input>
+		</div>
+		</div>
+
+		<?php if ($mediaclass == 'anime') { echo <<<EOT
+		<div style="display:table-row">
+		<div style="display:table-cell;">episode</div>
+		<div style="display:table-cell;"><input type="number" name="episode" style="width:50%;float:right;"></input></div>
+		</div>
+EOT;
+		}?>
+
+		<?php if ($mediaclass == 'manga') { echo <<<EOT
+		<div style="display:table-row">
+		<div style="display:table-cell;">page</div>
+		<div style="display:table-cell;"><input type="number" name="page" style="width:50%;float:right;"></input></div>
+		</div>
+EOT;
+		}?>
+
+		<div style="display:table-row">
+		<div style="display:table-cell;">media class</div>
+		<div style="display:table-cell;">
+			<select name="class" style="float:right;">
+			<option style="display:none;"> </option>
+			<option <?php if ($mediaclass == 'anime') echo 'selected'?> value="anime">anime</option>
+			<option <?php if ($mediaclass == 'single_image') echo 'selected'?> value="single_image">single_image</option>
+			<option <?php if ($mediaclass == 'movie') echo 'selected'?> value="movie">movie</option>
+			<option <?php if ($mediaclass == 'manga') echo 'selected'?> value="manga">manga</option>
+			<option <?php if ($mediaclass == 'music') echo 'selected'?> value="music">music</option>
+			<option <?php if ($mediaclass == 'video') echo 'selected'?> value="video">video</option>
+			</select>
+		</div>
+		</div>
+	</div>
+	<input type="submit" value="commit changes" style="display:block;margin:auto;margin-top:10px;display:block;">
+	</form>
 	</div>
 </div>
 <div id="right_frame" style="height:100%;">

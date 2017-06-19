@@ -8,7 +8,7 @@ include "bmfft_db.php";
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa! random</title>
+	<title>bmffd — hooYa! untagged</title>
 </head>
 <body>
 <div id="container">
@@ -27,7 +27,7 @@ include "bmfft_db.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="title"><h1>random ten</h1></div>
+	<div id="title"><h1>random untagged ten</h1></div>
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 		<div style="width:33%;float:left;">&nbsp</div>

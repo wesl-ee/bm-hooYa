@@ -28,7 +28,7 @@ include "bmfft_db.php";
 </div>
 <div id="right_frame">
 	<div id="header">
-		<div style="width:33%;float:left;"><a href="random.php">random ten</a></div>
+		<div style="width:33%;float:left;"><a href="random.php">random untagged</a></div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="window.open('m.php')">browsing music</a></div>
 	</div>

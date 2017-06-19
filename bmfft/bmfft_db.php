@@ -35,7 +35,7 @@ function bmfft_searchtag($tag)
 function bmfft_gettags($key)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
-	$value = $dba_fetch($key, $dbh);
+	$value = dba_fetch($key, $dbh);
 	dba_close($dbh);
 	return json_decode($value)['tags'];
 }
@@ -56,13 +56,22 @@ function bmfft_getrandom($count)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$skip = rand(0, bmfft_info(){'files'});
-	dba_firstkey($dbh);
+	if (!dba_firstkey($dbh)) {
+		print '<h3>wow no more untagged files!</h3>';
+	}
 	while (--$skip-$count) {
 		dba_nextkey($dbh);
 	}
 
 	while (--$count) {
-		$hashes[] = dba_nextkey($dbh);
+		if (!($key = dba_nextkey($dbh))) {
+			break;
+		}
+		if (!is_null(json_decode(dba_fetch($key, $dbh), true)['tags'])) {
+			++$count;
+			continue;
+		}
+		$hashes[] = $key;
 	}
 	dba_close($dbh);
 	return $hashes;
