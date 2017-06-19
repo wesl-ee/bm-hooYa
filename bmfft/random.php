@@ -8,7 +8,7 @@ include "bmfft_db.php";
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa!<?php echo "$dir"?></title>
+	<title>bmffd — hooYa! random</title>
 </head>
 <body>
 <div id="container">
@@ -38,7 +38,7 @@ include "bmfft_db.php";
 	$keys = bmfft_getrandom(10);
 	foreach ($keys as $key) {
 		print '<img ';
-		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
+		print 'onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print 'src="download.php?key='.rawurlencode($key).'&t=img&thumb"';
 		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';

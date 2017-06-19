@@ -8,7 +8,7 @@ include "bmfft_db.php";
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa!</title>
+	<title>bmffd — hooYa! popular</title>
 </head>
 <body>
 <div id="container">

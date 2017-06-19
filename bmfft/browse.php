@@ -14,7 +14,7 @@ $q = explode(' ', $q);
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa!</title>
+	<title>bmffd — <?php echo $_GET['q']?></title>
 </head>
 <body>
 <div id="container">
@@ -54,7 +54,7 @@ $q = explode(' ', $q);
 	$results = array_slice($keys, $page*10, 10);
 	foreach ($results as $key) {
 		print '<img ';
-		print 'onClick="window.open(\'view.php?key='.rawurlencode($key).'\')"';
+		print 'onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print 'src="download.php?key='.rawurlencode($key).'&thumb"';
 		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';

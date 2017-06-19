@@ -12,7 +12,7 @@ if (!isset($_GET['key']))
 // processing as well?
 $key = rawurldecode($_GET['key']);
 if (isset($_POST['tags'])) {
-	$tags = explode(" ", $_POST['tags']);
+	$tags = array_filter($_POST['tags']);
 	// array_filter out empty tags
 	$tags = array_filter($tags);
 	$new_tags =  count($tags) - count(bmfft_getattr($key, 'tags'));
@@ -30,18 +30,33 @@ if (isset($_POST['tags'])) {
 	// Submit changes to the DB and keep logs in any case
 	if ($new_tags > 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' added tags from '.$_SERVER['REMOTE_ADDR']);
 	elseif ($new_tags < 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' removed tags from '.$_SERVER['REMOTE_ADDR']);
-
 	bmfft_settags($key, $tags);
-	// Quick js to close the new window
-	echo '<script>window.close()</script>';
+	// Hack to make sure the user can navigate back to the query page
+	// without actually storing the query across page navigations
+	// which would be very ugly
+	print '<script>window.history.back();</script>';
 	die();
 }
 ?>
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa!</title>
-	<script type="text/javascript" src="dialog.js"></script>
+	<title>bmfft — <?php echo bmfft_name($key)?></title>
+	<script type="text/javascript">
+		function addTagField() {
+			var input = document.createElement('input');
+			input.type='text';
+			input.name='tags[]';
+			input.style.display='block';
+			input.style.width='90%';
+			input.style.margin='auto';
+			input.style.background='transparent';
+			input.style.color='inherit';
+			input.style.marginTop='5px';
+			document.getElementById('tagform').appendChild(input);
+			input.focus();
+		}
+	</script>
 </head>
 <?php
 ?>
@@ -59,23 +74,36 @@ if (isset($_POST['tags'])) {
 		}
 		?>
 	</div>
-	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
+	<div id="tag_frame" >
+	<h3 style="text-align:center;">tags</h3>
+	<form method="post" id="tagform" action="view.php?key=<?php echo rawurlencode($key)?>">
+	<?php
+		foreach (array_keys(bmfft_getattr($key, 'tags')) as $tag) {
+			print '<input type="text" id="tagin" name="tags[]" value='.$tag.' style="display:block;width:90%;margin:auto;color:inherit;background:transparent;margin-top:5px;"></input>';
+		}
+	 ?>
+	<input type="submit" value="commit tag changes" style="display:block;margin:auto;margin-top:10px;display:none;">
+	</form>
+	<div style="text-align:center;">
+		<a onClick="addTagField()">add a tag</a>
+	</div>
+	</div>
 </div>
 <div id="right_frame" style="height:100%;">
 	<div id="title" style="height:10%;">
 		<h1><?php echo bmfft_name($key); ?></h1>
 	</div>
 	<div id="header" style="height:10%;">
-		<div style="width:33%;float:left;"><a href="#" onClick="window.close()">close</a></div>
+		<div style="width:33%;float:left;"><a onClick="window.history.back();">back</a></div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;overflow:hidden;"><a href="#" onClick="view_tags('<?php print $key ?>')">view tags</a></div>
+		<div style="width:33%;float:left;text-align:right;overflow:hidden;"><a href="guidelines.php">tagging guidelines</a></div>
 	</div>
 	<div class="gallery" style="height:80%;">
 	<?php
 		// Vary the output based on the filetype, how smart!
 		$ftype = bmfft_getfiletype($key);
 		if ($ftype == 'image') {
-		print '<img id="content" onClick="add_tags(\''.$key.'\')" ';
+		print '<img id="content" onClick="alert(\'fucking old school tagging use the left hand side tags nao!\');"';
 		print 'src="download.php?key='.rawurlencode($key).'"';
 		print 'style="max-height:100%;">';
 		print '&nbsp</img>';
@@ -96,7 +124,6 @@ if (isset($_POST['tags'])) {
 		print '<img src="404.jpg" style="max-height:100%;">';
 		}
 	?>
-
 	</div>
 </div>
 </div>

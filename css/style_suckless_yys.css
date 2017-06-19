@@ -2,7 +2,7 @@ body {
 	background-color: #fbfaf8;
 	color: #7372a0;
 }
-#logout, #galleryFrame, #right_frame {
+#logout, #galleryFrame, #right_frame,#tag_frame {
 	background-color: inherit;
 	border: 1px solid black;
 	color: #7372a0;
@@ -39,6 +39,16 @@ body {
 	width: 30%;
 	overflow: hidden;
 }
+#tag_frame {
+	position: absolute;
+	max-height:80%;
+	min-height: 50%;
+	width: 70%;
+	border-radius: 20px 20px 0px 0px;
+	width: 90%;
+	overflow-y: scroll;
+	bottom:0;
+}
 #container {
 	position: absolute;
 	top: 0;
@@ -63,6 +73,7 @@ body {
 a {
 	text-decoration: underline;
 	color: inherit;
+	outline:none;
 }
 a:hover {
 	cursor: pointer;

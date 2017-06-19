@@ -2,7 +2,7 @@ body {
 	background-color: #fbfaf8;
 	color: #3E3F40;
 }
-#logout, #galleryFrame, #right_frame {
+#logout, #galleryFrame, #right_frame, #tag_frame {
 	background-color: #FEFFDD;
 	border: 1px solid black;
 	color: #3E3F40;
@@ -40,6 +40,16 @@ body {
 	width: 30%;
 	overflow: hidden;
 }
+#tag_frame {
+	position: absolute;
+	max-height:80%;
+	min-height: 50%;
+	width: 70%;
+	border-radius: 20px 20px 0px 0px;
+	width: 90%;
+	overflow-y: scroll;
+	bottom:0;
+}
 #container {
 	position: absolute;
 	top: 0;
@@ -57,6 +67,7 @@ body {
 	padding-bottom: 10px;
 	padding-top: 10px;
 	top: 0px;
+	max-height: 20%;
 	margin: auto;
 	width: 50%;
 	text-align:center;
@@ -65,6 +76,7 @@ a {
 	text-decoration: underline;
 	cursor: pointer;
 	color: #3F4037;
+	outline: none;
 }
 a:hover {
 	color: #5ABFCF;

@@ -36,7 +36,7 @@ include "bmfft_db.php";
 		<span style="color:#4c90f6;font-size:500%;">h</span>
 		<span style="color:#ed4d3c;font-size:500%;">o</span>
 		<span style="color:#fbc403;font-size:500%;">o</span>
-		<span style="color:#4c90f6;font-size:500%;">y</span>
+		<span style="color:#4c90f6;font-size:500%;">Y</span>
 		<span style="color:#3bb15d;font-size:500%;">a</span>
 		<span style="color:#ed4d3c;font-size:500%;">!</span>
 	</div>
