@@ -42,7 +42,7 @@ include "bmfft_db.php";
 	arsort($heat);
 	foreach (array_keys($heat) as $tag) {
 		print '<div style="display:table-row;overflow-auto;">';
-		print '<div style="width:80%;float:left;text-align:center;display:table-cell;text-overflow:ellipsis;overflow:hidden;"><a href="browse.php?q='.rawurlencode($tag).'">';
+		print '<div style="width:80%;float:left;text-align:center;display:table-cell;text-overflow:ellipsis;overflow:hidden;"><a href="browse.php?query='.rawurlencode($tag).'">';
 		print $tag;
 		print '</a></div>';
 		print '<div style="width:20%;float:left;text-align:center;display:table-cell;text-overflow:ellipsis;overflow:hidden;">&nbsp';

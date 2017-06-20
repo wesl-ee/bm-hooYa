@@ -1,15 +1,18 @@
 <!DOCTYPE HTML>
 <?php
+ini_set('session.cache_limiter','public');
+session_cache_limiter(false);
+
 include "../includes/core.php";
+include CONFIG_ROOT_PATH."includes/search.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
         include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
 
-if (!isset($_GET['q']))
-	die();
-// Split the query into search tags
-$q = $_GET['q'];
-$q = explode(' ', $q);
+foreach($_GET as $param => $value) {
+	if ($param != 'page') $q[$param] = $value;
+}
+if (!isset($q)) die();
 ?>
 <html>
 <head>
@@ -33,7 +36,7 @@ $q = explode(' ', $q);
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="title"><h1><?php echo $_GET['q']?></h1></div>
+	<div id="title"><h1>hooYa! results</h1></div>
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 	</div>
@@ -43,12 +46,8 @@ $q = explode(' ', $q);
 	$page = 0;
 	if (isset($_GET['page']))
 		$page = $_GET['page'];
+	$keys = bmfft_search($q);
 
-	// This can be improved to be a better search algorithm someday
-	// Actually this is very bad but I can't be bothered now
-	foreach ($q as $searchtag) {
-		$keys = bmfft_searchtag($searchtag);
-	}
 	// Take the current page's slice of the array to be the results
 	// And mark them up nicely
 	$results = array_slice($keys, $page*10, 10);
@@ -72,7 +71,7 @@ $q = explode(' ', $q);
 			continue;
 		}
 		print '<a ';
-		print 'href="?q='.$_GET['q'].'&page='.$i.'"';
+		print 'href="?'.http_build_query($q).'&page='.$i.'"';
 		print '>'.$i.'</a> ';
 	}
 	?>

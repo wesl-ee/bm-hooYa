@@ -11,9 +11,9 @@ if (!isset($_GET['key']))
 // better be held on the new page that will keep our AJAX
 // processing as well?
 $key = rawurldecode($_GET['key']);
-if (isset($_POST['class'])) {
-	$class= $_POST['class'];
-	bmfft_setattr($key, 'class', $class);
+if (isset($_POST['media_class'])) {
+	$mediaclass= $_POST['media_class'];
+	bmfft_setattr($key, 'media_class', $mediaclass);
 }
 if (isset($_POST['lewd'])) {
 	$lewd= $_POST['lewd'];
@@ -72,7 +72,7 @@ if (count($_POST)) {
 	</script>
 </head>
 <?php
-	$mediaclass = bmfft_getattr($key, 'class');
+	$mediaclass = bmfft_getattr($key, 'media_class');
 ?>
 <body>
 <div id="container">
@@ -130,7 +130,7 @@ EOT;
 		<div style="display:table-row">
 		<div style="display:table-cell;">media class</div>
 		<div style="display:table-cell;">
-			<select name="class" style="float:right;">
+			<select name="media_class" style="float:right;">
 			<option style="display:none;"> </option>
 			<option <?php if ($mediaclass == 'anime') echo 'selected'?> value="anime">anime</option>
 			<option <?php if ($mediaclass == 'single_image') echo 'selected'?> value="single_image">single_image</option>
@@ -160,13 +160,15 @@ EOT;
 		// Vary the output based on the filetype, how smart!
 		$ftype = bmfft_getfiletype($key);
 		if ($ftype == 'image') {
-		print '<img id="content" onClick="alert(\'fucking old school tagging use the left hand side tags nao!\');"';
-		print 'src="download.php?key='.rawurlencode($key).'"';
-		print 'style="max-height:100%;">';
+		print '<img id="content" onClick="alert(\'nice fucking old school tagging reflexes but use the left hand side tags nao!\');"';
+		print ' title="'.$key.'"';
+		print ' src="download.php?key='.rawurlencode($key).'"';
+		print ' style="max-height:100%;">';
 		print '&nbsp</img>';
 		}
 		elseif ($ftype == 'video') {
 		print '<video id="content" onClick="add_tags(\''.$key.'\')" ';
+		print ' title="'.$key.'"';
 		print 'style="max-height:90%;" autoplay loop controls>';
 		print '<source src="download.php?key='.rawurlencode($key).'" ';
 		print 'type="'.bmfft_getattr($key, 'mimetype').'"';

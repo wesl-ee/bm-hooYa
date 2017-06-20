@@ -9,6 +9,13 @@ include "bmfft_db.php";
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — hooYa!</title>
+	<script type="text/javascript">
+	function toggleFilter() {
+		var filter = document.getElementById('filter');
+		if (filter.style.display == 'none') filter.style.display = 'table';
+		else filter.style.display = 'none';
+	}
+	</script>
 </head>
 <body>
 <div id="container">
@@ -27,10 +34,10 @@ include "bmfft_db.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="header">
+	<div id="header" style="margin-bottom:20px;">
 		<div style="width:33%;float:left;"><a href="random.php">random untagged</a></div>
-		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="window.open('m.php')">browsing music</a></div>
+		<div style="width:33%;float:left;text-align:center;">(06.20) added lots of wallpapers!</div>
+		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="window.open('help.php')">search help</a></div>
 	</div>
 	<div style="width:100%;padding-bottom:20px;text-align:center;">
 		<span style="color:#4c90f6;font-size:500%;">h</span>
@@ -41,8 +48,30 @@ include "bmfft_db.php";
 		<span style="color:#ed4d3c;font-size:500%;">!</span>
 	</div>
 	<form style="width:100%;" action="browse.php" method="get" >
-		<input type="text" style="width:50%;display:block;margin:auto;margin-bottom:10px;" name="q" placeholder="character:devil_homura"></input>
-		<input type="submit" style="margin:auto;display:block;margin-bottom:10px;" value="いこう！"></input>
+		<input type="text" style="margin:auto;display:block;width:70%;" name="query" placeholder="character:devil_homura"></input>
+		<div style="width:70%;margin:auto;margin-bottom:10px;">
+		<input type="submit" style="width:20%;" value="いこう！"></input>
+		<a onClick="toggleFilter()" style="float:right;">filter</a>
+
+		</div>
+		<div style="width:70%;margin:auto">
+		<div id="filter" style="display:table;width:100%;padding-bottom:50px;display:none">
+		<div style="display:table-row;">
+		<div style="display:table-cell;border-bottom: 1px solid black;"></div>
+		<div style="display:table-cell;border-bottom: 1px solid black;">
+			<select name="media_class" style="text-align:right;border-bottom:none;float:right">
+			<option value="">media class</option>
+			<option value="anime">anime</option>
+			<option value="single_image">single_image</option>
+			<option value="movie">movie</option>
+			<option value="manga">manga</option>
+			<option value="music">music</option>
+			<option value="video">video</option>
+			</select>
+		</div>
+		</div>
+		</div>
+		</div>
 	</form>
 <!--	Yeah maybe when I add 'size' and 'files' entries to the DB so I
 don't need to query it every fucking time I can stop using this,
@@ -53,7 +82,7 @@ it's a waste of everyone's time-->
 		print number_format($info['files']);
 		print " files (";
 		print human_filesize($info['size']);
-		print ")";
+		print ")<br/>".number_format($info['untagged']).' untagged';
 		?>
 	</div>
 	<div style="width:100%;text-align:center;">

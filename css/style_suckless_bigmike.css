@@ -152,14 +152,10 @@ img {
 	-webkit-touch-callout: none;
 	image-orientation: from-image;
 }
-input,select,textarea {
+input,select,textarea,select {
 	background-color: #F7F7F7;
         font-family: inherit;
 	border: 1px solid black;
-}
-select {
-        width: 100px;
-        overflow: hidden;
 }
 ::-webkit-scrollbar {
         width: 0px;

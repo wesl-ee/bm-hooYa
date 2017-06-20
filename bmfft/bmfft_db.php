@@ -9,26 +9,6 @@ if (isset($_GET['key']) && isset($_GET['tags'])) {
 	return;
 }
 
-# Passed a tag, search the database for all MD5sums associated
-# with that tag
-function bmfft_searchtag($tag)
-{
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
-	$key = dba_firstkey($dbh);
-	while ($key !== false) {
-		$value = dba_fetch($key, $dbh);
-		$value = json_decode($value, true);
-		foreach($value['tags'] as $a => $b)
-		{
-			if ($a == $tag) {
-				$results[] = $key;
-			}
-		}
-		$key = dba_nextkey($dbh);
-	}
-	dba_close($dbh);
-	return $results;
-}
 # Passed an MD5sum, return all its tags
 # This function is just pretty convenient and can be
 # removed someday
@@ -115,12 +95,16 @@ function bmfft_info()
 	$size = 0;
 	for ($i = 0; $key; $i++) {
 		$size += bmfft_getattr($key, 'size');
+		if (!bmfft_getattr($key, 'tags')) {
+			$untagged++;
+		}
 		$key = dba_nextkey($dbh);
 	}
 	dba_close($dbh);
 	return array (
 		'size' => $size,
 		'files' => $i,
+		'untagged' => $untagged,
 	);
 }
 # Returns an unsorted association of tags->tag_counts
@@ -136,6 +120,18 @@ function bmfft_tagheat()
 	}
 	dba_close($dbh);
 	return $heat;
+}
+# Returns an unsorted association of tags->tag_counts
+function bmfft_allkeys()
+{
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
+	$key = dba_firstkey($dbh);
+	while ($key !== false) {
+		$result[] = $key;
+		$key = dba_nextkey($dbh);
+	}
+	dba_close($dbh);
+	return $result;
 }
 function bmfft_getfiletype($key)
 {

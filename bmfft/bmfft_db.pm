@@ -38,6 +38,16 @@ sub bmfft_update_db
 			$value{'path'} = $File::Find::name;
 			$value{'size'} = -s $File::Find::name;
 			$value{'mimetype'} = mimetype($File::Find::name);
+			my @ftype = split(/\//, $value{'mimetype'});
+			if (!defined $value{'media_class'} && $ftype[0] eq 'image') {
+				$value{'media_class'} = 'single_image';
+			}
+			if (!defined $value{'media_class'} && $ftype[0] eq 'video') {
+				$value{'media_class'} = 'video';
+			}
+			if (!defined $value{'media_class'} && $ftype[0] eq 'audio') {
+				$value{'media_class'} = 'music';
+			}
 
 #			if ($hash{$key}) {
 #				my $json = $hash{$key};

@@ -158,10 +158,6 @@ input,select {
         font-family: inherit;
 	border: 1px solid black;
 }
-select {
-        width: 100px;
-        overflow: hidden;
-}
 ::-webkit-scrollbar {
 	width: 0px;
 }
