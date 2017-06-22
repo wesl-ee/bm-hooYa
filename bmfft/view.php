@@ -12,18 +12,28 @@ if (!isset($_GET['key']))
 // processing as well?
 $key = rawurldecode($_GET['key']);
 if (isset($_POST['media_class'])) {
-	$mediaclass= $_POST['media_class'];
+	$mediaclass = $_POST['media_class'];
 	bmfft_setattr($key, 'media_class', $mediaclass);
 }
 if (isset($_POST['lewd'])) {
-	$lewd= $_POST['lewd'];
+	$lewd = $_POST['lewd'];
 	bmfft_setattr($key, 'lewd', $lewd);
+}
+if (isset($_POST['namespace_key'], $_POST['namespace_value'])) {
+	$ns_keys = $_POST['namespace_key'];
+	$ns_values = $_POST['namespace_value'];
+	bmfft_setnamespaces($key, $ns_keys, $ns_values);
 }
 if (isset($_POST['tags'])) {
 	$tags = array_filter($_POST['tags']);
 	// array_filter out empty tags
 	$tags = array_filter($tags);
-	$new_tags =  count($tags) - count(bmfft_getattr($key, 'tags'));
+	bmfft_settags($key, $tags);
+}
+if (count($_POST)) {
+	// Submit changes to the DB and keep logs in any case
+	$new_tags =  count($tags) - count(bmfft_gettags($key));
+	$new_namespaces = count($namespace_key) - count(bmfft_getnamespaces($key));
 	if (isset($_SESSION['user_id'])) {
 		$mysql_hostname = CONFIG_DB_SERVER;
 		$mysql_username = CONFIG_DB_USERNAME;
@@ -32,20 +42,15 @@ if (isset($_POST['tags'])) {
 		$mysql_table = CONFIG_DB_TABLE;
 		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 		// Keep a high-score count for every logged-in user!
-		$cmd = 'UPDATE `'. $mysql_table .'` SET `tags_added` = `tags_added` + ' . $new_tags . ' WHERE `username`="' . $_SESSION['username'] . '"';
+		$cmd = 'UPDATE `'. $mysql_table .'` SET `tags_added` = `tags_added` + ' . $new_tags+$new_namespaces . ' WHERE `username`="' . $_SESSION['username'] . '"';
 		$conn->query($cmd);
 	}
-	// Submit changes to the DB and keep logs in any case
 	if ($new_tags > 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' added tags from '.$_SERVER['REMOTE_ADDR']);
 	elseif ($new_tags < 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' removed tags from '.$_SERVER['REMOTE_ADDR']);
-	bmfft_settags($key, $tags);
-}
-if (count($_POST)) {
 	// Hack to make sure the user can navigate back to the query page
 	// without actually storing the query across page navigations
 	// which would be very ugly
 	print '<script>window.history.back();</script>';
-	die();
 }
 ?>
 <html>
@@ -61,13 +66,25 @@ if (count($_POST)) {
 			var input = document.createElement('input');
 			input.type='text';
 			input.name='tags[]';
-			input.style.width='100%';
-			input.style.display='block';
-			input.style.background='transparent';
-			input.style.color='inherit';
-			input.style.marginTop='5px';
 			document.getElementById('tagform').appendChild(input);
 			input.focus();
+		}
+		function addNamespaceField() {
+			var boxes = document.getElementById('namespaceform').querySelectorAll('input');
+			for (var i=0; i < boxes.length; i++)
+				// Why do you need another box when there's already an open one?
+				if (!boxes[i].value) {boxes[i].focus(); return;}
+			var key = document.createElement('input');
+			var value = document.createElement('input');
+			key.type='text';
+			value.type='text';
+			key.name='namespace_key[]';
+			value.name='namespace_value[]';
+			key.style.float='left';
+			value.style.float='right';
+			document.getElementById('namespaceform').appendChild(key);
+			document.getElementById('namespaceform').appendChild(value);
+			key.focus();
 		}
 	</script>
 </head>
@@ -90,11 +107,33 @@ if (count($_POST)) {
 	</div>
 	<div id="tag_frame" style="padding-bottom:10px;">
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>" style="width:90%;margin:auto;">
+	<h3 style="text-align:center;">namespaces</h3>
+	<div id="namespaceform">
+		<div style="width:100%;">
+		<div style="width:50%;text-align:left;float:left;">namespace</div>
+		<div style="width:50%;text-align:right;float:left;">value</div>
+		</div>
+	<div style="display:table">
+	<?php
+		foreach (bmfft_getnamespaces($key) as $namespace => $value) {
+			foreach ($value as $single => $a) {
+			print '<div style="display:table-row">';
+			print '<input type="text" name="namespace_key[]" value="'.$namespace.'" style="float:left;display:table-cell;text-align:center;"></input>';
+			print '<input type="text" name="namespace_value[]" value='.$single.' style="float:right;display:table-cell;text-align:center;"></input>';
+			print '</div>';
+			}
+		}
+	?>
+	</div>
+	</div>
+	<div style="text-align:center;">
+		<a onClick="addNamespaceField()">add a namespace</a>
+	</div>
 	<h3 style="text-align:center;">tags</h3>
 	<div id="tagform">
 	<?php
-		foreach (array_keys(bmfft_getattr($key, 'tags')) as $tag) {
-			print '<input type="text" id="tagin" name="tags[]" value='.$tag.' style="display:block;width:100%;color:inherit;background:transparent;margin-top:5px;"></input>';
+		foreach (array_keys(bmfft_gettags($key)) as $tag) {
+			print '<input type="text" name="tags[]" value='.$tag.' style="width:100%;"></input>';
 		}
 	?>
 	</div>
@@ -160,14 +199,14 @@ EOT;
 		// Vary the output based on the filetype, how smart!
 		$ftype = bmfft_getfiletype($key);
 		if ($ftype == 'image') {
-		print '<img id="content" onClick="alert(\'nice fucking old school tagging reflexes but use the left hand side tags nao!\');"';
+		print '<img id="content" onClick="addNamespaceField()"';
 		print ' title="'.$key.'"';
 		print ' src="download.php?key='.rawurlencode($key).'"';
 		print ' style="max-height:100%;">';
 		print '&nbsp</img>';
 		}
 		elseif ($ftype == 'video') {
-		print '<video id="content" onClick="add_tags(\''.$key.'\')" ';
+		print '<video id="content" onClick="addNamespaceField()" ';
 		print ' title="'.$key.'"';
 		print 'style="max-height:90%;" autoplay loop controls>';
 		print '<source src="download.php?key='.rawurlencode($key).'" ';

@@ -106,8 +106,17 @@ a:hover {
 	white-space:nowrap;
 	text-overflow:ellipsis;
 }
-.gallery {
-	max-height: 80%;
+#tagform input,#namespaceform input {
+	display:block;
+	color:inherit;
+	background:transparent;
+	margin-top:5px;
+}
+#namespaceform input {
+	width: 45%;
+}
+#tagform input {
+	width: 100%;
 }
 .gallery img, .gallery video {
 	max-height: 90%;

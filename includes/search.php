@@ -43,15 +43,21 @@ function bmfft_search($query)
 		// Check the relevancy of each search term
 		foreach ($terms as $term) {
 			// +1
-			if ($value['tags'][$term] && $search_rules[$term] != 'forbid') {
-				$results[$key]++;
+			foreach ($value['namespaces'] as $single) {
+				if ($single[$term]) {
+					$results[$key]++;
+				}
+				else if ($search_rules[$term] == 'strict') {
+					unset($results[$key]);
+					break;
+				}
 			}
+/*			if ($value['tags'][$term] && $search_rules[$term] != 'forbid') {
+				$results[$key]++;
+			}*/
 			// If the search term was meant to contain the search term
 			// then expel it from the results
-			else if ($search_rules[$term] == 'strict') {
-				unset($results[$key]);
-				break;
-			}
+//			}
 		}
 		$key = dba_nextkey($dbh);
 	}

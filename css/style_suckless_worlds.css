@@ -115,6 +115,18 @@ a:hover {
 	white-space:nowrap;
 	text-overflow:ellipsis;
 }
+#tagform input,#namespaceform input {
+	display:block;
+	color:inherit;
+	background:transparent;
+	margin-top:5px;
+}
+#namespaceform input {
+	width: 45%;
+}
+#tagform input {
+	width: 100%;
+}
 .gallery {
 	max-height: 80%;
 }

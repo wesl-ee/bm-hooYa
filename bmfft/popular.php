@@ -32,23 +32,26 @@ include "bmfft_db.php";
 		<div style="width:100%;float:left;"><a href=".">back to search</a></div>
 	</div>
 	<div id="header" style="padding-bottom:30px;">
-		<div style="width:80%;float:left;text-align:center;font-weight:bold;">tag</div>
-		<div style="width:20%;float:left;text-align:center;font-weight:bold;">count</div>
+		<div style="width:20%;float:left;text-align:left;font-weight:bold;">type</div>
+		<div style="width:60%;float:left;text-align:center;font-weight:bold;">tag</div>
+		<div style="width:20%;float:left;text-align:left;font-weight:bold;">count</div>
 	</div>
 	<div style="width:100%;display:table;">
 	<?php
 	// Definitely organize this into pages, like we did with browse.php
-	$heat = bmfft_tagheat();
-	arsort($heat);
-	foreach (array_keys($heat) as $tag) {
+	$heat = bmfft_namespaceheat();
+	foreach ($heat as $type => $value) {
+	foreach ($value as $single => $a) {
 		print '<div style="display:table-row;overflow-auto;">';
-		print '<div style="width:80%;float:left;text-align:center;display:table-cell;text-overflow:ellipsis;overflow:hidden;"><a href="browse.php?query='.rawurlencode($tag).'">';
-		print $tag;
+		print '<div style="width:20%;float:left;text-align:left;display:table-cell;text-overflow:ellipsis;overflow:hidden;">'.$type.'</div>';
+		print '<div style="width:60%;float:left;text-align:left;display:table-cell;text-overflow:ellipsis;overflow:hidden;"><a href="browse.php?query='.rawurlencode($single).'">';
+		print $single;
 		print '</a></div>';
-		print '<div style="width:20%;float:left;text-align:center;display:table-cell;text-overflow:ellipsis;overflow:hidden;">&nbsp';
-		print $heat[$tag];
+		print '<div style="width:20%;float:left;text-align:left;display:table-cell;text-overflow:ellipsis;overflow:hidden;">&nbsp';
+		print $heat[$type][$single];
 		print '</div>';
 		print '</div>';
+	}
 	}
 	?>
 	</div>

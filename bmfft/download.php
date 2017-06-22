@@ -14,7 +14,6 @@ if (($file = bmfft_getattr($key, 'path')) === false) {
 	bmfft_xsendfile($file);
 	return;
 }
-
 // Handle thumbnail requests
 if (isset($_GET['thumb'])) {
 	if (bmfft_getattr($key, 'lewd')) {

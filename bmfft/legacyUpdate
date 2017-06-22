@@ -1,0 +1,46 @@
+#!/usr/bin/perl -w
+use strict;
+use JSON::XS;
+use GDBM_File;
+use Data::Dumper;
+
+my %hash;
+tie %hash, 'GDBM_File', 'tmp.db', &GDBM_WRCREAT, 0640;
+for my $key (keys %hash) {
+	my $value = $hash{$key};
+	$value = decode_json($value);
+	my %value = %{$value};
+	if ($value->{'tags'}) {
+		my %tags = %{$value->{'tags'}};
+		foreach my $tag (keys %tags) {
+			if (my ($namespace, $namespace_value) = $tag =~ /^(\w+):(.*)$/) {
+				my %addition = ($namespace => {$namespace_value => 1});
+				if ($value->{'namespaces'}) {
+					my %namespaces = %{$value->{'namespaces'}};
+					$value->{'namespaces'} = {%namespaces, %addition}; 
+				}
+				else {
+					$value->{'namespaces'} = {%addition};
+				}
+#				delete $value->{'tags'}{$tag};
+#				$hash{$key} = encode_json($value);
+			}
+			my $namespace = 'tags';
+			my $namespace_value = $tag;
+			my %addition = ($namespace => {%tags});
+			if ($value->{'namespaces'}) {
+				my %namespaces = %{$value->{'namespaces'}};
+				$value->{'namespaces'} = {%namespaces, %addition}; 
+				print Dumper({%namespaces, %addition});
+			}
+			else {
+				$value->{'namespaces'} = {%addition};
+			}
+			delete $value->{'tags'}{$tag};
+			$hash{$key} = encode_json($value);
+			print Dumper($value);
+			}
+	}
+	delete $value->{'tags'};
+}
+untie %hash;

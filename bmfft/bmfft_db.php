@@ -10,25 +10,38 @@ if (isset($_GET['key']) && isset($_GET['tags'])) {
 }
 
 # Passed an MD5sum, return all its tags
-# This function is just pretty convenient and can be
-# removed someday
+# This function is convenient
 function bmfft_gettags($key)
 {
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
-	$value = dba_fetch($key, $dbh);
-	dba_close($dbh);
-	return json_decode($value)['tags'];
+	return bmfft_getattr($key, 'namespaces')['tags'];
 }
-# Passed an MD5sum and some tags in an array, create the tagging hash
+function bmfft_getnamespaces($key)
+{
+	$namespaces = bmfft_getattr($key, 'namespaces');
+	unset($namespaces['tags']);
+	return $namespaces;
+}
+function bmfft_setnamespaces($key, $keys, $values)
+{
+	if (count($keys) !== count($values)) die;
+	for ($i=0; $i < count($keys); $i++) {
+		if ($keys[$i] && $values[$i])
+			$namespaces[$keys[$i]][$values[$i]] = 1;
+	}
+	bmfft_setattr($key, 'namespaces', $namespaces);
+}
+# Passed an MD5sum and some tags in an array, create the namespace hash
 # So if you're passed ('ass') this function constructs ('ass' => 1)
-# and sets that as the tag component of the value in the key->value db
-# This makes searching tags for a given file super-fast!
+# and sets that as the $namespace component of the value in the key->value db
+# This makes searching tags and namespaces for a given file super-fast!
 function bmfft_settags($key, $tags)
 {
 	foreach ($tags as $tag) {
 		$hash_tags[$tag] = 1;
 	}
-	bmfft_setattr($key, 'tags', $hash_tags);
+	$new_namespaces = bmfft_getattr($key, 'namespaces');
+	$new_namespaces['tags'] = $hash_tags;
+	bmfft_setattr($key, 'namespaces', $new_namespaces);
 }
 # Just a neat function for fun, spits out $count hashes
 # from a random part of the database
@@ -87,25 +100,39 @@ function bmfft_name($key)
 	return basename(bmfft_getattr($key, 'path'));
 }
 # Returns some info about the database (this will later be stored
-# inside the DB so it needn't be calculated everytime
+# inside the DB so it needn't be calculated everytime)
 function bmfft_info()
+{
+	// Not necessary every time but here for now
+//	bmfft_meta_update();
+	$dbh = dba_open(CONFIG_META_DB, 'rd', 'gdbm');
+	$size= dba_fetch('size', $dbh);
+	$files = dba_fetch('files', $dbh);
+	$untagged = dba_fetch('untagged', $dbh);
+	$namespaces = dba_fetch('namespaces', $dbh);
+	dba_close($dbh);
+	return array (
+		'size' => $size,
+		'files' => $files,
+		'untagged' => $untagged,
+		'namespaces' => $namespaces,
+	);
+}
+function bmfft_namespaceheat()
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$key = dba_firstkey($dbh);
-	$size = 0;
-	for ($i = 0; $key; $i++) {
-		$size += bmfft_getattr($key, 'size');
-		if (!bmfft_getattr($key, 'tags')) {
-			$untagged++;
+	while ($key !== false) {
+		$value = dba_fetch($key, $dbh);
+		$value = json_decode($value, true);
+		foreach($value['namespaces'] as $type => $value) {
+			if ($value) foreach ($value as $single => $a)
+				$heat[$type][$single]++;
 		}
 		$key = dba_nextkey($dbh);
 	}
 	dba_close($dbh);
-	return array (
-		'size' => $size,
-		'files' => $i,
-		'untagged' => $untagged,
-	);
+	return $heat;
 }
 # Returns an unsorted association of tags->tag_counts
 function bmfft_tagheat()
@@ -120,6 +147,37 @@ function bmfft_tagheat()
 	}
 	dba_close($dbh);
 	return $heat;
+}
+function bmfft_meta_update()
+{
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
+	$key = dba_firstkey($dbh);
+	$size = 0;
+	for ($i = 0; $key; $i++) {
+		$size += bmfft_getattr($key, 'size');
+		if (!bmfft_gettags($key)) {
+			$untagged++;
+		}
+		foreach (bmfft_getnamespaces($key) as $namespace) {
+			$namespaces[$namespace] = 1;
+		}
+		$key = dba_nextkey($dbh);
+	}
+	dba_close($dbh);
+	$dbh = dba_open(CONFIG_META_DB, 'nd', 'gdbm');
+	dba_replace('size', $size, $dbh);
+	dba_replace('files', $i, $dbh);
+	dba_replace('untagged', $untagged, $dbh);
+	dba_replace('namespaces', $namespaces, $dbh);
+	dba_close($dbh);
+}
+function bmfft_meta_getattr($key, $attr)
+{
+	$dbh = dba_open(CONFIG_META_DB, 'rd', 'gdbm');
+	$value = dba_fetch($key, $dbh);
+	$value = json_decode($value, true);
+	dba_close($dbh);
+	return $value[$attr];
 }
 # Returns an unsorted association of tags->tag_counts
 function bmfft_allkeys()

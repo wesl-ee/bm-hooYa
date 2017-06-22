@@ -36,7 +36,7 @@ include "bmfft_db.php";
 <div id="right_frame">
 	<div id="header" style="margin-bottom:20px;">
 		<div style="width:33%;float:left;"><a href="random.php">random untagged</a></div>
-		<div style="width:33%;float:left;text-align:center;">(06.20) added lots of wallpapers!</div>
+		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="window.open('help.php')">search help</a></div>
 	</div>
 	<div style="width:100%;padding-bottom:20px;text-align:center;">
@@ -48,19 +48,19 @@ include "bmfft_db.php";
 		<span style="color:#ed4d3c;font-size:500%;">!</span>
 	</div>
 	<form style="width:100%;" action="browse.php" method="get" >
-		<input type="text" style="margin:auto;display:block;width:70%;" name="query" placeholder="character:devil_homura"></input>
-		<div style="width:70%;margin:auto;margin-bottom:10px;">
-		<input type="submit" style="width:20%;" value="いこう！"></input>
+		<input type="text" style="margin:auto;display:block;width:70%;" name="query" placeholder="devil_homura +gun -kaname_madoka"></input>
+		<div style="width:70%;display:block;margin:auto;margin-bottom:10px;vertical-align:top;">
+		<input type="submit" style="width:20%;vertical-align:top;border-top:0px;" value="いこう！"></input>
 		<a onClick="toggleFilter()" style="float:right;">filter</a>
 
 		</div>
 		<div style="width:70%;margin:auto">
-		<div id="filter" style="display:table;width:100%;padding-bottom:50px;display:none">
-		<div style="display:table-row;">
-		<div style="display:table-cell;border-bottom: 1px solid black;"></div>
-		<div style="display:table-cell;border-bottom: 1px solid black;">
-			<select name="media_class" style="text-align:right;border-bottom:none;float:right">
-			<option value="">media class</option>
+		<div id="filter" style="display:table;width:100%;padding-bottom:50px;display:none;">
+		<div style="display:table-row;height:30px;">
+		<div style="display:table-cell;border-bottom:1px solid black;height:100%;vertical-align:bottom;">Media Type</div>
+		<div style="display:table-cell;border-bottom:1px solid black;height:100%;vertical-align:bottom;">
+			<select name="media_class" style="text-align:right;float:right;border-bottom:0px;">
+			<option value=""> </option>
 			<option value="anime">anime</option>
 			<option value="single_image">single_image</option>
 			<option value="movie">movie</option>
@@ -88,6 +88,7 @@ it's a waste of everyone's time-->
 	<div style="width:100%;text-align:center;">
 		<a href="popular.php">check out our popular tags!</a>
 	</div>
+
 </div>
 </div>
 </body>
