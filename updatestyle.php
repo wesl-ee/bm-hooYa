@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
 include "includes/core.php";
-
 header("Refresh: 1; url=userprefs.php");
 
 ?>
@@ -38,9 +37,11 @@ if (updateUserStyle($_SESSION['username'], $pref_css)) {
 else {
 	echo "User style was not updated successfully!";
 }
+if (!$_POST['work']) {
+	unset($_SESSION['mascot']);
+}
 ?>
 </div>
-
 </div>
 </body>
 </HTML>

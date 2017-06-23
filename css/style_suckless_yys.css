@@ -112,8 +112,8 @@ a:hover {
 	margin-top:5px;
 }
 #namespaceform input {
-	display: inline;
 	width: 45%;
+	text-align:center;
 }
 #tagform input {
 	display: block;

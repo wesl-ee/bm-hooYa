@@ -119,6 +119,7 @@ a:hover {
 }
 #namespaceform input {
 	width: 45%;
+	text-align:center;
 }
 #tagform input {
 	width: 100%;

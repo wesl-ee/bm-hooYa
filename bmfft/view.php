@@ -108,12 +108,11 @@ if (count($_POST)) {
 	<div id="tag_frame" style="padding-bottom:10px;">
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>" style="width:90%;margin:auto;">
 	<h3 style="text-align:center;">namespaces</h3>
-	<div id="namespaceform">
+	<div id="namespaceform" style="display:table;overflow:auto;">
 		<div style="width:100%;">
 		<div style="width:50%;text-align:left;float:left;">namespace</div>
 		<div style="width:50%;text-align:right;float:left;">value</div>
 		</div>
-	<div style="display:table">
 	<?php
 		foreach (bmfft_getnamespaces($key) as $namespace => $value) {
 			foreach ($value as $single => $a) {
@@ -124,7 +123,6 @@ if (count($_POST)) {
 			}
 		}
 	?>
-	</div>
 	</div>
 	<div style="text-align:center;">
 		<a onClick="addNamespaceField()">add a namespace</a>
@@ -141,7 +139,7 @@ if (count($_POST)) {
 		<a onClick="addTagField()">add a tag</a>
 	</div>
 	<h3 style="text-align:center;">extended attributes</h3>
-	<div style="width:100%;display:table;">
+	<div style="width:100%;display:table;overflow:auto;">
 		<div style="display:table-row">
 		<div style="display:table-cell;">lewd</div>
 		<div style="display:table-cell;">

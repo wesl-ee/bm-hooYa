@@ -1,8 +1,10 @@
 share/*
 bmfft/cache/*
+bmfft/db/*
+!bmfft/db/tags.db.example
 !bmfft/cache/.gitkeep
 includes/config.php
-!share/sample.png
+!share/saint_pepsi-enjoy_yourself.mp4
 !bmfft/.gitignore
 log/access.log
 log/auth.log

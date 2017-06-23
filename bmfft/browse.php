@@ -36,10 +36,11 @@ if (!isset($q)) die();
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="title"><h1>hooYa! results</h1></div>
+	<div id="title" style="text-align:center;"><h1><?php echo ($q['query'] ? $q['query'] : 'all'); if ($q['media_class']) echo ' '.$q['media_class'].'s';?></h1></div>
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 	</div>
+	<hr/>
 	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
 	<?php
 	// Choose the page that is displayed

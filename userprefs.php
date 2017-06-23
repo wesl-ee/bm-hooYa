@@ -27,12 +27,13 @@ include "includes/core.php";
 	<div style="padding-bottom:20px;">
 		<a href="index.php">« back</a>
 	</div>
-	<div style="float:left;width:50%;">
-		CSS Style</br></br>
-
+	<form action="updatestyle.php" method="post">
+	<div style="display:table;width:100%;">
+	<div style="display:table-row">
+	<div style="display:table-cell;padding-bottom:20px;">
+		CSS Style
 	</div>
-	<div style="float:left;width:50%">
-		<form action="updatestyle.php" method="post">
+	<div style="display:table-cell;padding-bottom:20px;">
 		<select name="pref_css" onchange="this.form.submit()">
 		<option <?php if ($_SESSION['pref_css']=="bigmike") echo "selected" ?> value="bigmike">Big Mike</option>
 		<option <?php if ($_SESSION['pref_css']=="classic") echo "selected" ?> value="classic">Classic</option>
@@ -45,9 +46,18 @@ include "includes/core.php";
 		<option <?php if ($_SESSION['pref_css']=="wu_tang") echo "selected" ?> value="wu_tang">Wu-tang</option>
 		</select>
 	</div>
-	<div style="float:left;width:100%">
-		<a href="change_password.php">Change Password</a>
 	</div>
+	<div style="display:table-row;">
+	<div style="display:table-cell;padding-bottom:20px;">
+		Mascot
+	</div>
+	<div style="display:table-cell;padding-bottom:20px;">
+		<input <?php if ($_SESSION['mascot']) echo 'checked'?> type="checkbox" name="work" onchange="this.form.submit()"></input>
+	</div>
+	</div>
+	</div>
+	</form>
+		<a href="change_password.php">Change Password</a>
 </div>
 
 </div>

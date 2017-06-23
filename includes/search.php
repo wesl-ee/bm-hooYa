@@ -41,23 +41,27 @@ function bmfft_search($query)
 			continue;
 		}
 		// Check the relevancy of each search term
+		// Fucking hell this is bad but w/e~ I'll patch it up
+		// in a more readable form sometime but I'd rather just
+		// be over it for now
 		foreach ($terms as $term) {
+			if ($search_rules[$term] == 'forbid')
+				continue;
 			// +1
-			foreach ($value['namespaces'] as $single) {
-				if ($single[$term]) {
+			$term_found = false;	// what the fuck
+			foreach ($value['namespaces'] as $a) {
+				if ($a[$term]) {
 					$results[$key]++;
-				}
-				else if ($search_rules[$term] == 'strict') {
-					unset($results[$key]);
-					break;
+					$term_found = true; // what the fuck
+					continue;
 				}
 			}
-/*			if ($value['tags'][$term] && $search_rules[$term] != 'forbid') {
-				$results[$key]++;
-			}*/
 			// If the search term was meant to contain the search term
 			// then expel it from the results
-//			}
+			if (!$term_found && $search_rules[$term] == 'strict') {
+				unset($results[$key]);
+				break;
+			}
 		}
 		$key = dba_nextkey($dbh);
 	}
