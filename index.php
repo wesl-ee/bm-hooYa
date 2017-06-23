@@ -25,7 +25,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 		}
 	        ?>
         </div>
-	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
+	<img id="mascot" src=<?php echo $_SESSION['mascot']?>>
 </div>
 
 <div id="right_frame">
@@ -42,7 +42,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	</div>
 
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
-		<a href="message_pile/">Message pile</a>
+		<a href="micro/">(NEW) Message pile</a>
 	</div>
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
 		<a href="userprefs.php">User preferences</a>

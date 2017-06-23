@@ -1,0 +1,1 @@
+See the [contributing section in README.md](https://github.com/beardog108/MicroTXT#contributing)
