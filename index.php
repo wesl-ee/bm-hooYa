@@ -42,7 +42,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	</div>
 
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
-		<a href="micro/">(NEW) Message pile</a>
+		<a href="message_pile/">(NEW) Message pile</a>
 	</div>
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
 		<a href="userprefs.php">User preferences</a>

@@ -76,7 +76,7 @@ $data = str_replace('</html>', '', $data);
 			<div style="display:table;width:50%;margin:auto;">
 			<div style="display:table-row;">
 				<div style="display:table-cell;text-align:right">Name:</div>
-				<div style="display:table-cell;text-align:left;padding-left:20px;"><input required type='text' name='name' maxlength='20' value='Anonymous'></div>
+				<div style="display:table-cell;text-align:left;padding-left:20px;"><?php echo $_SESSION['username']?></div>
 			</div>
 			<div style="display:table-row;">
 				<div style="display:table-cell;text-align:right;">Tripcode:</div>

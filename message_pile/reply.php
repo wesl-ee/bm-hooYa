@@ -30,7 +30,7 @@ function redirectError($msg)
 	die(0);
 }
 
-if (! isset($_POST['text']) || ! isset($_POST['CSRF']) || ! isset($_POST['name']) || ! isset($_POST['threadID']) || ! isset($_POST['replyTo']) || ! isset($_POST['tripcode']))
+if (! isset($_POST['text']) || ! isset($_POST['CSRF']) || ! isset($_POST['threadID']) || ! isset($_POST['replyTo']) || ! isset($_POST['tripcode']))
 {
 	redirectError('Missing argument');
 }
@@ -88,7 +88,7 @@ if (! file_exists($threadFile))
 // Get user data
 
 $text = $_POST['text'];
-$name = $_POST['name'];
+$name = $_SESSION['username'];
 $tripcode = $_POST['tripcode'];
 
 // html encode user data to prevent xss

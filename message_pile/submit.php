@@ -34,7 +34,7 @@ function redirectError($msg)
 	die(0);
 }
 
-if (! isset($_POST['text']) || ! isset($_POST['CSRF']) || ! isset($_POST['title']) || ! isset($_POST['name']) || ! isset($_POST['tripcode']))
+if (! isset($_POST['text']) || ! isset($_POST['CSRF']) || ! isset($_POST['title']) || ! isset($_POST['tripcode']))
 {
 	redirectError('Missing argument');
 }
@@ -73,7 +73,7 @@ if ($captcha)
 
 $text = $_POST['text'];
 $title = $_POST['title'];
-$name = $_POST['name'];
+$name = $_SESSION['username'];
 $tripcode = $_POST['tripcode'];
 
 $name = $db->escapeString($name);

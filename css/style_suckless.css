@@ -100,8 +100,6 @@ a:hover {
         -o-filter:      grayscale(0%);
 }
 #title, #header {
-	height: 10%;
-	max-height:10%;
 	overflow: hidden;
 	white-space:nowrap;
 	text-overflow:ellipsis;
