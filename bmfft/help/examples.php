@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <?php
-include "../includes/core.php";
+include "../../includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
         include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
@@ -19,7 +19,7 @@ include "bmfft_db.php";
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="guidelines.php">guidelines</a></div>
 	</div>
-	<img style="width:50%;margin:auto;display:block;" src="download.php?key=rs9hWyM27jU4o0r%2Fsxm%2FnQ"></img>
+	<img style="width:50%;margin:auto;display:block;" src="../download.php?key=rs9hWyM27jU4o0r%2Fsxm%2FnQ"></img>
 	<p style="text-align:center">character:kaname_madoka<br/>
 	series:puella_magi_madoka_magica<br/>
 	laughing<br/>

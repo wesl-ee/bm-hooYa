@@ -36,11 +36,6 @@
 		return;
 	}
 	
-	$mysql_hostname = CONFIG_DB_SERVER;
-	$mysql_username = CONFIG_DB_USERNAME;
-	$mysql_password = CONFIG_DB_PASSWORD;
-	$mysql_dbname = CONFIG_DB_DATABASE;
-	$mysql_table = CONFIG_DB_TABLE;
 	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 	$cmd = "SELECT `username` FROM `" . CONFIG_DB_TABLE . "` WHERE `username`='".$onsen_username."'";
 	$result=$conn->query($cmd);

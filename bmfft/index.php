@@ -37,29 +37,23 @@ include "bmfft_db.php";
 	<div id="header" style="margin-bottom:20px;">
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;"><a href='help.php'>search help</a><br/><a href="random.php">random untagged</a></div>
+		<div style="width:33%;float:left;text-align:right;"><a href='help/'>search help</a><br/><a href="random.php">random untagged</a></div>
 	</div>
 	<div style="width:100%;padding-bottom:20px;text-align:center;">
-<!--		<span style="color:#4c90f6;font-size:500%;">h</span>
-		<span style="color:#ed4d3c;font-size:500%;">o</span>
-		<span style="color:#fbc403;font-size:500%;">o</span>
-		<span style="color:#4c90f6;font-size:500%;">Y</span>
-		<span style="color:#3bb15d;font-size:500%;">a</span>
-		<span style="color:#ed4d3c;font-size:500%;">!</span>-->
 		<h1>hooYa!</h1>
 	</div>
 	<form style="width:100%;" action="browse.php" method="get" >
 		<input type="text" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" placeholder="search_terms"></input>
 		<div style="width:70%;display:block;margin:auto;margin-bottom:10px;vertical-align:top;">
-		<input type="submit" style="width:20%;vertical-align:top;border-top:0px;" value="いこう！"></input>
+		<input type="submit" style="width:20%;vertical-align:top;" value="いこう！"></input>
 		<a onClick="toggleFilter()" style="float:right;">filter</a>
 
 		</div>
 		<div style="width:70%;margin:auto">
 		<div id="filter" style="display:table;width:100%;padding-bottom:50px;display:none;">
 		<div style="display:table-row;height:30px;">
-		<div style="display:table-cell;border-bottom:1px solid black;height:100%;vertical-align:bottom;">Media Type</div>
-		<div style="display:table-cell;border-bottom:1px solid black;height:100%;vertical-align:bottom;">
+		<div style="display:table-cell;height:100%;vertical-align:bottom;">Media Type</div>
+		<div style="display:table-cell;height:100%;vertical-align:bottom;">
 			<select name="media_class" style="text-align:center;float:right;border-bottom:0px;">
 			<option value=""> </option>
 			<option value="anime">anime</option>
@@ -74,9 +68,6 @@ include "bmfft_db.php";
 		</div>
 		</div>
 	</form>
-<!--	Yeah maybe when I add 'size' and 'files' entries to the DB so I
-don't need to query it every fucking time I can stop using this,
-it's a waste of everyone's time-->
 	<div style="width:100%;text-align:center;">
 		<?php print("now serving ");
 		$info = bmfft_info();
@@ -87,7 +78,7 @@ it's a waste of everyone's time-->
 		?>
 	</div>
 	<div style="width:100%;text-align:center;">
-		<a href="popular.php">check out our popular tags!</a>
+		<a href="popular/">check out our popular tags!</a>
 	</div>
 
 </div>

@@ -1,13 +1,5 @@
 <?php
 include_once '../includes/config.php';
-# AJAX handler goes here because I haven't set aside a file to do that yet
-if (isset($_GET['key']) && isset($_GET['tags'])) {
-	foreach (bmfft_getattr($_GET['key'], 'tags') as $key => $value) {
-		$tags[] = $key;
-	}
-	print json_encode($tags);
-	return;
-}
 
 # Passed an MD5sum, return all its tags
 # This function is convenient
@@ -15,12 +7,14 @@ function bmfft_gettags($key)
 {
 	return bmfft_getattr($key, 'namespaces')['tags'];
 }
+# Preferred function for fetching an array of namespaces
 function bmfft_getnamespaces($key)
 {
 	$namespaces = bmfft_getattr($key, 'namespaces');
 	unset($namespaces['tags']);
 	return $namespaces;
 }
+# Preferred function for altering namespaces
 function bmfft_setnamespaces($key, $keys, $values)
 {
 	if (count($keys) !== count($values)) die;
@@ -103,8 +97,6 @@ function bmfft_name($key)
 # inside the DB so it needn't be calculated everytime)
 function bmfft_info()
 {
-	// Not necessary every time but here for now
-//	bmfft_meta_update();
 	$dbh = dba_open(CONFIG_META_DB, 'rd', 'gdbm');
 	$size= dba_fetch('size', $dbh);
 	$files = dba_fetch('files', $dbh);
@@ -118,17 +110,17 @@ function bmfft_info()
 		'namespaces' => $namespaces,
 	);
 }
-function bmfft_namespaceheat()
+# Returns an unsorted array for a given namespace e.g. 'series'
+# in the form of 'series' => number of files in this series
+function bmfft_namespaceheat($namespace)
 {
 	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
 	$key = dba_firstkey($dbh);
 	while ($key !== false) {
 		$value = dba_fetch($key, $dbh);
 		$value = json_decode($value, true);
-		foreach($value['namespaces'] as $type => $value) {
-			if ($value) foreach ($value as $single => $a)
-				$heat[$type][$single]++;
-		}
+		foreach ($value['namespaces'][$namespace] as $single => $a)
+			$heat[$single]++;
 		$key = dba_nextkey($dbh);
 	}
 	dba_close($dbh);
@@ -148,29 +140,7 @@ function bmfft_tagheat()
 	dba_close($dbh);
 	return $heat;
 }
-function bmfft_meta_update()
-{
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
-	$key = dba_firstkey($dbh);
-	$size = 0;
-	for ($i = 0; $key; $i++) {
-		$size += bmfft_getattr($key, 'size');
-		if (!bmfft_gettags($key)) {
-			$untagged++;
-		}
-		foreach (bmfft_getnamespaces($key) as $namespace) {
-			$namespaces[$namespace] = 1;
-		}
-		$key = dba_nextkey($dbh);
-	}
-	dba_close($dbh);
-	$dbh = dba_open(CONFIG_META_DB, 'nd', 'gdbm');
-	dba_replace('size', $size, $dbh);
-	dba_replace('files', $i, $dbh);
-	dba_replace('untagged', $untagged, $dbh);
-	dba_replace('namespaces', $namespaces, $dbh);
-	dba_close($dbh);
-}
+# Finds some information from the CONFIG_META_DB file
 function bmfft_meta_getattr($key, $attr)
 {
 	$dbh = dba_open(CONFIG_META_DB, 'rd', 'gdbm');

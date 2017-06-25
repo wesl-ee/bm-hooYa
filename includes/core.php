@@ -9,14 +9,16 @@ include(dirname(__FILE__)."/config.php");
 //function definitions
 
 // updates the user's current style and stashes that into a SQL table
-function updateUserStyle($username, $css)
+function updateUserStyle($css = NULL, $username = NULL)
 {
+	if ($username) {
 	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 	if ($conn->connect_error) {
 		return False;
 	}
 	$cmd = "UPDATE `" . CONFIG_DB_TABLE . "` SET `pref_css`='$css' WHERE `username`='$username'";
 	$conn->query($cmd);
+	}
 	$_SESSION['pref_css'] = $css;
 	switch($_SESSION['pref_css']) {
         case "classic":
@@ -38,11 +40,6 @@ function updateUserStyle($username, $css)
                 $_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_red.css";
                 $_SESSION['mascot']=CONFIG_DOCUMENT_ROOT_PATH."img/mao.png";
                 $_SESSION['motd']="为人民服务";
-                break;
-        case "default":
-                $_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_yys.css";
-                $_SESSION['motd']="Welcome home";
-                $_SESSION['mascot']="";
                 break;
         case "nier":
                 $_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_nier.css";

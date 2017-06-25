@@ -10,7 +10,7 @@ $ftype = bmfft_getfiletype($key);
 
 // Throw a 404 img if that key is not in the database
 if (($file = bmfft_getattr($key, 'path')) === false) {
-	$file = dirname(__FILE__).'/404.jpg';
+	$file = dirname(__FILE__).'/spoilers/404.jpg';
 	bmfft_xsendfile($file);
 	return;
 }

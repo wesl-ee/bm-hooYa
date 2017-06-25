@@ -1,8 +1,9 @@
 <?php
-
 $_SESSION['last_activity'] = new DateTime();
 if (!isset($_SESSION['username']))
 	$_SESSION['username'] = 'anon';
+if (!isset($_SESSION['pref_css']))
+	updateUserStyle();
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="robots" content="noindex">

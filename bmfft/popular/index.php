@@ -8,14 +8,7 @@ include "bmfft_db.php";
 <html>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa!</title>
-	<script type="text/javascript">
-	function toggleFilter() {
-		var filter = document.getElementById('filter');
-		if (filter.style.display == 'none') filter.style.display = 'table';
-		else filter.style.display = 'none';
-	}
-	</script>
+	<title>bmffd — hooYa! popular</title>
 </head>
 <body>
 <div id="container">
@@ -34,15 +27,18 @@ include "bmfft_db.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<h1 style="text-align:center;">hooYa! news</h1>
-	<a href=".">back</a><hr/>
-	<div style="width:20%;float:left;">(06.20)</div>
-	<div style="width:80%;float:left;">lots of wallpapers added</div>
-	<div style="width:20%;float:left;">(06.16)</div>
-	<div style="width:80%;float:left;">video support</div>
-	<div style="width:20%;float:left;">(06.11)</div>
-	<div style="width:80%;float:left;">hooYa launched</div>
-</div>
+	<div id="title"><h1>select a tag</h1></div>
+	<div id="header" style="overflow:auto;padding-bottom:10px;">
+		<div style="width:100%;float:left;"><a href="../">back</a></div>
+	</div>
+	<div style="width:100%;display:table;text-align:right;">
+	<div style="display:table-row;">
+		<div style="display:table-cell;padding-top:20px;"><a href="view.php?n=series">series</a></div>
+		<div style="display:table-cell;padding-top:20px;"><a href="view.php?n=character">character</a></div>
+		<div style="display:table-cell;padding-top:20px;"><a href="view.php?n=tags">other things</a></div>
+	</div>
+	</div>
+	</div>
 </div>
 </body>
 </html>

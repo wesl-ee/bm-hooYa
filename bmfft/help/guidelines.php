@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <?php
-include "../includes/core.php";
+include "../../includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
         include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
@@ -15,7 +15,7 @@ include "bmfft_db.php";
 <div id="right_frame" style="width:100%;">
 	<div id="title"><h1>guidelines</h1></div>
 	<div id="header" style="width:100%;">
-		<div style="width:33%;float:left;"><a href="#" onClick="window.close()">close</a></div>
+		<div style="width:33%;float:left;"><a href="#" onClick="window.history.back()">back</a></div>
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="examples.php">examples</a></div>
 	</div>

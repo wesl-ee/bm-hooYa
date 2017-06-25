@@ -57,7 +57,7 @@ if (count($_POST)) {
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<title>bmffd — <?php echo bmfft_name($key)?></title>
-	<script ="text/javascript">
+	<script type="text/javascript">
 		function addTagField() {
 			var boxes = document.getElementById('tagform').querySelectorAll('input');
 			for (var i=0; i < boxes.length; i++)
@@ -108,11 +108,9 @@ if (count($_POST)) {
 	<div id="tag_frame" style="padding-bottom:10px;">
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>" style="width:90%;margin:auto;">
 	<h3 style="text-align:center;">namespaces</h3>
-	<div id="namespaceform" style="display:table;overflow:auto;">
-		<div style="width:100%;">
-		<div style="width:50%;text-align:left;float:left;">namespace</div>
-		<div style="width:50%;text-align:right;float:left;">value</div>
-		</div>
+	<div id="namespaceform" style="display:table;overflow:auto;width:100%;">
+		<div style="text-align:left;float:left;">namespace</div>
+		<div style="text-align:right;float:right;">value</div>
 	<?php
 		foreach (bmfft_getnamespaces($key) as $namespace => $value) {
 			foreach ($value as $single => $a) {
@@ -184,15 +182,15 @@ EOT;
 	</div>
 </div>
 <div id="right_frame" style="height:100%;">
-	<div id="title" style="height:10%;">
-		<h1><?php echo bmfft_name($key); ?></h1>
+	<div id="title" style="">
+		<h3><?php echo $key; ?></h3>
 	</div>
-	<div id="header" style="height:10%;">
+	<div id="header" style="">
 		<div style="width:33%;float:left;"><a onClick="window.history.back();">back</a></div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;overflow:hidden;"><a href="guidelines.php">tagging guidelines</a></div>
+		<div style="width:33%;float:left;text-align:right;overflow:hidden;"><a href="help/guidelines.php">tagging guidelines</a></div>
 	</div>
-	<div class="gallery" style="height:80%;">
+	<div class="gallery" style="height:100%;">
 	<?php
 		// Vary the output based on the filetype, how smart!
 		$ftype = bmfft_getfiletype($key);

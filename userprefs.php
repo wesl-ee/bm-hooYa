@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <?php
 include "includes/core.php";
+if (isset($_POST['pref_css'])) {
+	header("Refresh: 1; url=userprefs.php");
+	$pref_css = $_POST['pref_css'];
+}
 ?>
 <head>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
@@ -24,10 +28,24 @@ include "includes/core.php";
 </div>
 <div id="right_frame">
 <h1 style="text-align:center;">User preferences</h1>
+<?php
+	if (isset($_POST['pref_css'])) {
+		if (updateUserStyle($pref_css, $_SESSION['username'])) {
+			echo "User style was updated successfully!";
+		}
+		else {
+			echo "User style was not updated successfully!";
+		}
+		if (!$_POST['work']) {
+			unset($_SESSION['mascot']);
+		}
+		die();
+	}
+	?>
 	<div style="padding-bottom:20px;">
 		<a href="index.php">« back</a>
 	</div>
-	<form action="updatestyle.php" method="post">
+	<form method="post">
 	<div style="display:table;width:100%;">
 	<div style="display:table-row">
 	<div style="display:table-cell;padding-bottom:20px;">
@@ -37,7 +55,6 @@ include "includes/core.php";
 		<select name="pref_css" onchange="this.form.submit()">
 		<option <?php if ($_SESSION['pref_css']=="bigmike") echo "selected" ?> value="bigmike">Big Mike</option>
 		<option <?php if ($_SESSION['pref_css']=="classic") echo "selected" ?> value="classic">Classic</option>
-		<option <?php if ($_SESSION['pref_css']=="default") echo "selected" ?> value="default">Default</option>
 		<option <?php if ($_SESSION['pref_css']=="gold") echo "selected" ?> value="gold">Gold</option>
 		<option <?php if ($_SESSION['pref_css']=="nier") echo "selected" ?> value="nier">Nier</option>
 		<option <?php if ($_SESSION['pref_css']=="red") echo "selected" ?> value="red">Red</option>
