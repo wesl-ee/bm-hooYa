@@ -21,27 +21,30 @@ if (isset($_GET['thumb'])) {
 		bmfft_xsendfile($file);
 		return;
 	}
+
 	// Take a snapshot of the video and use that as a thumbnail
 	if ($ftype == 'video') {
-		if (!file_exists('cache/'.bin2hex(base64_decode($key)).'.jpg'))
-		exec('ffmpeg -ss 00:00:00 -i \''.bmfft_getattr($key, 'path').'\' -vframes 1 -q:v 10 -vf scale=320:-1 cache/'.bin2hex(base64_decode($key)).'.jpg');
 		$file='cache/'.bin2hex(base64_decode($key)).'.jpg';
+		if (!file_exists($file))
+			exec('ffmpegthumbnailer -i '.escapeshellarg(bmfft_getattr($key, 'path')).' -f -q 10 -s 320 -o '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}
 	// Default to JPG thumbnails to save space and time
 	if ($ftype == 'image' && bmfft_getattr($key, 'mimetype') != 'image/png') {
-		if (!file_exists('cache/'.bin2hex(base64_decode($key)).'.jpg'))
-		exec('ffmpeg -i \''.bmfft_getattr($key, 'path').'\' -vframes 1 -q:v 10 -vf scale=320:-1 cache/'.bin2hex(base64_decode($key)).'.jpg');
+		$file='cache/'.bin2hex(base64_decode($key)).'.jpg';
+		if (!file_exists($file))
+			exec('convert '.escapeshellarg(bmfft_getattr($key, 'path')).' -thumbnail "500x500>" '.$file);
+
 		$file='cache/'.bin2hex(base64_decode($key)).'.jpg';
 		bmfft_xsendfile($file);
 		return;
 	}
 	// PNGs need a PNG thumbnail because otherwise transparencies look funny
 	if ($ftype == 'image' && bmfft_getattr($key, 'mimetype') == 'image/png') {
-		if (!file_exists('cache/'.bin2hex(base64_decode($key)).'.png'))
-		exec('ffmpeg -i \''.bmfft_getattr($key, 'path').'\' -vframes 1 -q:v 20 -vf scale=320:-1 cache/'.bin2hex(base64_decode($key)).'.png');
 		$file='cache/'.bin2hex(base64_decode($key)).'.png';
+		if (!file_exists($file))
+			exec('convert '.escapeshellarg(bmfft_getattr($key, 'path')).' -thumbnail "500x500>" '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}
