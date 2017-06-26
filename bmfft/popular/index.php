@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <?php
-include "../includes/core.php";
+include "../../includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
         include CONFIG_ROOT_PATH."includes/auth.php";
-include "bmfft_db.php";
+include "../bmfft_db.php";
 ?>
 <html>
 <head>

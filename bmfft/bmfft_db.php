@@ -91,6 +91,26 @@ function bmfft_setattr($key, $attr, $data)
 # on initialization
 function bmfft_name($key)
 {
+	// Try to construct a good name for each file
+	switch(bmfft_getattr($key, 'media_class')) {
+	case 'anime':
+		// Remember that a file can have more than one series!
+		$s = bmfft_getnamespaces($key)['series'];
+		foreach ($s as $a => $b) {
+			$series .= "$a ";
+		}
+		if (!$series) break;
+		$season = bmfft_getattr($key, 'season');
+		if (!$season) break;
+		$episode = bmfft_getattr($key, 'episode');
+		if (!$episode) break;
+
+		// We need all three of these things for a good description
+		$title .= "$series season $season episode $episode";
+	}
+	if ($title) return ucwords(str_replace('_', ' ', $title));
+	// Return the filename on disk if we can't construct something from the
+	// metadata
 	return basename(bmfft_getattr($key, 'path'));
 }
 # Returns some info about the database (this will later be stored

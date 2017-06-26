@@ -198,14 +198,14 @@ if (count($_POST)) {
 		$ftype = bmfft_getfiletype($key);
 		if ($ftype == 'image') {
 		print '<img id="content" onClick="addNamespaceField()"';
-		print ' title="'.$key.'"';
+		print ' title="'.bmfft_name($key).'"';
 		print ' src="download.php?key='.rawurlencode($key).'"';
 		print ' style="max-height:100%;">';
 		print '&nbsp</img>';
 		}
 		elseif ($ftype == 'video') {
 		print '<video id="content" onClick="(this.paused ? this.play() : this.pause())" ';
-		print ' title="'.$key.'"';
+		print ' title="'.bmfft_name($key).'"';
 		print 'style="max-height:90%;" autoplay loop controls>';
 		print '<source src="download.php?key='.rawurlencode($key).'" ';
 		print 'type="'.bmfft_getattr($key, 'mimetype').'"';

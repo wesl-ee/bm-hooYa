@@ -43,7 +43,7 @@ if (!isset($q)) die();
 		foreach ($q as $a => $b) {
 			if ($a == 'query' && !$b) {echo 'all '; continue;}
 			if (!$b) continue;
-			if ($a != 'media_class')
+			if ($a != 'media_class' && $a != 'query')
 				echo "$a ";
 			echo "$b ";
 		}
@@ -69,7 +69,7 @@ if (!isset($q)) die();
 		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print ' src="download.php?key='.rawurlencode($key).'&thumb"';
-		print ' title="'.bmfft_getattr($key, 'class').'">';
+		print ' title="'.bmfft_name($key).'">';
 		print '&nbsp</img>';
 	}
 	?>

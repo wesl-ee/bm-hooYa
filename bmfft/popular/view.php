@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <?php
-include "../includes/core.php";
+include "../../includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
         include CONFIG_ROOT_PATH."includes/auth.php";
-include "bmfft_db.php";
+include "../bmfft_db.php";
 $namespace = $_GET['n'];
 ?>
 <html>
@@ -46,7 +46,7 @@ $namespace = $_GET['n'];
 		print '<div style="width:20%;float:left;text-align:left;display:table-cell;text-overflow:ellipsis;overflow:hidden;">&nbsp';
 		print $heat[$single];
 		print '</div>';
-		print '<div style="width:80%;float:left;text-align:left;display:table-cell;text-overflow:ellipsis;overflow:hidden;"><a href="browse.php?query='.rawurlencode($single).'">';
+		print '<div style="width:80%;float:left;text-align:left;display:table-cell;text-overflow:ellipsis;overflow:hidden;"><a href="../browse.php?query='.rawurlencode($single).'">';
 		print $single;
 		print '</a></div>';
 		print '</div>';
