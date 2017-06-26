@@ -95,6 +95,7 @@ if (isset($_POST['onsen_username'], $_POST['onsen_password'])) {
 
 	// Set preferred css style
 	$_SESSION['pref_css'] = $sql_pref_css;
+	reloadUserStyle();
 
 	// Set the last_login date to today
 	$today = date("Y-m-d H:i:s");

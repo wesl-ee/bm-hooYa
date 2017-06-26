@@ -16,6 +16,7 @@ if (($file = bmfft_getattr($key, 'path')) === false) {
 }
 // Handle thumbnail requests
 if (isset($_GET['thumb'])) {
+	$mimetype = bmfft_getattr($key, 'mimetype');
 	if (bmfft_getattr($key, 'lewd')) {
 		$file = dirname(__FILE__).'/spoilers/spoiler1.png';
 		bmfft_xsendfile($file);
@@ -30,18 +31,23 @@ if (isset($_GET['thumb'])) {
 		bmfft_xsendfile($file);
 		return;
 	}
+	if ($ftype == 'image' && $mimetype == 'image/gif') {
+		$file='cache/'.bin2hex(base64_decode($key)).'.jpg';
+		if (!file_exists($file))
+			exec('convert '.escapeshellarg(bmfft_getattr($key, 'path')).'[0] -thumbnail "500x500>" '.$file);
+		bmfft_xsendfile($file);
+		return;
+	}
 	// Default to JPG thumbnails to save space and time
-	if ($ftype == 'image' && bmfft_getattr($key, 'mimetype') != 'image/png') {
+	if ($ftype == 'image' && $mimetype != 'image/png') {
 		$file='cache/'.bin2hex(base64_decode($key)).'.jpg';
 		if (!file_exists($file))
 			exec('convert '.escapeshellarg(bmfft_getattr($key, 'path')).' -thumbnail "500x500>" '.$file);
-
-		$file='cache/'.bin2hex(base64_decode($key)).'.jpg';
 		bmfft_xsendfile($file);
 		return;
 	}
 	// PNGs need a PNG thumbnail because otherwise transparencies look funny
-	if ($ftype == 'image' && bmfft_getattr($key, 'mimetype') == 'image/png') {
+	if ($ftype == 'image') {
 		$file='cache/'.bin2hex(base64_decode($key)).'.png';
 		if (!file_exists($file))
 			exec('convert '.escapeshellarg(bmfft_getattr($key, 'path')).' -thumbnail "500x500>" '.$file);

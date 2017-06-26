@@ -20,6 +20,10 @@ function updateUserStyle($css = NULL, $username = NULL)
 	$conn->query($cmd);
 	}
 	$_SESSION['pref_css'] = $css;
+	reloadUserStyle();
+	return True;
+}
+function reloadUserStyle() {
 	switch($_SESSION['pref_css']) {
         case "classic":
                 $_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless.css";
@@ -64,8 +68,7 @@ function updateUserStyle($css = NULL, $username = NULL)
                 $_SESSION['stylesheet']=CONFIG_DOCUMENT_ROOT_PATH."css/style_suckless_worlds.css";
                 $_SESSION['motd']="we'll see creation come undone";
                 break;
-}
-	return True;
+	}
 }
 // returns the size of a directory in bytes
 function dirSize($dir)
