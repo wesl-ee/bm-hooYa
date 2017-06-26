@@ -15,6 +15,51 @@ include "bmfft_db.php";
 		if (filter.style.display == 'none') filter.style.display = 'table';
 		else filter.style.display = 'none';
 	}
+	function changeExtAttrs(media_class) {
+		var ext_attrs = document.getElementById('ext_attrs');
+		ext_attrs.innerHTML = '';
+		if (media_class == 'anime') {
+			var row = document.createElement('div');
+			row.style.display = 'table-row';
+			row.style.height = '30px';
+			row.style.width = '100%';
+			ext_attrs.appendChild(row);
+
+			var episode = document.createElement('div');
+			episode.style.display = 'table-cell';
+			episode.style.height = '100%';
+			episode.style.float = 'left';
+			episode.innerHTML = 'Episode';
+			row.appendChild(episode);
+
+			episode = document.createElement('div');
+			episode.style.display = 'table-cell';
+			episode.style.height = '100%';
+			episode.innerHTML = '<input type="number" name="episode"></input>';
+			episode.style.float = 'right';
+			row.appendChild(episode);
+
+			row = document.createElement('div');
+			row.style.display = 'table-row';
+			row.style.height = '30px';
+			row.style.width = '100%';
+			ext_attrs.appendChild(row);
+
+			var season = document.createElement('div');
+			season.style.display = 'table-cell';
+			season.style.height = '100%';
+			season.style.float = 'left';
+			season.innerHTML = 'Season';
+			row.appendChild(season);
+
+			var season = document.createElement('div');
+			season.style.display = 'table-cell';
+			season.style.height = '100%';
+			season.style.float = 'right';
+			season.innerHTML = '<input type="number" name="season"></input>';
+			row.appendChild(season);
+		}
+	}
 	</script>
 </head>
 <body>
@@ -49,12 +94,10 @@ include "bmfft_db.php";
 		<a onClick="toggleFilter()" style="float:right;">filter</a>
 
 		</div>
-		<div style="width:70%;margin:auto">
-		<div id="filter" style="display:table;width:100%;padding-bottom:50px;display:none;">
-		<div style="display:table-row;height:30px;">
-		<div style="display:table-cell;height:100%;vertical-align:bottom;">Media Type</div>
-		<div style="display:table-cell;height:100%;vertical-align:bottom;">
-			<select name="media_class" style="text-align:center;float:right;border-bottom:0px;">
+		<div id="filter" style="width:70%;margin:auto;display:none;">
+		<div style="float:left;vertical-align:bottom;">Media Type</div>
+		<div style="float:right;vertical-align:bottom;">
+			<select name="media_class" onChange="changeExtAttrs(this.value)" style="text-align:center;float:right;border-bottom:0px;">
 			<option value=""> </option>
 			<option value="anime">anime</option>
 			<option value="single_image">single_image</option>
@@ -64,8 +107,7 @@ include "bmfft_db.php";
 			<option value="video">video</option>
 			</select>
 		</div>
-		</div>
-		</div>
+		<div id="ext_attrs" style="display:table;width:100%;padding-bottom:50px;padding-top:10px;"></div>
 		</div>
 	</form>
 	<div style="width:100%;text-align:center;">

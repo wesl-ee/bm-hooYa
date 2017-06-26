@@ -30,6 +30,10 @@ if (isset($_POST['tags'])) {
 	$tags = array_filter($tags);
 	bmfft_settags($key, $tags);
 }
+if (isset($_POST['ext_attrs'])) {
+	foreach ($_POST['ext_attrs'] as $attr => $value)
+		bmfft_setattr($key, $attr, $value);
+}
 if (count($_POST)) {
 	// Submit changes to the DB and keep logs in any case
 	$new_tags =  count($tags) - count(bmfft_gettags($key));
@@ -109,8 +113,8 @@ if (count($_POST)) {
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>" style="width:90%;margin:auto;">
 	<h3 style="text-align:center;">namespaces</h3>
 	<div id="namespaceform" style="display:table;overflow:auto;width:100%;">
-		<div style="text-align:left;float:left;">namespace</div>
-		<div style="text-align:right;float:right;">value</div>
+		<div style="text-align:left;float:left;width:50%;">namespace</div>
+		<div style="text-align:right;float:right;width:50%;">value</div>
 	<?php
 		foreach (bmfft_getnamespaces($key) as $namespace => $value) {
 			foreach ($value as $single => $a) {
@@ -141,31 +145,33 @@ if (count($_POST)) {
 		<div style="display:table-row">
 		<div style="display:table-cell;">lewd</div>
 		<div style="display:table-cell;">
-		<input type="hidden" name="lewd" value="0"> </input>
+		<input type="hidden" name="ext_attrs[lewd]" value="0"> </input>
 		<input type="checkbox" name="lewd" style="float:right;" <?php if (bmfft_getattr($key, 'lewd')) echo ' checked';?>> </input>
 		</div>
 		</div>
 
-		<?php if ($mediaclass == 'anime') { echo <<<EOT
-		<div style="display:table-row">
-		<div style="display:table-cell;">episode</div>
-		<div style="display:table-cell;"><input type="number" name="episode" style="width:50%;float:right;"></input></div>
-		</div>
-EOT;
-		}?>
+		<?php if ($mediaclass == 'anime') {
+		print('<div style="display:table-row">');
+		print('<div style="display:table-cell;">season</div>');
+		print('<div style="display:table-cell;"><input type="number" min="0" name="ext_attrs[season]" style="width:50%;float:right;" value="'.bmfft_getattr($key, 'season').'"></div>');
+		print('</div>');
+		print('<div style="display:table-row">');
+		print('<div style="display:table-cell;">episode</div>');
+		print('<div style="display:table-cell;"><input type="number" min="0" name="ext_attrs[episode]" style="width:50%;float:right;" value="'.bmfft_getattr($key, 'episode').'"></div>');
+		print('</div>');
+		}
 
-		<?php if ($mediaclass == 'manga') { echo <<<EOT
-		<div style="display:table-row">
-		<div style="display:table-cell;">page</div>
-		<div style="display:table-cell;"><input type="number" name="page" style="width:50%;float:right;"></input></div>
-		</div>
-EOT;
+		if ($mediaclass == 'manga') {
+		print('<div style="display:table-row">');
+		print('<div style="display:table-cell;">page</div>');
+		print('<div style="display:table-cell;"><input type="number" min="0" name="ext_attrs[page]" style="width:50%;float:right;"></input></div>');
+		print('</div>');
 		}?>
 
 		<div style="display:table-row">
 		<div style="display:table-cell;">media class</div>
 		<div style="display:table-cell;">
-			<select name="media_class" style="float:right;">
+			<select name="ext_attrs[media_class]" style="float:right;">
 			<option style="display:none;"> </option>
 			<option <?php if ($mediaclass == 'anime') echo 'selected'?> value="anime">anime</option>
 			<option <?php if ($mediaclass == 'single_image') echo 'selected'?> value="single_image">single_image</option>
@@ -183,7 +189,7 @@ EOT;
 </div>
 <div id="right_frame" style="height:100%;">
 	<div id="title" style="">
-		<h3><?php echo $key; ?></h3>
+		<h3><?php echo bmfft_name($key); ?></h3>
 	</div>
 	<div id="header" style="">
 		<div style="width:33%;float:left;"><a onClick="window.history.back();">back</a></div>
@@ -202,7 +208,7 @@ EOT;
 		print '&nbsp</img>';
 		}
 		elseif ($ftype == 'video') {
-		print '<video id="content" onClick="addNamespaceField()" ';
+		print '<video id="content" onClick="(this.paused ? this.play() : this.pause())" ';
 		print ' title="'.$key.'"';
 		print 'style="max-height:90%;" autoplay loop controls>';
 		print '<source src="download.php?key='.rawurlencode($key).'" ';
