@@ -5,6 +5,7 @@ function bmfft_search($query)
 
 	// First, tokenikze the search string
 	if (!empty($query['query'])) $terms = explode(' ', strtolower($query['query']));
+	unset($query['query']);
 
 	// Determine the strictness of each search term
 	foreach ($terms as $key => $value) {
@@ -27,9 +28,16 @@ function bmfft_search($query)
 	while ($key !== false) {
 		$value = dba_fetch($key, $dbh);
 		$value = json_decode($value, true);
-
+		
 		// Filter by media class
-		if ($mediaclass && $value['media_class'] != $mediaclass) {
+		$match = true;
+		foreach ($query as $ext_attr => $attr_value) {
+			if ($attr_value && $value[$ext_attr] != $attr_value) {
+				$match = false;
+				break;
+			}
+		}
+		if (!$match) {
 			$key = dba_nextkey($dbh);
 			continue;
 		}

@@ -95,9 +95,8 @@ include "bmfft_db.php";
 
 		</div>
 		<div id="filter" style="width:70%;margin:auto;display:none;">
-		<div style="float:left;vertical-align:bottom;">Media Type</div>
-		<div style="float:right;vertical-align:bottom;">
-			<select name="media_class" onChange="changeExtAttrs(this.value)" style="text-align:center;float:right;border-bottom:0px;">
+		<div style="float:left;vertical-align:bottom;margin-bottom:10px;">Media Type</div>
+			<select name="media_class" onChange="changeExtAttrs(this.value)" style="margin-bottom:10px;width:30%;text-align:center;float:right;border-bottom:0px;">
 			<option value=""> </option>
 			<option value="anime">anime</option>
 			<option value="single_image">single_image</option>
@@ -106,8 +105,7 @@ include "bmfft_db.php";
 			<option value="music">music</option>
 			<option value="video">video</option>
 			</select>
-		</div>
-		<div id="ext_attrs" style="display:table;width:100%;padding-bottom:50px;padding-top:10px;"></div>
+		<div id="ext_attrs" style="display:table;width:100%;padding-bottom:50px;"></div>
 		</div>
 	</form>
 	<div style="width:100%;text-align:center;">

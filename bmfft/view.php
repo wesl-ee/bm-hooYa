@@ -15,10 +15,6 @@ if (isset($_POST['media_class'])) {
 	$mediaclass = $_POST['media_class'];
 	bmfft_setattr($key, 'media_class', $mediaclass);
 }
-if (isset($_POST['lewd'])) {
-	$lewd = $_POST['lewd'];
-	bmfft_setattr($key, 'lewd', $lewd);
-}
 if (isset($_POST['namespace_key'], $_POST['namespace_value'])) {
 	$ns_keys = $_POST['namespace_key'];
 	$ns_values = $_POST['namespace_value'];
@@ -146,7 +142,7 @@ if (count($_POST)) {
 		<div style="display:table-cell;">lewd</div>
 		<div style="display:table-cell;">
 		<input type="hidden" name="ext_attrs[lewd]" value="0"> </input>
-		<input type="checkbox" name="lewd" style="float:right;" <?php if (bmfft_getattr($key, 'lewd')) echo ' checked';?>> </input>
+		<input type="checkbox" name="ext_attrs[lewd]" style="float:right;" <?php if (bmfft_getattr($key, 'lewd')) echo ' checked';?>> </input>
 		</div>
 		</div>
 
