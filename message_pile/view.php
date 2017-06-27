@@ -44,9 +44,7 @@ $data = str_replace('</html>', '', $data);
 <html>
 <head>
 	<meta charset='utf-8'>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<title><?php echo $siteTitle . ' - ' . $id;?></title>
-	<link rel="icon" type="image/x-icon" href="favicon.png?v=1">
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<link rel='stylesheet' href='theme.css'>
 </head>

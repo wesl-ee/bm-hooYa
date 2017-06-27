@@ -17,11 +17,9 @@ include('php/sqlite.php');
 <html>
 <head>
 	<meta charset='utf-8'>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<title><?php echo $siteTitle; ?></title>
 	<?php include CONFIG_ROOT_PATH."includes/head.php"; ?>
 	<link rel='stylesheet' href='theme.css'>
-	<link rel="icon" type="image/x-icon" href="favicon.png?v=1">
 </head>
 <body>
 <div id="container">

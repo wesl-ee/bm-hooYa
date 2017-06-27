@@ -38,6 +38,7 @@ sub bmfft_update_db
 			$value{'path'} = $File::Find::name;
 			$value{'size'} = -s $File::Find::name;
 			$value{'mimetype'} = mimetype($File::Find::name);
+			$value{'added_time'} = time;
 			my @ftype = split(/\//, $value{'mimetype'});
 			if (!defined $value{'media_class'} && $ftype[0] eq 'image') {
 				$value{'media_class'} = 'single_image';
