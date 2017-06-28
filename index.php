@@ -34,7 +34,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	<a href="/">« back</a>
 	</div>
 	<div style="text-align:center;padding-bottom:30px;">
-	<marquee style="display:block;" behavior="slide" direction="right" scrollamount="30">like your morning coffee!</marquee>
+	<marquee style="display:block;" behavior="slide" direction="right" scrollamount="30">your morning coffee!</marquee>
 	</div>
 	<div style="margin-bottom:30px;">
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
@@ -42,12 +42,12 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	</div>
 
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
-		<a href="message_pile/">(NEW) Message pile</a>
+		<a href="message_pile/">Message pile</a>
 	</div>
 	<div style="float:left;width:33%;text-align:center;padding-bottom:50px;">
 		<a href="userprefs.php">User preferences</a>
 	</div>
-	<div style="float:left;width:33%;text-align:center"><a href="new.php">Recent curations</a></div>
+	<div style="float:left;width:33%;text-align:center">&nbsp</div>
 	<div style="float:left;width:33%;text-align:center"><a href="users.php">User directory</a></div>
 	<div style="float:left;width:33%;text-align:center">
 		<a href="filemanager.php">File manager</a>

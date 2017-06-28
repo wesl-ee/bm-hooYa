@@ -12,7 +12,7 @@ include "bmfft_db.php";
 	<script type="text/javascript">
 	function toggleFilter() {
 		var filter = document.getElementById('filter');
-		if (filter.style.display == 'none') filter.style.display = 'table';
+		if (filter.style.display == 'none') filter.style.display = 'block';
 		else filter.style.display = 'none';
 	}
 	function changeExtAttrs(media_class) {
@@ -88,7 +88,7 @@ include "bmfft_db.php";
 		<h1>hooYa!</h1>
 	</div>
 	<form style="width:100%;" action="browse.php" method="get" >
-		<input type="text" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" placeholder="search_terms"></input>
+		<div><input type="text" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" placeholder="search_terms"></input></div>
 		<div style="width:70%;display:block;margin:auto;margin-bottom:10px;vertical-align:top;">
 		<input type="submit" style="width:20%;vertical-align:top;" value="いこう！"></input>
 		<a onClick="toggleFilter()" style="float:right;">filter</a>
