@@ -185,4 +185,12 @@ function bmfft_getfiletype($key)
 {
 	return explode('/', bmfft_getattr($key, 'mimetype'))[0];
 }
+function bmfft_exists($key)
+{
+	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
+	$key = dba_firstkey($dbh);
+	$a = dba_exists($key, $dbh);
+	dba_close($dbh);
+	return $a;
+}
 ?>

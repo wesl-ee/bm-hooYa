@@ -4,6 +4,7 @@ include "../includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
         include CONFIG_ROOT_PATH."includes/auth.php";
 include "bmfft_db.php";
+include "../includes/video.php";
 
 if (!isset($_GET['key']))
 	die();
@@ -204,17 +205,15 @@ if (count($_POST)) {
 		print '&nbsp</img>';
 		}
 		elseif ($ftype == 'video') {
-		print '<video id="content" onClick="(this.paused ? this.play() : this.pause())" ';
+		print '<video id="content" poster="../img/loading.gif" ';
 		print ' title="'.bmfft_name($key).'"';
 		print 'style="max-height:90%;" autoplay loop controls>';
-		print '<source src="download.php?key='.rawurlencode($key).'" ';
+/*		print '<source src="download.php?key='.rawurlencode($key).'" ';
 		print 'type="'.bmfft_getattr($key, 'mimetype').'"';
-		print '</source>';
+		print '</source>';*/
+		video_print($key);
 		print 'Your browser cannot play this video~';
 		print '</video>';
-		print '<script type="text/javascript">document.getElementById("content").addEventListener("click", function(event) { event.preventDefault(); });</script>';
-		print '<div><button style="height:30px;width:30px;border:none;background-size:50% 50%;background-repeat:no-repeat;background-position:center;background:url(\'../img/play.png\')";';
-		print ' id="pbutton"></button></div>';
 		}
 		else {
 		print '<img src="404.jpg" style="max-height:100%;">';
