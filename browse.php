@@ -4,6 +4,7 @@ ini_set('session.cache_limiter','public');
 session_cache_limiter(false);
 
 include "includes/config.php";
+
 include CONFIG_COMMON_PATH."/includes/core.php";
 include "includes/search.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
@@ -17,7 +18,7 @@ if (!isset($q)) die();
 ?>
 <html>
 <head>
-	<?php include "common/includes/head.php"; ?>
+	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
 	<title>bmffd — <?php echo $_GET['q']?></title>
 </head>
 <body>
