@@ -1,0 +1,26 @@
+big mike's fancy file tagger
+
+contact: yumi@bigmike.sne.jp
+license: Modified BSD (see LICENSE)
+
+hooYa is a community-driven file tagger for pictures and other media
+hooYa was implemented originally at https://bigmike.sne.jp/onsen
+hooYa is now implemented at https://bigmike.sne.jp/hub/hooYa
+
+you will need to install bigmike-common for this utility's
+stylesheets and authentication capacity, available at
+https://bigmike.sne.jp/gitphp/
+
+hooYa! currently ships with these features:
+
+- per-deployment configuration
+	per-deployment settings are defined in includes/config.php
+- file tagging
+	Both one-line tags and associative namespaces lile "series" => "yuyushiki"
+	are supported. Tagging is currently handled by a GNUdbm style database
+	but will soon use a MySQL database for faster lookups
+- thumbnailing
+	Dynamic generation of thumbnails. Cached
+- video transcoding for web streaming
+	On-the-fly video transcoding from native formats to web-streamable
+	formats like .mp4 and .webm, cached for faster access to often-used files
