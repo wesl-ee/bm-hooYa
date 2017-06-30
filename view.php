@@ -1,8 +1,10 @@
 <!DOCTYPE HTML>
 <?php
-include "common/includes/core.php";
+include "includes/config.php";
+
+include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
-	include "common/includes/auth.php";
+	include CONFIG_COMMON_PATH."includes/auth.php";
 include "includes/bmfft_db.php";
 include "includes/video.php";
 
@@ -36,14 +38,9 @@ if (count($_POST)) {
 	$new_tags =  count($tags) - count(bmfft_gettags($key));
 	$new_namespaces = count($namespace_key) - count(bmfft_getnamespaces($key));
 	if (isset($_SESSION['user_id'])) {
-		$mysql_hostname = CONFIG_DB_SERVER;
-		$mysql_username = CONFIG_DB_USERNAME;
-		$mysql_password = CONFIG_DB_PASSWORD;
-		$mysql_dbname = CONFIG_DB_DATABASE;
-		$mysql_table = CONFIG_DB_TABLE;
 		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 		// Keep a high-score count for every logged-in user!
-		$cmd = 'UPDATE `'. $mysql_table .'` SET `tags_added` = `tags_added` + ' . $new_tags+$new_namespaces . ' WHERE `username`="' . $_SESSION['username'] . '"';
+		$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + ' . $new_tags+$new_namespaces . ' WHERE `username`="' . $_SESSION['username'] . '"';
 		$conn->query($cmd);
 	}
 	if ($new_tags > 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' added tags from '.$_SERVER['REMOTE_ADDR']);
