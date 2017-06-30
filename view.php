@@ -37,10 +37,10 @@ if (count($_POST)) {
 	// Submit changes to the DB and keep logs in any case
 	$new_tags =  count($tags) - count(bmfft_gettags($key));
 	$new_namespaces = count($namespace_key) - count(bmfft_getnamespaces($key));
-	if (isset($_SESSION['user_id'])) {
+	if (isset($_SESSION['userid'])) {
 		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 		// Keep a high-score count for every logged-in user!
-		$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + ' . $new_tags+$new_namespaces . ' WHERE `username`="' . $_SESSION['username'] . '"';
+		$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + ' . $new_tags+$new_namespaces . ' WHERE `id`="' . $_SESSION['userid'] . '"';
 		$conn->query($cmd);
 	}
 	if ($new_tags > 0) lwrite(CONFIG_ACCESSLOG_FILE, $_SESSION['username'] . ' added tags from '.$_SERVER['REMOTE_ADDR']);
@@ -94,7 +94,7 @@ if (count($_POST)) {
 <div id="left_frame">
 	<div id="logout">
 		<?php
-		if (isset($_SESSION['username'])) {
+		if (isset($_SESSION['userid'])) {
 			print('<a href="'.CONFIG_WEBHOMEPAGE.'">home</a></br>');
 			print('<a href="'.CONFIG_COMMON_WEBPATH.'logout.php">logout</a>');
 		}
@@ -202,7 +202,7 @@ if (count($_POST)) {
 		print '&nbsp</img>';
 		}
 		elseif ($ftype == 'video') {
-		print '<video id="content" poster="../img/loading.gif" ';
+		print '<video id="content" poster="'.CONFIG_COMMON_WEBPATH.'img/loading.gif" ';
 		print ' title="'.bmfft_name($key).'"';
 		print 'style="max-height:90%;" autoplay loop controls>';
 /*		print '<source src="download.php?key='.rawurlencode($key).'" ';

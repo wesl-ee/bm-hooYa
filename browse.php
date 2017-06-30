@@ -26,7 +26,7 @@ if (!isset($q)) die();
 <div id="left_frame">
 	<div id="logout">
 		<?php
-		if (isset($_SESSION['username'])) {
+		if (isset($_SESSION['userid'])) {
 			print('<a href="'.CONFIG_WEBHOMEPAGE.'">home</a></br>');
 			print('<a href="'.CONFIG_COMMON_WEBPATH.'logout.php">logout</a>');
 		}

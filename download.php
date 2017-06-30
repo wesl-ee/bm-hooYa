@@ -2,7 +2,8 @@
 include 'includes/config.php';
 
 include CONFIG_COMMON_PATH.'includes/core.php';
-include CONFIG_COMMON_PATH.'includes/auth.php';
+if (CONFIG_REQUIRE_AUTHENTICATION)
+	include CONFIG_COMMON_PATH.'includes/auth.php';
 include 'includes/video.php';
 include 'includes/bmfft_db.php';
 
@@ -64,7 +65,7 @@ if (isset($_GET['partyhat'])) {
 if ($ftype == 'video') {
 	if (isset($_GET['track'])) {
 		$track = $_GET['track'];
-		$out = CONFIG_TEMPORARY_PATH.$key.'_'.$track['index'];
+		$out = CONFIG_TEMPORARY_PATH.bin2hex(base64_decode($key)).'_'.$track['index'];
 		$file = bmfft_getattr($key, 'path');
 		$info = video_getstreaminfo($file, $track)[$track];
 		if ($info['codec_type'] == 'video')
