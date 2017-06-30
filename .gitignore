@@ -1,14 +1,2 @@
-share/*
-bmfft/cache/*
 bmfft/db/*
-!bmfft/db/tags.db.example
-!bmfft/cache/.gitkeep
 includes/config.php
-!share/saint_pepsi-enjoy_yourself.mp4
-!bmfft/.gitignore
-log/access.log
-log/auth.log
-otp_challenge
-bmfft/tags.db
-new.php
-message_pile/posts/*.html
