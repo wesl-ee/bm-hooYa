@@ -5,7 +5,10 @@ include "includes/config.php";
 include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
-include "includes/bmfft_db.php";
+include "includes/database.php";
+$main_attrs = db_get_main_attrs($key, ['Class', 'Path']);
+$class = $main_attrs['Class'];
+$path = $main_attrs['Path'];
 ?>
 <html>
 <head>
@@ -37,13 +40,13 @@ include "includes/bmfft_db.php";
 	</div>
 	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
 	<?php
-	$keys = bmfft_getrandom(10);
+	$keys = db_getrandom(10);
 	foreach ($keys as $key) {
 		print '<img ';
 		print 'onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print 'src="download.php?key='.rawurlencode($key).'&t=img&thumb"';
-		print 'title="'.basename(bmfft_getattr($key, 'path')).'">';
+		print 'title="'.basename($path).'">';
 		print '&nbsp</img>';
 	}
 	?>

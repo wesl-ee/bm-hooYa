@@ -5,7 +5,7 @@ include "includes/config.php";
 include CONFIG_COMMON_PATH."/includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."/includes/auth.php";
-include "includes/bmfft_db.php";
+include "includes/database.php";
 ?>
 <html>
 <head>
@@ -112,11 +112,9 @@ include "includes/bmfft_db.php";
 	</form>
 	<div style="width:100%;text-align:center;">
 		<?php print("now serving ");
-		$info = bmfft_info();
-		print number_format($info['files']);
-		print " files (";
-		print human_filesize($info['size']);
-		print ")<br/>".number_format($info['untagged']).' untagged';
+		$info = db_info();
+		print number_format($info['Files']);
+		print " files";
 		?>
 	</div>
 	<div style="width:100%;text-align:center;">

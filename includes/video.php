@@ -36,7 +36,7 @@ function video_getstreaminfo($file)
 }
 function video_print($key)
 {
-	$file = bmfft_getattr($key, 'path');
+	$file = db_get_main_attrs($key, ['Path'])['Path'];
 	$streams = video_getstreaminfo($file);
 	foreach ($streams as $stream) {
 		if ($stream['codec_type'] == 'audio') {
@@ -45,7 +45,7 @@ function video_print($key)
 	}
 	foreach ($streams as $stream) {
 		if ($stream['codec_type'] == 'video') {
-			$src = CONFIG_DOCUMENT_ROOT_PATH.'/bmfft/download.php?key='.rawurlencode($key).'&track='.$stream['index'];
+			$src = CONFIG_HOOYA_WEBPATH.'download.php?key='.rawurlencode($key).'&track='.$stream['index'];
 			if ($stream['codec_name'] == 'vp8')
 				$type = 'video/webm';
 			else
@@ -53,7 +53,7 @@ function video_print($key)
 			print('<source src="'.$src.'" type="'.$type.'">');
 		}
 		if ($stream['codec_type'] == 'subtitle') {
-			$src = CONFIG_DOCUMENT_ROOT_PATH.'/bmfft/download.php?key='.rawurlencode($key).'&track='.$stream['index'];
+			$src = CONFIG_HOOYA_WEBPATH.'download.php?key='.rawurlencode($key).'&track='.$stream['index'];
 			$srclang = $stream['tags']['language'];
 			$label = $stream['tags']['title'];
 			print('<track kind="subtitles" src="'.$src.'" label="'.$label.' srclang="'.$srclang.'"');
