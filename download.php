@@ -67,11 +67,11 @@ if (isset($_GET['thumb'])) {
 if (isset($_GET['partyhat'])) {
 	// Coming soon -- watch imagemagick render party hats onto thumbnails!
 }
-/*if ($ftype == 'video') {
+if ($ftype == 'video') {
 	if (isset($_GET['track'])) {
 		$track = $_GET['track'];
-		$out = CONFIG_TEMPORARY_PATH.bin2hex(base64_decode($key)).'_'.$track['index'];
-		$file = bmfft_getattr($key, 'path');
+		$out = CONFIG_TEMPORARY_PATH.$key.'_'.$track['index'];
+		$file = $path;
 		$info = video_getstreaminfo($file, $track)[$track];
 		if ($info['codec_type'] == 'video')
 			video_muxvideo($file, $track, $out);
@@ -82,7 +82,7 @@ if (isset($_GET['partyhat'])) {
 		bmfft_xsendfile($file);
 		return;
 	}
-}*/
+}
 // Otherwise, just send the file with no special rendering
 bmfft_xsendfile($file);
 

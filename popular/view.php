@@ -5,7 +5,7 @@ include "../includes/config.php";
 include CONFIG_COMMON_PATH."/includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."/includes/auth.php";
-include "../includes/bmfft_db.php";
+include "../includes/database.php";
 $namespace = $_GET['n'];
 ?>
 <html>
@@ -41,7 +41,7 @@ $namespace = $_GET['n'];
 	<div style="width:100%;display:table;">
 	<?php
 	// Definitely organize this into pages, like we did with browse.php
-	$heat = bmfft_namespaceheat($namespace);
+	$heat = db_tagspace_sort($namespace);
 	arsort($heat);
 	foreach ($heat as $single => $a) {
 		print '<div style="display:table-row;overflow-auto;">';

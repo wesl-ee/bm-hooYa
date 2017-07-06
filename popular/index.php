@@ -5,7 +5,7 @@ include "../includes/config.php";
 include CONFIG_COMMON_PATH."/includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."/includes/auth.php";
-include "../includes/bmfft_db.php";
+include "../includes/database.php";
 ?>
 <html>
 <head>
@@ -33,14 +33,14 @@ include "../includes/bmfft_db.php";
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:100%;float:left;"><a href="../">back</a></div>
 	</div>
-	<div style="width:100%;display:table;text-align:right;">
-	<div style="display:table-row;">
-		<div style="display:table-cell;padding-top:20px;"><a href="view.php?n=series">series</a></div>
-		<div style="display:table-cell;padding-top:20px;"><a href="view.php?n=character">character</a></div>
-		<div style="display:table-cell;padding-top:20px;"><a href="view.php?n=tags">other things</a></div>
-	</div>
-	</div>
-	</div>
+	<?php
+		foreach(db_get_tagspaces() as $space) {
+			print '<div style="width:50%;float:left;text-align:center;">';
+			print "<a href=view.php?n=$space>$space</a>";
+			print '</div>';
+		}
+	?>
+</div>
 </div>
 </body>
 </html>

@@ -109,6 +109,33 @@ function db_getrandom($n)
 	mysqli_close($dbh);
 	return $ret;
 }
+function db_tagspace_sort($tag_space)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	$query = "SELECT Member, COUNT(Member) AS Count FROM TagMap,Tags WHERE TagId = Id"
+		. " AND Space = '$tag_space' GROUP BY TagId ORDER BY Count DESC";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[$row['Member']] = $row['Count'];
+	}
+	return $ret;
+}
+function db_get_tagspaces()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	$query = "SELECT Space FROM Tags GROUP BY Space";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[] = $row['Space'];
+	}
+	return $ret;
+}
 function db_info()
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
