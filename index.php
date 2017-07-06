@@ -84,7 +84,7 @@ include "includes/database.php";
 	<div id="header" style="margin-bottom:20px;">
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;"><a href='help/'>search help</a><br/><a href="random.php">random untagged</a></div>
+		<div style="width:33%;float:left;text-align:right;"><a href='help/'>search help</a><br/><a href="random.php">random</a></div>
 	</div>
 	<div style="width:100%;padding-bottom:20px;text-align:center;">
 		<h1>hooYa!</h1>
@@ -103,7 +103,6 @@ include "includes/database.php";
 			<option value="anime">anime</option>
 			<option value="single_image">single_image</option>
 			<option value="movie">movie</option>
-			<option value="manga">manga</option>
 			<option value="music">music</option>
 			<option value="video">video</option>
 			</select>

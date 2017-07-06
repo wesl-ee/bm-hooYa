@@ -23,13 +23,13 @@ function hooya_search($query)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
-
 	// TODO Approximate tags which are not exact by levenshtien distance
 
-	// Next search the database for them and keep an array of keys associated with the
-	// number of matching terms
-	$query = "SELECT FileId, COUNT(*) AS Matches FROM TagMap WHERE TagId IN ("
-	. "SELECT Id AS TagId FROM Tags WHERE ";
+	$query = "SELECT Id, COUNT(*) AS Matches FROM Files WHERE Id IN ("
+	. "SELECT Files.Id FROM Files, TagMap, Tags WHERE "
+	. "Files.Id = TagMap.FileId AND TagMap.TagId = Tags.Id ";
+	if (isset($mediaclass)) $query .= "AND Files.Class = '$mediaclass' ";
+	$query .= "AND (";
 	foreach ($terms as $i => $term) {
 /*		if ($search_rules[$term] == 'forbid') {
 			if ($i > 0) $query .= " OR";
@@ -39,17 +39,19 @@ function hooya_search($query)
 			if ($i > 0) $query .= " OR";
 			$query .= " Member = '$term'";
 //		}
-
 	}
-	$query .= ") GROUP BY FileId ORDER BY Matches DESC";
-/*	if (isset($page, $resultsperpage)) {
-		$lower = $page * $resultsperpage;
-		$upper = $lower + $resultsperpage;
-		$query .= " LIMIT $lower,$upper";
-	}*/
+	$query .= "))";
+
+	// Display all items on an empty query
+	if (empty($terms)) {
+		$query = "SELECT Id, COUNT(*) AS Matches FROM Files ";
+		if (isset($mediaclass)) $query .= " WHERE Files.Class = '$mediaclass' ";
+	}
+
+	$query .= " GROUP BY Id ORDER BY Matches DESC, Id DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		$results[] = $row["FileId"];
+		$results[] = $row["Id"];
 	}
 	return $results;
 }

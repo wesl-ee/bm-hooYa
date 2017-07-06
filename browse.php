@@ -86,23 +86,18 @@ if (!isset($q)) die();
 	?>
 	</div>
 	<div style="text-align:center;">
-	<?php
-	// This is the page nav at the bottom
-	// Can definitely be made prettier~
-	for ($i=0; $i < (count($keys)/10); $i++) {
-		if ($i == $page) {
-			print '<span style="font-weight:bold;font-color:inverse;">'.$i.'</span> ';
-			continue;
-		}
-		print '<a ';
-		print 'href="?'.http_build_query($q).'&page='.$i.'"';
-		print '>'.$i.'</a> ';
-	}
-	?>
+		<?php if ($page > 0)
+			print "<a href='?".http_build_query($q)."&page=".($page-1)."'><</a>";
+		?>
+		<form method="GET" style="text-align:center;display:inline;">
+			<input style="text-align:center;" name="page" type="text" Value=<?php echo $page?>>
+			<?php foreach($_GET as $a => $b) if ($a != "page") print "<input type='hidden' name='$a' value='$b'>" ?>
+		</form>
+		<?php if ($page < count($keys))
+			print "<a href='?".http_build_query($q)."&page=".($page+1)."'>></a>";
+		?>
 	</div>
-	<div style="width:100%;text-align:center;padding-bottom:10px;">
-		<?php echo count($keys);?> results
-	</div> 
+	<div style="width:100%;text-align:center;"><?php print ((int)round(count($keys)/10)." pages")?></div>
 </div>
 </body>
 </html>

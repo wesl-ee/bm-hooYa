@@ -108,8 +108,10 @@ $ftype = explode('/', $mimetype)[0];
 		<?php
 			$tags = db_get_tags($key);
 			foreach ($tags as $tag) {
+				print '<div style="">';
 				print '<input style="text-align:center;float:left;" name="tag_space[]" value="'.$tag['Space'].'"></input>';
-				print '<input style="text-align:center;float:right;" name="tag_member[]" value="'.$tag['Member'].'"></input>';
+				print '<input style="text-align:center;float:left;margin-left:5%;" name="tag_member[]" value="'.$tag['Member'].'"></input>';
+				print '</div>';
 			}
 		?>
 		</div>
@@ -122,10 +124,10 @@ $ftype = explode('/', $mimetype)[0];
 	</div>
 </div>
 <div id="right_frame" style="height:100%;">
-	<div id="title" style="">
-		<h3>view</h3>
+	<div>
+	<h3>File</h3>
 	</div>
-	<div id="header" style="">
+	<div>
 		<div style="width:33%;float:left;"><a onClick="window.history.back();">back</a></div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;overflow:hidden;"><a href="help/guidelines.php">tagging guidelines</a></div>

@@ -101,8 +101,9 @@ function db_getrandom($n)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
-	$query = "SELECT Id FROM Files ORDER BY RAND()"
-		. " LIMIT " . $n;
+	$query = "SELECT Id FROM Files WHERE NOT Id in ("
+	. "SELECT FileId AS Id FROM TagMap) ORDER BY RAND()"
+	. " LIMIT " . $n;
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res))
 		$ret[] = $row['Id'];
