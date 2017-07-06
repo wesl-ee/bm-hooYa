@@ -1,5 +1,5 @@
 <?php
-function bmfft_search($query)
+function hooya_search($query)
 {
 	if (!empty($query['media_class'])) $mediaclass = $query['media_class'];
 
@@ -19,62 +19,38 @@ function bmfft_search($query)
 		} 
 	}
 
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+
 	// TODO Approximate tags which are not exact by levenshtien distance
 
 	// Next search the database for them and keep an array of keys associated with the
 	// number of matching terms
-	$dbh = dba_open(CONFIG_TAG_DB, 'rd', 'gdbm');
-	$key = dba_firstkey($dbh);
-	while ($key !== false) {
-		$value = dba_fetch($key, $dbh);
-		$value = json_decode($value, true);
-		
-		// Filter by media class
-		$match = true;
-		foreach ($query as $ext_attr => $attr_value) {
-			if ($attr_value && $value[$ext_attr] != $attr_value) {
-				$match = false;
-				break;
-			}
-		}
-		if (!$match) {
-			$key = dba_nextkey($dbh);
-			continue;
-		}
+	$query = "SELECT FileId, COUNT(*) AS Matches FROM TagMap WHERE TagId IN ("
+	. "SELECT Id AS TagId FROM Tags WHERE ";
+	foreach ($terms as $i => $term) {
+/*		if ($search_rules[$term] == 'forbid') {
+			if ($i > 0) $query .= " OR";
+			$query .= " Member != '$term'";
+		}*/
+//		else {
+			if ($i > 0) $query .= " OR";
+			$query .= " Member = '$term'";
+//		}
 
-		// Skip most processing if we have a blank query
-		if (!$terms) {
-			$results[$key]++;
-			$key = dba_nextkey($dbh);
-			continue;
-		}
-		// Check the relevancy of each search term
-		// Fucking hell this is bad but w/e~ I'll patch it up
-		// in a more readable form sometime but I'd rather just
-		// be over it for now
-		foreach ($terms as $term) {
-			if ($search_rules[$term] == 'forbid')
-				continue;
-			// +1
-			$term_found = false;	// what the fuck
-			foreach ($value['namespaces'] as $a) {
-				if ($a[$term]) {
-					$results[$key]++;
-					$term_found = true; // what the fuck
-					continue;
-				}
-			}
-			// If the search term was meant to contain the search term
-			// then expel it from the results
-			if (!$term_found && $search_rules[$term] == 'strict') {
-				unset($results[$key]);
-				break;
-			}
-		}
-		$key = dba_nextkey($dbh);
 	}
-	dba_close($dbh);
-	arsort($results);
-	return array_keys($results);
+	$query .= ") GROUP BY FileId ORDER BY Matches DESC";
+/*	if (isset($page, $resultsperpage)) {
+		$lower = $page * $resultsperpage;
+		$upper = $lower + $resultsperpage;
+		$query .= " LIMIT $lower,$upper";
+	}*/
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$results[] = $row["FileId"];
+	}
+	return $results;
 }
 ?>

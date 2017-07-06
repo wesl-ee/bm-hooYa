@@ -9,7 +9,7 @@ include CONFIG_COMMON_PATH."/includes/core.php";
 include "includes/search.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."/includes/auth.php";
-include "includes/bmfft_db.php";
+include "includes/database.php";
 
 foreach($_GET as $param => $value) {
 	if ($param != 'page') $q[$param] = $value;
@@ -61,19 +61,28 @@ if (!isset($q)) die();
 	$page = 0;
 	if (isset($_GET['page']))
 		$page = $_GET['page'];
-	$keys = bmfft_search($q);
-
-	// Take the current page's slice of the array to be the results
-	// And mark them up nicely
+	$keys = hooya_search($q);
 	$results = array_slice($keys, $page*10, 10);
 	foreach ($results as $key) {
 		print '<img';
 		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
 		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print ' src="download.php?key='.rawurlencode($key).'&thumb"';
-		print ' title="'.bmfft_name($key).'">';
+		print ' title="'.''.'">';
 		print '&nbsp</img>';
 	}
+
+	// Take the current page's slice of the array to be the results
+	// And mark them up nicely
+
+/*	foreach ($results as $key) {
+		print '<img';
+		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
+		print ' style="display:block;margin-bottom:10px;width:100%;"';
+		print ' src="download.php?key='.rawurlencode($key).'&thumb"';
+		print ' title="'.bmfft_name($key).'">';
+		print '&nbsp</img>';
+	}*/
 	?>
 	</div>
 	<div style="text-align:center;">
