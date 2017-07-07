@@ -54,9 +54,8 @@ function db_set_tags($key, $tags)
 	mysqli_query($dbh, $query);
 	// Finally, clean up `Tags`, in the case that all references to the
 	// tag have been deleted
-	$query = "DELETE FROM Tags WHERE Id NOT IN (SELECT TagId FROM TagMap "
-		+ "WHERE FileId = '$key')";
-	mysqli_query($dbh, $query);
+	$query = "DELETE FROM Tags WHERE Id NOT IN (SELECT TagId FROM TagMap)";
+	mysqli_query($dbh, $query, MYSQLI_ASYNC);
 	mysqli_close($dbh);
 }
 function db_set_main_attrs($key, $attrs)
@@ -73,7 +72,7 @@ function db_set_main_attrs($key, $attrs)
 	// Remove trailing comma
 	$query = substr($query, 0, -1);
 	$query .= " WHERE Id = '$key'";
-	mysqli_query($dbh, $query);
+	mysqli_query($dbh, $query, MYSQLI_ASYNC);
 	mysqli_close($dbh);
 }
 function db_get_main_attrs($key, $attrs)
@@ -146,7 +145,9 @@ function db_info()
 	$query = "SELECT COUNT(*) FROM Files";
 	$res = mysqli_query($dbh, $query);
 	$files = mysqli_fetch_assoc($res)['COUNT(*)'];
+	$version = mysqli_get_server_version($dbh);
 	mysqli_close($dbh);
-	return ['Files' => $files];
+	return ['Files' => $files,
+		'Version' => $version];
 }
 ?>

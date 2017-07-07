@@ -17,15 +17,7 @@ $namespace = $_GET['n'];
 <div id="container">
 <div id="left_frame">
 	<div id="logout">
-		<?php
-		if (isset($_SESSION['userid'])) {
-			print('<a href="'.CONFIG_WEBHOMEPAGE.'">home</a></br>');
-			print('<a href="'.CONFIG_COMMON_WEBPATH.'logout.php">logout</a>');
-		}
-		else {
-			print('<a href="'.CONFIG_COMMON_WEBPATH.'login.php?ref='.$_SERVER['REQUEST_URI'].'">login</a>');
-		}
-		?>
+		<?php print_login(); ?>
 	</div>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>

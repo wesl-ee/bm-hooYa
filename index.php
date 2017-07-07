@@ -68,15 +68,7 @@ include "includes/database.php";
 <div id="container">
 <div id="left_frame">
 	<div id="logout">
-		<?php
-		if (isset($_SESSION['userid'])) {
-			print('<a href="'.CONFIG_WEBHOMEPAGE.'">home</a></br>');
-			print('<a href="'.CONFIG_COMMON_WEBPATH.'logout.php">logout</a>');
-		}
-		else {
-			print('<a href="'.CONFIG_COMMON_WEBPATH.'login.php?ref='.$_SERVER['REQUEST_URI'].'">login</a>');
-		}
-		?>
+		<?php print_login(); ?>
 	</div>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
@@ -112,8 +104,19 @@ include "includes/database.php";
 	<div style="width:100%;text-align:center;">
 		<?php print("now serving ");
 		$info = db_info();
+
 		print number_format($info['Files']);
 		print " files";
+		print "<br/>";
+
+		// See mysql_get_server_version for the version encoding
+		print "(mysql version ";
+		$major = round($info['Version']/10000);
+		$minor = round(($info['Version'] - $major * 10000)/100);
+		$sub = $info['Version'] - $major * 10000 - $minor * 100;
+		print ($major.".");
+		print ($minor.".");
+		print ($sub.")");
 		?>
 	</div>
 	<div style="width:100%;text-align:center;">
