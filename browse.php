@@ -38,8 +38,8 @@ if (!isset($q)) die();
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="title" style="text-align:center;">
-	<h1>
+	<article>
+	<article>
 		<?php
 		// Construct a pretty header on the fly from the given query
 		foreach ($q as $a => $b) {
@@ -50,39 +50,29 @@ if (!isset($q)) die();
 			echo "$b ";
 		}
 		?>
-	</h1></div>
-	<div id="header" style="overflow:auto;padding-bottom:10px;">
+	</article>
+	<header style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
-	</div>
+	</header>
 	<hr/>
-	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
+	<div id="thumbs">
 	<?php
 	// Choose the page that is displayed
 	$page = 0;
 	if (isset($_GET['page']))
 		$page = $_GET['page'];
 	$keys = hooya_search($q);
-	$results = array_slice($keys, $page*10, 10);
+
+	// Take the current page's slice of the array to be the results
+	// And mark them up nicely
+	$results = array_slice($keys, $page*15, 15);
 	foreach ($results as $key) {
 		print '<img';
 		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
-		print ' style="display:block;margin-bottom:10px;width:100%;"';
 		print ' src="download.php?key='.rawurlencode($key).'&thumb"';
 		print ' title="'.''.'">';
 		print '&nbsp</img>';
 	}
-
-	// Take the current page's slice of the array to be the results
-	// And mark them up nicely
-
-/*	foreach ($results as $key) {
-		print '<img';
-		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
-		print ' style="display:block;margin-bottom:10px;width:100%;"';
-		print ' src="download.php?key='.rawurlencode($key).'&thumb"';
-		print ' title="'.bmfft_name($key).'">';
-		print '&nbsp</img>';
-	}*/
 	?>
 	</div>
 	<div style="text-align:center;">
@@ -90,14 +80,14 @@ if (!isset($q)) die();
 			print "<a href='?".http_build_query($q)."&page=".($page-1)."'><</a>";
 		?>
 		<form method="GET" style="text-align:center;display:inline;">
-			<input style="text-align:center;" name="page" type="text" Value=<?php echo $page?>>
+			<input style="text-align:center;width:50px" name="page" type="text" Value=<?php echo $page?>>
 			<?php foreach($_GET as $a => $b) if ($a != "page") print "<input type='hidden' name='$a' value='$b'>" ?>
 		</form>
-		<?php if ($page < count($keys))
+		<?php if ($page < round(count($keys)/15))
 			print "<a href='?".http_build_query($q)."&page=".($page+1)."'>></a>";
 		?>
 	</div>
-	<div style="width:100%;text-align:center;"><?php print ((int)round(count($keys)/10)." pages")?></div>
+	<div style="width:100%;text-align:center;"><?php print ((int)round(count($keys)/15)." pages")?></div>
 </div>
 </body>
 </html>

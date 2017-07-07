@@ -88,7 +88,6 @@ bmfft_xsendfile($file);
 
 function bmfft_xsendfile($file) {
 	header('Content-Type:'.mime_content_type($file));
-	header('Content-Disposition: attachment; filename="' . basename($file) . '"');
 	header('X-Sendfile: '.$file);
 }
 ?>

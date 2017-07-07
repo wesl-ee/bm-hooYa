@@ -32,22 +32,21 @@ $path = $main_attrs['Path'];
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="title"><h1>random untagged ten</h1></div>
-	<div id="header" style="overflow:auto;padding-bottom:10px;">
+	<header>random untagged fifteen</header>
+	<header>
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="location.reload()">more!</a></div>
-	</div>
-	<div class="gallery" style="column-count:4;column-fill:balance;column-gap:10px;">
+	</header>
+	<div id="thumbs">
 	<?php
-	$keys = db_getrandom(10);
+	$keys = db_getrandom(15);
 	foreach ($keys as $key) {
-		print '<img ';
-		print 'onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
-		print ' style="display:block;margin-bottom:10px;width:100%;"';
-		print 'src="download.php?key='.rawurlencode($key).'&t=img&thumb"';
-		print 'title="'.basename($path).'">';
-		print '&nbsp</img>';
+		print '<img';
+		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
+		print ' src="download.php?key='.rawurlencode($key).'&t=img&thumb"';
+		print ' title="'.basename($path).'">';
+		print ' &nbsp</img>';
 	}
 	?>
 	</div>

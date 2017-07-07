@@ -8,32 +8,40 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 include "includes/database.php";
 include "includes/video.php";
 
+// Grab the primary key for addressing the file
 if (!isset($_GET['key']))
 	die;
 $key = rawurldecode($_GET['key']);
 
+// Discriminate by media Class (video, single_image etc. . .)
 if (isset($_POST['class'])) {
 	$class = $_POST['class'];
 	db_set_main_attrs($key, ['Class' => $class]);
 }
-if (isset($_POST['tag_space'], $_POST['tag_member'])) {
+
+// Grab tag {space => member pairs} (e.g. 'character' => 'madoka')
+if (isset($_POST['tag_space'], $_POST['tag_member'])
+	&& count($_POST['tag_space']) == count($_POST['tag_space'])) {
 	$tag_space = $_POST['tag_space'];
 	$tag_member = $_POST['tag_member'];
-	if (count($tag_space) != count($tag_member)) die('whoops!');
 	for ($i = 0; $i < count($tag_space); $i++) {
-		if (empty($tag_space[$i]) || empty($tag_member[$i]))
+		if ($tag_space[$i] === ''|| $tag_member[$i] === '')
 			continue;
 		$tags[$i]['Space'] = $tag_space[$i];
 		$tags[$i]['Member'] = $tag_member[$i];
 	}
+	// Replace the previous tags with the space -> member pairs we
+	// just read in
 	db_set_tags($key, $tags);
 }
 
+// Get some information about the file our $key maps to
 $main_attrs = db_get_main_attrs($key, ['Class', 'Path', 'Mimetype']);
 $class = $main_attrs['Class'];
 $path = $main_attrs['Path'];
 $mimetype = $main_attrs['Mimetype'];
 
+// Filetype is the first half of the mimetype
 $ftype = explode('/', $mimetype)[0];
 ?>
 <html>
@@ -41,111 +49,120 @@ $ftype = explode('/', $mimetype)[0];
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
 	<title>bmffd — view</title>
 	<script type="text/javascript">
-/*		function addTagField() {
-			var boxes = document.getElementById('tagform').querySelectorAll('input');
-			for (var i=0; i < boxes.length; i++)
-				// Why do you need another box when there's already an open one?
-				if (!boxes[i].value) {boxes[i].focus(); return;}
-			var input = document.createElement('input');
-			input.type='text';
-			input.name='tag_space[]';
-			document.getElementById('tagform').appendChild(input);
-			input.focus();
-		}*/
-		function addNamespaceField() {
-			var boxes = document.getElementById('namespaceform').querySelectorAll('input');
-			for (var i=0; i < boxes.length; i++)
-				// Why do you need another box when there's already an open one?
-				if (!boxes[i].value) {boxes[i].focus(); return;}
-			var key = document.createElement('input');
-			var value = document.createElement('input');
-			key.type='text';
-			value.type='text';
-			key.name='tag_space[]';
-			value.name='tag_member[]';
-			key.style.float='left';
-			value.style.float='right';
-			document.getElementById('namespaceform').appendChild(key);
-			document.getElementById('namespaceform').appendChild(value);
-			key.focus();
-		}
+	// Insert an additional space => member pair of input boxes
+	function addTagField() {
+		var tagform = document.getElementById('tagform');
+		var boxes = tagform.querySelectorAll('input');
+		for (var i=0; i < boxes.length; i++)
+			// Why do you need another box?
+			if (!boxes[i].value) {boxes[i].focus(); return;}
+		var space = document.createElement('input');
+		var member = document.createElement('input');
+		space.type = 'text';
+		space.id = 'space_box';
+		space.name='tag_space[]';
+
+		member.type='text';
+		member.id = 'member_box';
+		member.name='tag_member[]';
+
+		document.getElementById('tagform').appendChild(space);
+		document.getElementById('tagform').appendChild(member);
+		space.focus();
+	}
 	</script>
 </head>
 <body>
 <div id="container">
 <div id="left_frame">
 	<div id="logout">
-		<?php
-		if (isset($_SESSION['userid'])) {
-			print('<a href="'.CONFIG_WEBHOMEPAGE.'">home</a></br>');
-			print('<a href="'.CONFIG_COMMON_WEBPATH.'logout.php">logout</a>');
-		}
-		else {
-			print('<a href="'.CONFIG_COMMON_WEBPATH.'login.php?ref='.$_SERVER['REQUEST_URI'].'">login</a>');
-		}
-		?>
+		<?php print_login(); ?>
 	</div>
-	<div id="tag_frame" style="padding-bottom:10px;">
-	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>" style="width:90%;margin:auto;overflow:auto;">
+	<div id="tag_frame" style="padding:10px;">
+	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>">
 		<h3 style="text-align:left;">Properties</h3>
 		<div style="overflow:auto;">
 			<div style="float:left;">media class</div>
 			<div style="float:right;">
 				<select name="class">
 				<option style="display:none;"> </option>
-				<option <?php if ($class == 'anime') echo 'Selected' ?> value="anime">Anime</option>
-				<option <?php if ($class == 'single_image') echo 'Selected' ?> value="single_image">Single Image</option>
-				<option <?php if ($class == 'movie') echo 'Selected' ?> value="movie">Movie</option>
-				<option <?php if ($class == 'music') echo 'Selected' ?> value="music">Music</option>
-				<option <?php if ($class == 'video') echo 'Selected' ?> value="video">Video</option>
+				<option
+					<?php if ($class == 'anime') echo 'Selected' ?>
+					value="anime">
+					Anime
+				</option>
+				<option
+					<?php if ($class == 'single_image') echo 'Selected' ?>
+					value="single_image">
+					Single Image
+				</option>
+				<option
+					<?php if ($class == 'movie') echo 'Selected' ?>
+					value="movie">
+					Movie
+				</option>
+				<option
+					<?php if ($class == 'music') echo 'Selected' ?>
+					value="music">
+					Music
+				</option>
+				<option
+					<?php if ($class == 'video') echo 'Selected' ?>
+					value="video">
+					Video
+				</option>
 				</select>
 			</div>
 		</div><hr/>
 		<h3 style="text-align:left;">tags</h3>
-		<div id="namespaceform">
-		<div style="text-align:left;float:left;width:50%;">tag space</div>
-		<div style="text-align:right;float:right;width:50%;">tag value</div>
+		<div id="tagform">
 		<?php
+			// Populate a list of existing tags
 			$tags = db_get_tags($key);
 			foreach ($tags as $tag) {
-				print '<div style="">';
-				print '<input style="text-align:center;float:left;" name="tag_space[]" value="'.$tag['Space'].'"></input>';
-				print '<input style="text-align:center;float:left;margin-left:5%;" name="tag_member[]" value="'.$tag['Member'].'"></input>';
-				print '</div>';
+				print '<input id="space_box"'
+				. ' name="tag_space[]"'
+				. ' value="'.$tag['Space'].'"'
+				. '>';
+				print '<input id="member_box"'
+				. ' name="tag_member[]"'
+				. ' value="'.$tag['Member'].'"'
+				. '>';
 			}
 		?>
 		</div>
 	<div style="text-align:center;">
-		<a onClick="addNamespaceField()">add a tag</a>
+		<a onClick="addTagField()">add a tag</a>
 	</div><hr/>
 	<h3 style="text-align:center;">extended attributes (soon)</h3>
 	<input type="submit" value="commit changes" style="display:block;margin:auto;margin-top:10px;display:block;">
 	</form>
 	</div>
 </div>
-<div id="right_frame" style="height:100%;">
-	<div>
-	<h3>File</h3>
-	</div>
-	<div>
-		<div style="width:33%;float:left;"><a onClick="window.history.back();">back</a></div>
-		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;overflow:hidden;"><a href="help/guidelines.php">tagging guidelines</a></div>
-	</div>
-	<div class="gallery" style="height:100%;">
+<div id="right_frame_flex">
+	<header>File</header>
+	<header>
+		<div style="width:33%;float:left;">
+			<a onClick="window.history.back();">back</a>
+		</div>
+		<div style="width:33%;float:left;text-align:center;">
+			&nbsp
+		</div>
+		<div style="width:33%;float:left;text-align:right;overflow:hidden;">
+			<a href="help/guidelines.php">tagging guidelines</a>
+		</div>
+	</header>
+	<div id="content">
 	<?php
 	// Vary the output based on the filetype, how smart!
 	if ($ftype == 'image') {
-		print '<img id="content" onClick="addNamespaceField()"';
-		print ' title="'.''.'"';
-		print ' src="download.php?key='.rawurlencode($key).'"';
-		print ' style="max-height:100%;">';
+		print '<img src="download.php?key='.rawurlencode($key).'"';
+		print ' onClick="window.open(this.src)">';
 		print '&nbsp</img>';
 	}
 	elseif ($ftype == 'video') {
-		print '<video id="content" poster="'.CONFIG_COMMON_WEBPATH.'img/loading.gif" ';
-		print ' title="'.''.'"';
-		print 'style="max-height:90%;" autoplay loop controls>';
+		print '<video poster="'.CONFIG_COMMON_WEBPATH.'img/loading.gif" ';
+		print 'autoplay loop controls>';
 		video_print($key);
 		print 'Your browser cannot play this video~';
 		print '</video>';
