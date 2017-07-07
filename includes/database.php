@@ -145,7 +145,7 @@ function db_info()
 	$query = "SELECT COUNT(*) FROM Files";
 	$res = mysqli_query($dbh, $query);
 	$files = mysqli_fetch_assoc($res)['COUNT(*)'];
-	$version = mysqli_get_server_version($dbh);
+	$version = mysqli_get_server_info($dbh);
 	mysqli_close($dbh);
 	return ['Files' => $files,
 		'Version' => $version];

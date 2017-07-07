@@ -30,9 +30,24 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 		$tags[$i]['Space'] = $tag_space[$i];
 		$tags[$i]['Member'] = $tag_member[$i];
 	}
+	$new_tags =  count($tags) - count(db_get_tags($key));
+	if (isset($_SESSION['userid'])) {
+		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
+		// Keep a high-score count for every logged-in user!
+		$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + ' . ($new_tags+$new_namespaces) . ' WHERE `id`=' . $_SESSION['userid'] . '';
+		$conn->query($cmd);
+	}
+
 	// Replace the previous tags with the space -> member pairs we
 	// just read in
 	db_set_tags($key, $tags);
+
+}
+if (count($_POST)) {
+	// Hack to make sure the user can navigate back to the query page
+	// without actually storing the query across page navigations
+	// which would be very ugly
+	print '<script>window.history.back();</script>';
 }
 
 // Get some information about the file our $key maps to

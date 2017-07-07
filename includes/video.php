@@ -1,7 +1,7 @@
 <?php
 function video_muxvideo($file, $videotrack, $out)
 {
-	if (is_file($out)) return;
+	if (is_file($out)) {exec('touch ' . escapeshellarg($out)); return;}
 	$cmd = 'ffprobe -v quiet -print_format json -show_streams '.escapeshellarg($file).' 2>&1';
 	$output = shell_exec($cmd);
 	$streams = json_decode($output, true)['streams'];

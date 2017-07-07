@@ -29,7 +29,7 @@ $path = $main_attrs['Path'];
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="location.reload()">more!</a></div>
-	</header>
+	</header><hr/>
 	<div id="thumbs">
 	<?php
 	$keys = db_getrandom(15);

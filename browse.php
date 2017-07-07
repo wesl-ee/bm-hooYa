@@ -30,8 +30,7 @@ if (!isset($q)) die();
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<article>
-	<article>
+	<header>
 		<?php
 		// Construct a pretty header on the fly from the given query
 		foreach ($q as $a => $b) {
@@ -42,7 +41,7 @@ if (!isset($q)) die();
 			echo "$b ";
 		}
 		?>
-	</article>
+	</header>
 	<header style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
 	</header>

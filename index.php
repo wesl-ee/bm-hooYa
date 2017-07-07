@@ -109,14 +109,8 @@ include "includes/database.php";
 		print " files";
 		print "<br/>";
 
-		// See mysql_get_server_version for the version encoding
-		print "(mysql version ";
-		$major = round($info['Version']/10000);
-		$minor = round(($info['Version'] - $major * 10000)/100);
-		$sub = $info['Version'] - $major * 10000 - $minor * 100;
-		print ($major.".");
-		print ($minor.".");
-		print ($sub.")");
+		// See mysql_get_server_info
+		print ("(".$info['Version'].")");
 		?>
 	</div>
 	<div style="width:100%;text-align:center;">
