@@ -65,28 +65,22 @@ $ftype = explode('/', $mimetype)[0];
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
 	<title>bmffd — view</title>
-	<script type="text/javascript">
-	// Insert an additional space => member pair of input boxes
-	function addTagField() {
-		var tagform = document.getElementById('tagform');
-		var boxes = tagform.querySelectorAll('input');
-		for (var i=0; i < boxes.length; i++)
-			// Why do you need another box?
-			if (!boxes[i].value) {boxes[i].focus(); return;}
-		var space = document.createElement('input');
-		var member = document.createElement('input');
-		space.type = 'text';
-		space.id = 'space_box';
-		space.name='tag_space[]';
-
-		member.type='text';
-		member.id = 'member_box';
-		member.name='tag_member[]';
-
-		document.getElementById('tagform').appendChild(space);
-		document.getElementById('tagform').appendChild(member);
-		space.focus();
-	}
+	<script src="js/f.js"></script>
+	<script>
+		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {
+		// alt + n generates new tag inputs
+		case (78):
+			e.preventDefault();
+			addTagField();
+			break;
+		//alt + enter commits changes
+		case (13):
+			e.preventDefault();
+			var tag_frame = document.getElementById('tag_frame');
+			var tag_form = tag_frame.getElementsByTagName('form')[0];
+			tag_form.submit();
+		} }
+		document.addEventListener("keydown", hotKeys);
 	</script>
 </head>
 <body>
