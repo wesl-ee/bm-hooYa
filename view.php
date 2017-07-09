@@ -32,9 +32,11 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	}
 	$new_tags =  count($tags) - count(db_get_tags($key));
 	if (isset($_SESSION['userid'])) {
-		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME, CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
+		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME
+		,CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
 		// Keep a high-score count for every logged-in user!
-		$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + ' . ($new_tags+$new_namespaces) . ' WHERE `id`=' . $_SESSION['userid'] . '';
+		$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + '
+		. ($new_tags+$new_namespaces) . ' WHERE `id`=' . $_SESSION['userid'] . '';
 		$conn->query($cmd);
 	}
 
@@ -150,7 +152,7 @@ $ftype = explode('/', $mimetype)[0];
 		<a onClick="addTagField()">add a tag</a>
 	</div><hr/>
 	<h3 style="text-align:center;">extended attributes (soon)</h3>
-	<input type="submit" value="commit changes" style="display:block;margin:auto;margin-top:10px;display:block;">
+	<input type="submit" value="commit changes" style="margin:auto;display:block;">
 	</form>
 	</div>
 </div>

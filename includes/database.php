@@ -5,6 +5,8 @@ function db_get_tags($key)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	// Escape all potential user input
+	$key = mysqli_real_escape_string($dbh, $key);
 	// Pull from `Tags` using our $key
 	$query = "SELECT Tags.Space, Tags.Member FROM " .
 		"Files, TagMap, Tags WHERE Files.Id = '$key' " .
@@ -23,6 +25,9 @@ function db_set_tags($key, $tags)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	// Escape all potential user input
+	$key = mysqli_real_escape_string($dbh, $key);
+	$tags = mysqli_real_escape_string($dbh, $tags);
 	foreach ($tags as $tag) {
 		// First, take the opportunity to insert new tags into `Tags`
 		$space = $tag["Space"];
@@ -55,7 +60,7 @@ function db_set_tags($key, $tags)
 	// Finally, clean up `Tags`, in the case that all references to the
 	// tag have been deleted
 	$query = "DELETE FROM Tags WHERE Id NOT IN (SELECT TagId FROM TagMap)";
-	mysqli_query($dbh, $query, MYSQLI_ASYNC);
+	mysqli_query($dbh, $query);
 	mysqli_close($dbh);
 }
 function db_set_main_attrs($key, $attrs)
@@ -64,15 +69,18 @@ function db_set_main_attrs($key, $attrs)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	// Escape all potential user input
+	$key = mysqli_real_escape_string($dbh, $key);
 	// Construct the SQL query
 	$query = "UPDATE Files SET";
 	foreach ($attrs as $attr => $value) {
+		$value = mysqli_real_escape_string($dbh, $value);
 		$query .= " $attr = '$value',";
 	}
 	// Remove trailing comma
 	$query = substr($query, 0, -1);
 	$query .= " WHERE Id = '$key'";
-	mysqli_query($dbh, $query, MYSQLI_ASYNC);
+	mysqli_query($dbh, $query);
 	mysqli_close($dbh);
 }
 function db_get_main_attrs($key, $attrs)
@@ -81,9 +89,12 @@ function db_get_main_attrs($key, $attrs)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	// Escape all potential user input
+	$key = mysqli_real_escape_string($dbh, $key);
 	// Construct the SQL query
 	$query = "SELECT";
 	foreach ($attrs as $attr) {
+		$attr = mysqli_real_escape_string($dbh, $attr);
 		$query .= " $attr,";
 	}
 	// Remove trailing comma
@@ -115,6 +126,8 @@ function db_tagspace_sort($tag_space)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	// Escape all potential user input
+	$tag_space = mysqli_real_escape_string($dbh, $tag_space);
 	$query = "SELECT Member, COUNT(Member) AS Count FROM TagMap,Tags WHERE TagId = Id"
 		. " AND Space = '$tag_space' GROUP BY TagId ORDER BY Count DESC";
 	$res = mysqli_query($dbh, $query);

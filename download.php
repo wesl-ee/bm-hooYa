@@ -36,14 +36,17 @@ if (isset($_GET['thumb'])) {
 	if ($ftype == 'video') {
 		$file = CONFIG_TEMPORARY_PATH.$key.'.jpg';
 		if (!file_exists($file))
-			exec('ffmpegthumbnailer -i '.escapeshellarg($path).' -f -q 10 -s 320 -o '.$file);
+			exec('ffmpegthumbnailer -i '.escapeshellarg($path)
+			.' -f -q 10 -s 350  -o '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}
+	// Take the first frame of a .gif and thumbnail it
 	if ($ftype == 'image' && $mimetype == 'image/gif') {
 		$file = CONFIG_TEMPORARY_PATH.$key.'.jpg';
 		if (!file_exists($file))
-			exec('convert '.escapeshellarg($path).'[0] -thumbnail "500x500>" '.$file);
+			exec('convert '.escapeshellarg($path)
+			.'[0] -thumbnail "350x350>" '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}
@@ -51,7 +54,8 @@ if (isset($_GET['thumb'])) {
 	if ($ftype == 'image' && $mimetype != 'image/png') {
 		$file = CONFIG_TEMPORARY_PATH.$key.'.jpg';
 		if (!file_exists($file))
-			exec('convert '.escapeshellarg($path).' -thumbnail "500x500>" '.$file);
+			exec('convert '.escapeshellarg($path)
+			.' -thumbnail "350x350>" '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}
@@ -59,7 +63,8 @@ if (isset($_GET['thumb'])) {
 	if ($ftype == 'image') {
 		$file = CONFIG_TEMPORARY_PATH.$key.'.png';
 		if (!file_exists($file))
-			exec('convert '.escapeshellarg($path).' -thumbnail "500x500>" '.$file);
+			exec('convert '.escapeshellarg($path)
+			.' -thumbnail "350x350>" '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}

@@ -1,8 +1,5 @@
 <!DOCTYPE HTML>
 <?php
-ini_set('session.cache_limiter','public');
-session_cache_limiter(false);
-
 include "includes/config.php";
 
 include CONFIG_COMMON_PATH."/includes/core.php";
@@ -71,14 +68,20 @@ if (!isset($q)) die();
 			print "<a href='?".http_build_query($q)."&page=".($page-1)."'><</a>";
 		?>
 		<form method="GET" style="text-align:center;display:inline;">
-			<input style="text-align:center;width:50px" name="page" type="text" Value=<?php echo $page?>>
-			<?php foreach($_GET as $a => $b) if ($a != "page") print "<input type='hidden' name='$a' value='$b'>" ?>
+			<input style="text-align:center;width:50px"
+				name="page" type="text" Value=<?php echo $page?>>
+			<?php foreach($_GET as $a => $b)
+				if ($a != "page")
+				print "<input type='hidden' name='$a' value='$b'>"
+			?>
 		</form>
 		<?php if ($page < round(count($keys)/15))
 			print "<a href='?".http_build_query($q)."&page=".($page+1)."'>></a>";
 		?>
 	</div>
-	<div style="width:100%;text-align:center;"><?php print ((int)round(count($keys)/15)." pages")?></div>
+	<div style="width:100%;text-align:center;">
+		<?php print (round(count($keys)/15)." pages")?>
+	</div>
 </div>
 </body>
 </html>
