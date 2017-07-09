@@ -1,5 +1,5 @@
 <?php
-// A place for thumbnails and encoded video, relative to DOCUMENT_HEAD
+// A place for thumbnails and encoded video
 define("CONFIG_TEMPORARY_PATH", "/var/http/a/");
 define("CONFIG_TEMPORARY_WEBPATH", "/a/");
 
@@ -13,5 +13,6 @@ define("CONFIG_MYSQL_HOOYA_USER", "MYSQL_USER");
 define("CONFIG_MYSQL_HOOYA_PASSWORD", "MYSQL_PASSWORD");
 define("CONFIG_MYSQL_HOOYA_DATABASE", "MYSQL_DB");
 
+// Where you want to keep hooYa files
 define("CONFIG_HOOYA_STORAGE_PATH", "/var/media/")
 ?>

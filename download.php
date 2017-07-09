@@ -38,6 +38,8 @@ if (isset($_GET['thumb'])) {
 		if (!file_exists($file))
 			exec('ffmpegthumbnailer -i '.escapeshellarg($path)
 			.' -f -q 10 -s 350  -o '.$file);
+			var_dump('ffmpegthumbnailer -i '.escapeshellarg($path)
+                        .' -f -q 10 -s 350  -o '.$file);die;
 		bmfft_xsendfile($file);
 		return;
 	}
