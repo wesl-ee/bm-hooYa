@@ -149,18 +149,29 @@ function db_get_tagspaces()
 	}
 	return $ret;
 }
-function db_info()
+function db_info($req)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
-	$query = "SELECT COUNT(*) FROM Files";
-	$res = mysqli_query($dbh, $query);
-	$files = mysqli_fetch_assoc($res)['COUNT(*)'];
-	$version = mysqli_get_server_info($dbh);
+	if ($req['Files']) {
+		$query = "SELECT COUNT(*) FROM Files";
+		$res = mysqli_query($dbh, $query);
+		$files = mysqli_fetch_assoc($res)['COUNT(*)'];
+		$ret['Files'] = $files;
+	}
+	if ($req['Version']) {
+		$version = mysqli_get_server_info($dbh);
+		$ret['Version'] = $version;
+	}
+	if ($req['Size']) {
+		$query = "SELECT SUM(Size) FROM Files";
+		$res = mysqli_query($dbh, $query);
+		$size = mysqli_fetch_assoc($res)['SUM(Size)'];
+		$ret['Size'] = $size;
+	}
 	mysqli_close($dbh);
-	return ['Files' => $files,
-		'Version' => $version];
+	return $ret;
 }
 ?>

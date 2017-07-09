@@ -134,10 +134,12 @@ $ftype = explode('/', $mimetype)[0];
 				print '<input id="space_box"'
 				. ' name="tag_space[]"'
 				. ' value="'.$tag['Space'].'"'
+				. ' onKeyDown="inputFilter(event)"'
 				. '>';
 				print '<input id="member_box"'
 				. ' name="tag_member[]"'
 				. ' value="'.$tag['Member'].'"'
+				. ' onKeyDown="inputFilter(event)"'
 				. '>';
 			}
 		?>

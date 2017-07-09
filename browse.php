@@ -17,6 +17,17 @@ if (!isset($q)) die();
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
 	<title>bmffd — <?php echo $_GET['q']?></title>
+        <script>
+		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {
+		// alt + l goes to next page
+		case (76):
+			break;
+		// alt + h goes to previous page
+		case (13):
+			break;
+		} }
+		document.addEventListener("keydown", hotKeys);
+	</script>
 </head>
 <body>
 <div id="container">

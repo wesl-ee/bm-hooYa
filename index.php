@@ -11,6 +11,7 @@ include "includes/database.php";
 <head>
 	<?php include CONFIG_COMMON_PATH."/includes/head.php"; ?>
 	<title>bmffd — hooYa!</title>
+	<script src="js/f.js"></script>
 	<script type="text/javascript">
 	function toggleFilter() {
 		var filter = document.getElementById('filter');
@@ -82,7 +83,7 @@ include "includes/database.php";
 		<h1>hooYa!</h1>
 	</div>
 	<form style="width:100%;" action="browse.php" method="get" >
-		<div><input type="text" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" placeholder="search_terms"></input></div>
+		<div><input type="text" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></div>
 		<div style="width:70%;display:block;margin:auto;margin-bottom:10px;vertical-align:top;">
 		<input type="submit" style="width:20%;vertical-align:top;" value="いこう！"></input>
 		<a onClick="toggleFilter()" style="float:right;">filter</a>
@@ -103,7 +104,7 @@ include "includes/database.php";
 	</form>
 	<div style="width:100%;text-align:center;">
 		<?php print("now serving ");
-		$info = db_info();
+		$info = db_info(['Files' => 1, 'Version' => 1]);
 
 		print number_format($info['Files']);
 		print " files";

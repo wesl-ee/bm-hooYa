@@ -2,15 +2,22 @@
 function inputFilter(e)
 {
 	switch (e.keyCode) {
+	// Replace spaces with underscores unless that would make
+	// two underscores in a row
 	case 32:
-		if (e.target.value.slice(-1) != '_') {
+		if (e.target.value.slice(-1) == '_') {
+			a = e.target.value;
+			e.target.value = a.substring(0, a.length - 1);
+		}
+		else {
 			e.preventDefault();
 			e.target.value += '_';
 		}
 	}
 }
 // Insert an additional space => member pair of input boxes
-function addTagField() {
+function addTagField()
+{
 	var tagform = document.getElementById('tagform');
 	var boxes = tagform.querySelectorAll('input');
 	for (var i=0; i < boxes.length; i++)
