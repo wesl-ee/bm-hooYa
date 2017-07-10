@@ -7,6 +7,7 @@ if (!CONFIG_REQUIRE_AUTHENTICATION) die;
 include CONFIG_COMMON_PATH."includes/auth.php";
 include CONFIG_COMMON_PATH."includes/access.php";
 include CONFIG_HOOYA_PATH."includes/database.php";
+include CONFIG_HOOYA_PATH."includes/admin.php";
 // Don't let not-admins in here!
 if (!db_isAdmin($_SESSION['userid'])) die;
 
@@ -28,7 +29,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 <div id="right_frame">
 	<h1 style="text-align:center;">remove from hooYa!</h1>
 	<div class="header">
-	<a href="../">« back</a>
+	<a href="<?php echo CONFIG_COMMON_WEBPATH.'admin/'?>">« back</a>
 	</div>
 	<form method="POST" style="display:block;width:70%;margin:auto;">
 		<label for="key">designation</label>
