@@ -73,12 +73,28 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 	<div style="width:70%;margin:auto;display:block;">
 	Log
 	<textarea style="width:100%;" rows="10"><?php if (isset($_POST['path'])) {
+		// Grab tag {space => member pairs} (e.g. 'character' => 'madoka')
+		if (isset($_POST['tag_space'], $_POST['tag_member'])
+			&& count($_POST['tag_space']) == count($_POST['tag_space'])) {
+			$tag_space = $_POST['tag_space'];
+			$tag_member = $_POST['tag_member'];
+			for ($i = 0; $i < count($tag_space); $i++) {
+				if ($tag_space[$i] === ''|| $tag_member[$i] === '')
+					continue;
+				$tags[$i]['Space'] = $tag_space[$i];
+				$tags[$i]['Member'] = $tag_member[$i];
+			}
+		}
+		// TL NOTE not doing anything w/ $tags yet. . .
+		// Either copy or move files from the path to CONFIG_HOOYA_STORAGE_PATH
 		if ($_POST['merge']) {
-			hooya_mergedir($_POST['path'], $_POST['method']);
+			hooya_mergedir($_POST['path'], $_POST['method'], $tags);
 		}
+		// Just index files where they are
 		else {
-			hooya_importdir($_POST['path']);
+			hooya_importdir($_POST['path'], $tags);
 		}
+
 	} ?></textarea>
 	</div>
 </div>

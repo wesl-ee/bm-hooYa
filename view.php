@@ -43,7 +43,6 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	// Replace the previous tags with the space -> member pairs we
 	// just read in
 	db_set_tags($key, $tags);
-
 }
 if (count($_POST)) {
 	// Hack to make sure the user can navigate back to the query page

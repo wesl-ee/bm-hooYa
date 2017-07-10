@@ -1,6 +1,6 @@
 <?php
 /* Probably merge this and database.php files later */
-function hooya_mergedir($path, $method)
+function hooya_mergedir($path, $method, $tags)
 {
 	$files = getDirFiles($path);
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -13,6 +13,7 @@ function hooya_mergedir($path, $method)
 		$size = filesize($file);
 		$mimetype = mime_content_type($file);
 		$ftype = explode('/', $mimetype)[0];
+		$extension = pathinfo($file)['extension'];
 		switch ($ftype) {
 		case 'image':
 			$class = 'single_image';
@@ -34,7 +35,7 @@ function hooya_mergedir($path, $method)
 				$failcount++;
 				continue;
 			}
-			$file = CONFIG_HOOYA_STORAGE_PATH . $id;
+			$file = CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension;
 		}
 		else if ($method == 'cp') {
 			if (!copy($file, CONFIG_HOOYA_STORAGE_PATH . $id)) {
@@ -44,7 +45,7 @@ function hooya_mergedir($path, $method)
 				$failcount++;
 				continue;
 			}
-			$file = CONFIG_HOOYA_STORAGE_PATH . $id;
+			$file = CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension;
 		}
 		$query = "INSERT INTO `Files`"
 		. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
@@ -65,7 +66,7 @@ function hooya_mergedir($path, $method)
 	if ($failcount > 0) print "\nFailed to index $failcount files";
 	mysqli_close($dbh);
 }
-function hooya_importdir($path)
+function hooya_importdir($path, $tags)
 {
 	$files = getDirFiles($path);
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -78,6 +79,7 @@ function hooya_importdir($path)
 		$size = filesize($file);
 		$mimetype = mime_content_type($file);
 		$ftype = explode('/', $mimetype)[0];
+		$extension = pathinfo($file)['extension'];
 		switch ($ftype) {
 		case 'image':
 			$class = 'single_image';
@@ -129,6 +131,9 @@ function hooya_updatedb($path)
 		mysqli_query($dbh, $query);
 	}
 	mysqli_close($dbh);
+}
+function hooya_tagdir($dir)
+{
 }
 function hooya_deletekey($key, $rm = false)
 {
