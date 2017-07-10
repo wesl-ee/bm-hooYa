@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <?php
-include "../../includes/core.php";
+include "../includes/config.php";
+include CONFIG_COMMON_PATH."includes/core.php";
 // Why do you want the admin panel if you can't handle accounts?
 if (!CONFIG_REQUIRE_AUTHENTICATION) die;
 include CONFIG_COMMON_PATH."includes/auth.php";
 include CONFIG_COMMON_PATH."includes/access.php";
-include CONFIG_HOOYA_PATH."includs/database.php";
+include CONFIG_HOOYA_PATH."includes/database.php";
 // Don't let not-admins in here!
 if (!db_isAdmin($_SESSION['userid'])) die;
 
@@ -19,15 +20,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 <div id="container">
 <div id="left_frame">
 	<div id="logout">
-		<?php
-		if (isset($_SESSION['username'])) {
-			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'">home</a></br>');
-			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'logout.php">logout</a>');
-		}
-		else {
-			print('<a href="'.CONFIG_DOCUMENT_ROOT_PATH.'login.php?ref='.$_SERVER['REQUEST_URI'].'">login</a>');
-		}
-	        ?>
+		<?php print_login(); ?>
         </div>
 	<img id="mascot" src=<?php echo $_SESSION['mascot']?>>
 </div>
@@ -50,12 +43,10 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 	if (isset($_POST['key'])) {
 		$key = rawurldecode($_POST['key']);
 		if (!file_exists($key))
-			$status = bmfft_deletekey($key, $_POST['rm']);
+			hooya_deletekey($key, $_POST['rm']);
 		else {
-			$status = bmfft_deletedir($key, $_POST['rm']);
+			hooya_deletedir($key, $_POST['rm']);
 		}
-		if ($status) print 'Success!';
-		else print 'Operation failed';
 	}?></textarea>
 	</div>
 </div>

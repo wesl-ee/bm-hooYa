@@ -39,7 +39,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 <div id="right_frame">
 	<h1 style="text-align:center;">admin hub</h1>
 	<div class="header">
-	<a href="../">« back</a>
+	<a href=<?php echo CONFIG_COMMON_WEBPATH . "admin/" ?>>« back</a>
 	</div>
 	<form method="POST" style="display:block;width:70%;margin:auto;">
 		<input type="text" name="path" placeholder="file or directory path" style="width:100%;margin-top:10px;"></input>
@@ -61,8 +61,8 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 		<div id="method" style="overflow:hidden;display:none;">
 			<div style="margin-top:10px;">merge method</div>
 			<select name="method" style="display:block;">
-				<option name="rsync">rsync (preserve original)</option>
-				<option name="mv">mv (move original)</option>
+				<option name="cp" value="cp">cp (preserve original)</option>
+				<option name="mv" value="mv">mv (move original)</option>
 			</select>
 		</div>
 		<div style="overflow:hidden;">
@@ -73,7 +73,12 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 	<div style="width:70%;margin:auto;display:block;">
 	Log
 	<textarea style="width:100%;" rows="10"><?php if (isset($_POST['path'])) {
-		hooya_importdir($_POST['path']);
+		if ($_POST['merge']) {
+			hooya_mergedir($_POST['path'], $_POST['method']);
+		}
+		else {
+			hooya_importdir($_POST['path']);
+		}
 	} ?></textarea>
 	</div>
 </div>

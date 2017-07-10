@@ -5,6 +5,7 @@ function db_get_tags($key)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Pull from `Tags` using our $key
@@ -25,6 +26,7 @@ function db_set_tags($key, $tags)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	$tags = mysqli_real_escape_string($dbh, $tags);
@@ -69,6 +71,7 @@ function db_set_main_attrs($key, $attrs)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Construct the SQL query
@@ -89,6 +92,7 @@ function db_get_main_attrs($key, $attrs)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Construct the SQL query
@@ -111,6 +115,7 @@ function db_getrandom($n)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	$query = "SELECT Id FROM Files WHERE NOT Id in ("
 	. "SELECT FileId AS Id FROM TagMap) ORDER BY RAND()"
 	. " LIMIT " . $n;
@@ -126,6 +131,7 @@ function db_tagspace_sort($tag_space)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$tag_space = mysqli_real_escape_string($dbh, $tag_space);
 	$query = "SELECT Member, COUNT(Member) AS Count FROM TagMap,Tags WHERE TagId = Id"
@@ -142,6 +148,7 @@ function db_get_tagspaces()
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	$query = "SELECT Space FROM Tags GROUP BY Space";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
@@ -155,6 +162,7 @@ function db_info($req)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
 	if ($req['Files']) {
 		$query = "SELECT COUNT(*) FROM Files";
 		$res = mysqli_query($dbh, $query);
