@@ -28,7 +28,7 @@ function hooya_mergedir($path, $method, $tags)
 			$class = 'single_image';
 		}
 		if ($method == 'mv') {
-			if (!rename($file, CONFIG_HOOYA_STORAGE_PATH . $id)) {
+			if (!rename($file, CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension)) {
 				print "Failed to rename ". basename($file) . "\n";
 				print "*Check permissions on $file and "
 				. CONFIG_HOOYA_STORAGE_PATH . "\n";
@@ -38,7 +38,7 @@ function hooya_mergedir($path, $method, $tags)
 			$file = CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension;
 		}
 		else if ($method == 'cp') {
-			if (!copy($file, CONFIG_HOOYA_STORAGE_PATH . $id)) {
+			if (!copy($file, CONFIG_HOOYA_STORAGE_PATH . $id) . '.' . $extension) {
 				print "Failed to copy " . basename($file) . "\n"
 				. "*Check permissions on " . CONFIG_HOOYA_STORAGE_PATH
 				. "\n";
