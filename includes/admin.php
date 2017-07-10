@@ -128,8 +128,17 @@ function hooya_updatedb($path)
 		$query = "UPDATE `Files` SET"
 		. " `Path` = '$file'"
 		. " WHERE `Id` = '$id'";
-		mysqli_query($dbh, $query);
+		if (mysqli_query($dbh, $query) === false) {
+			$failcount++;
+			print "Failed to update " . basename($file) . "\n";
+			continue;
+		}
+		$successcount++;
+		print "Updated " . basename($file) . "\n";
 	}
+	print "\n\nREPORT";
+	if ($successcount > 0) print "\nIndexed $successcount files (" . human_filesize($totalsize) . ")";
+	if ($failcount > 0) print "\nFailed to index $failcount files";
 	mysqli_close($dbh);
 }
 function hooya_tagdir($dir)
