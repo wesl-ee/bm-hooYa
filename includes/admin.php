@@ -133,6 +133,7 @@ function hooya_updatedb($path)
 			print "Failed to update " . basename($file) . "\n";
 			continue;
 		}
+		$totalsize += filesize($file);
 		$successcount++;
 		print "Updated " . basename($file) . "\n";
 	}

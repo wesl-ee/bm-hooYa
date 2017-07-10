@@ -26,14 +26,14 @@ function db_set_tags($key, $tags)
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+
 	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
-	$tags = mysqli_real_escape_string($dbh, $tags);
 	foreach ($tags as $tag) {
 		// First, take the opportunity to insert new tags into `Tags`
-		$space = $tag["Space"];
-		$member = $tag["Member"];
+		$space = mysqli_real_escape_string($dbh, $tag["Space"]);
+		$member = mysqli_real_escape_string($dbh, $tag["Member"]);
 		$query = "INSERT INTO Tags (`Space`, `Member`) "
 			. "VALUES ('$space', '$member')";
 		mysqli_query($dbh, $query);
@@ -45,6 +45,8 @@ function db_set_tags($key, $tags)
 			. "'$space' AND Tags.Member = '$member'";
 		mysqli_query($dbh, $query);
 	}
+
+
 
 	// Delete any mappings which were not explicitly passed to
 	// us in $tags; this indicates the user has removed an association
