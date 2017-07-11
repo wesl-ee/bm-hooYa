@@ -10,7 +10,7 @@ include "../includes/bmfft_db.php";
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa!</title>
+	<title>bigmike — hooYa! help</title>
 </head>
 <body>
 <div id="container">

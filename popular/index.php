@@ -2,15 +2,15 @@
 <?php
 include "../includes/config.php";
 
-include CONFIG_COMMON_PATH."/includes/core.php";
+include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
-	include CONFIG_COMMON_PATH."/includes/auth.php";
+	include CONFIG_COMMON_PATH."includes/auth.php";
 include "../includes/database.php";
 ?>
 <html>
 <head>
-	<?php include CONFIG_COMMON_PATH."/includes/head.php"; ?>
-	<title>bmffd — hooYa! popular</title>
+	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<title>bigmike — hooYa! popular</title>
 </head>
 <body>
 <div id="container">

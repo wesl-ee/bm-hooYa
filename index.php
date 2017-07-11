@@ -9,8 +9,8 @@ include "includes/database.php";
 ?>
 <html>
 <head>
-	<?php include CONFIG_COMMON_PATH."/includes/head.php"; ?>
-	<title>bmffd — hooYa!</title>
+	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<title>bigmike — hooYa!</title>
 	<script src="js/f.js"></script>
 	<script type="text/javascript">
 	function toggleFilter() {

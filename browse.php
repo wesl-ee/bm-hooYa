@@ -2,21 +2,21 @@
 <?php
 include "includes/config.php";
 
-include CONFIG_COMMON_PATH."/includes/core.php";
+include CONFIG_COMMON_PATH."includes/core.php";
 include "includes/search.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
-	include CONFIG_COMMON_PATH."/includes/auth.php";
+	include CONFIG_COMMON_PATH."includes/auth.php";
 include "includes/database.php";
 
 foreach($_GET as $param => $value) {
 	if ($param != 'page') $q[$param] = $value;
 }
-if (!isset($q)) die();
+if (!isset($q)) die;
 ?>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
-	<title>bmffd — <?php echo $_GET['q']?></title>
+	<title>bigmike — hooYa! <?php echo $_GET['q']?></title>
         <script>
 		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {
 		// alt + l goes to next page

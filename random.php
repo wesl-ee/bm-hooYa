@@ -13,7 +13,7 @@ $path = $main_attrs['Path'];
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
-	<title>bmffd — hooYa! untagged</title>
+	<title>bigmike — hooYa! untagged</title>
 </head>
 <body>
 <div id="container">
