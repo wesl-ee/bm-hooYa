@@ -72,7 +72,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 	</form>
 	<div style="width:70%;margin:auto;display:block;">
 	Log
-	<textarea style="width:100%;" rows="10"><?php if (isset($_POST['path'])) {
+	<textarea style="width:100%;" rows="10" readonly><?php if (isset($_POST['path'])) {
 		// Grab tag {space => member pairs} (e.g. 'character' => 'madoka')
 		if (isset($_POST['tag_space'], $_POST['tag_member'])
 			&& count($_POST['tag_space']) == count($_POST['tag_space'])) {

@@ -146,6 +146,34 @@ function hooya_tagdir($dir)
 }
 function hooya_deletekey($key, $rm = false)
 {
+        $dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+                CONFIG_MYSQL_HOOYA_USER,
+                CONFIG_MYSQL_HOOYA_PASSWORD,
+                CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT Path FROM Files WHERE Id='$key'";
+	$file = mysqli_fetch_assoc(mysqli_query($dbh, $query))['Path'];
+	$size = filesize($file);
+	if ($rm) {
+		if (unlink($file) === false) {
+			print "Failed to delete $file\n";
+			$failcount++;
+		}
+		else print "Deleted $file\n";
+	}
+
+	$query = "DELETE FROM Files WHERE Id='$key'";
+	if (mysqli_query($dbh, $query) === false) {
+		print "Failed to unmap $file\n";
+		$failcount++;
+	}
+	else {
+		print "Unmapped $key\n";
+		$successcount++;
+	}
+	print "\n\nREPORT";
+	if ($successcount > 0) print "\nUnmapped $successcount files (" . human_filesize($size) . ")";
+	if ($failcount > 0) print "\nFailed to unmap $failcount files";
 }
 function hooya_deletedir($dir, $rm = false)
 {

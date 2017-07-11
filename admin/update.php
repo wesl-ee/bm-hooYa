@@ -40,7 +40,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 	</form>
 	<div style="width:70%;margin:auto;display:block;">
 	Log
-	<textarea style="width:100%;" rows="10"><?php if (isset($_POST['path'])) {
+	<textarea style="width:100%;" rows="10" readonly><?php if (isset($_POST['path'])) {
 		hooya_updatedb($_POST['path']);
 	} ?></textarea>
 	</div>

@@ -33,7 +33,7 @@ function addTagField()
 	member.type='text';
 	member.id = 'member_box';
 	member.name='tag_member[]';
-	space.addEventListener('keydown', inputFilter);
+	member.addEventListener('keydown', inputFilter);
 
 	document.getElementById('tagform').appendChild(space);
 	document.getElementById('tagform').appendChild(member);
