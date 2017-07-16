@@ -7,16 +7,30 @@ function hooya_search($query)
 	if (!empty($query['query'])) $terms = explode(' ', strtolower($query['query']));
 	unset($query['query']);
 
+	$tagspaces = db_get_tagspaces();
+
 	// Determine the strictness of each search term
 	foreach ($terms as $key => $value) {
 		if ($value[0] == '+') {
-			$terms[$key] = substr($terms[$key], 1);
-			$search_rules[$terms[$key]] = 'strict';
+			$value = substr($terms[$key], 1);
+			$terms[$key] = $value;
+			$search_rules[$value] = 'strict';
 		} 
 		if ($value[0] == '-') {
-			$terms[$key] = substr($terms[$key], 1);
-			$search_rules[$terms[$key]] = 'forbid';
-		} 
+			$value = substr($terms[$key], 1);
+			$terms[$key] = $value;
+			$search_rules[$value] = 'forbid';
+		}
+		// Search for tagspace:member pairs like series:magica
+		$index = strpos($value, ':');
+		if ($index) {
+			$space = substr($value, 0, $index);
+			if ($tagspaces[$space]) {
+				$value = substr($value, $index+1);
+				$terms[$key] = $value;
+				$search_spaces[$value] = $space;
+			}
+		}
 	}
 
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -36,11 +50,16 @@ function hooya_search($query)
 			$query .= " Member != '$term'";
 		}*/
 //		else {
-			if ($i > 0) $query .= " OR";
-			$query .= " Member = '$term'";
+			if ($i > 0) $query .= " OR ";
+			$query .= " (Member = '$term'";
+			// Account for any tagspace specification like series:
+			if ($space = $search_spaces[$term])
+				$query .= " AND Space = '$space'";
+			$query .= ")";
 //		}
 	}
 	$query .= "))";
+	var_dump($query);die;
 
 	// Display all items on an empty query
 	if (empty($terms)) {

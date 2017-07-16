@@ -26,7 +26,7 @@ include "../includes/database.php";
 		<div style="width:100%;float:left;"><a href="../">back</a></div>
 	</div>
 	<?php
-		foreach(db_get_tagspaces() as $space) {
+		foreach(array_keys(db_get_tagspaces()) as $space) {
 			print '<div style="width:50%;float:left;text-align:center;">';
 			print "<a href=view.php?n=$space>$space</a>";
 			print '</div>';

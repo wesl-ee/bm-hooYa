@@ -23,24 +23,28 @@ include "../includes/bmfft_db.php";
 	</div>
 	<p>searching is currently exact-match only. You can check out some popular tags <a href="popular.php">here</a>
 	while we work on this feature.</p>
-	<p>currently if you enter a bundle of search terms, each word is parsed out and the database is searched for that
-	word. The most relevant results are shown first, less relevant results shown on the following pages. Not all the pictures
-	may have all your tags, so use some of these operators to narrow your search</p>
+	<p>Here are some example searches</p>
 	<dl>
-		<dt>+lil_b</dt>
+		<dt>puella_magi_madoka_magica</dt>
+		<dd> - shows all pictures with the pmmm tag</dd>
+		<dt>puella_magi_madoka_magica gun</dd>
+		<dd> - shows all pictures with either the pmmm or gun tag, sorted by relevance</dd>
+		<dt>series:re:zero</dt>
+		<dd> - shows all pictures from the series re:zero</dd>
+<!--		<dt>+lil_b</dt>
 		<dd> - all results are REQUIRED to have the lil_b tag</dd>
 		<dt>-mathematics</dt>
-		<dd> - all results MUST NOT have the mathematics tag</dd>
+		<dd> - all results MUST NOT have the mathematics tag</dd>-->
 	</dl>
-	<h3>namespaces and tags</h3>
+	<h3>tagspaces and tags</h3>
 	<p>what the hell is the difference?</p>
-	<p>a namespace is like a tag, but for a certain characteristic. For instance, your favorite anime may be have indexed as
-	series:yuyushiki and be tagged as something like slice_of_life. It's not too hard to differentiate between a tag and a namespace
-	attribute, but if you have any hesitations just ask away in the IRC or imageboard!</p>
+	<p> a tagspace is something like 'series' or 'character' or 'clothing'. Note that the pairs 'series:naruto' and 'character:naruto'
+	are completely different searches</p>
 	<h3>soft introducton to database internals</h3>
-	<p>internally, a tag is stored with all the other namespaces, just under the special 'tags' namespace. It's complex, but storing
-	things like this makes searching a lot faster, as only one calculation per search term per picture is necessary; the whole array
-	doesn't need to be walked, because I abuse PHP and Perl's associative hashing; exciting! For deeper reading, check <a>this</a> out</p>
+	<p>Internally, every file is hashed and its hash is stored in one SQL table. Then, a seperate table is created for
+	each tagspace:member pair like 'series:pmmm'. Finally, A go-between table is created for mapping files->tags. This
+	arrangement is ideal because the data is 'normalized', meaning that redundant data is prevented and SQL lookups
+	are very fast, since they are keyed primarily by the file's MD5 hash. For deeper reading, check <a>this</a> out</p>
 	<!-- tagging quiz here -->
 	<p>as always, please read the <a href="guidelines.php">guidelines</a> before tagging, and just enjoy yourself!</p>
 </div>

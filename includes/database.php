@@ -154,7 +154,7 @@ function db_get_tagspaces()
 	$query = "SELECT Space FROM Tags GROUP BY Space";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		$ret[] = $row['Space'];
+		$ret[$row['Space']] = 1;
 	}
 	return $ret;
 }
