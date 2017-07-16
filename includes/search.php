@@ -39,8 +39,7 @@ function hooya_search($query)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	// TODO Approximate tags which are not exact by levenshtien distance
 
-	$query = "SELECT Id, COUNT(*) AS Matches FROM Files WHERE Id IN ("
-	. "SELECT Files.Id FROM Files, TagMap, Tags WHERE "
+	$query = "SELECT Files.Id, COUNT(*) AS Relevancy FROM Files, TagMap, Tags WHERE "
 	. "Files.Id = TagMap.FileId AND TagMap.TagId = Tags.Id ";
 	if (isset($mediaclass)) $query .= "AND Files.Class = '$mediaclass' ";
 	$query .= "AND (";
@@ -58,8 +57,7 @@ function hooya_search($query)
 			$query .= ")";
 //		}
 	}
-	$query .= "))";
-	var_dump($query);die;
+	$query .= ")";
 
 	// Display all items on an empty query
 	if (empty($terms)) {
@@ -67,7 +65,7 @@ function hooya_search($query)
 		if (isset($mediaclass)) $query .= " WHERE Files.Class = '$mediaclass' ";
 	}
 
-	$query .= " GROUP BY Id ORDER BY Matches DESC, Id DESC";
+	$query .= " GROUP BY Files.Id ORDER BY Relevancy DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$results[] = $row["Id"];
