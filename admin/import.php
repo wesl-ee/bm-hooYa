@@ -21,9 +21,15 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 	<script type="text/javascript">
 	function togglecheck(checkbox) {
 		var method = document.getElementById('method');
-		if (checkbox.checked)
+		var methodselect = document.getElementById('methodselect');
+		if (checkbox.checked) {
+			methodselect.disabled = false;
 			method.style.display = 'block';
-		else method.style.display = 'none';
+		}
+		else {
+			methodselect.disabled = true;
+			method.style.display = 'none';
+		}
 	}
 	</script>
 </head>
@@ -60,7 +66,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 			</div>
 		<div id="method" style="overflow:hidden;display:none;">
 			<div style="margin-top:10px;">merge method</div>
-			<select name="method" style="display:block;">
+			<select name="method" id="methodselect" style="display:block;" disabled>
 				<option name="cp" value="cp">cp (preserve original)</option>
 				<option name="mv" value="mv">mv (move original)</option>
 			</select>
@@ -79,7 +85,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 			$tag_space = $_POST['tag_space'];
 			$tag_member = $_POST['tag_member'];
 			for ($i = 0; $i < count($tag_space); $i++) {
-				if ($tag_space[$i] === ''|| $tag_member[$i] === '')
+				if ($tag_space[$i] === '' || $tag_member[$i] === '')
 					continue;
 				$tags[$i]['Space'] = $tag_space[$i];
 				$tags[$i]['Member'] = $tag_member[$i];
@@ -87,14 +93,7 @@ if (!db_isAdmin($_SESSION['userid'])) die;
 		}
 		// TL NOTE not doing anything w/ $tags yet. . .
 		// Either copy or move files from the path to CONFIG_HOOYA_STORAGE_PATH
-		if ($_POST['merge']) {
-			hooya_mergedir($_POST['path'], $_POST['method'], $tags);
-		}
-		// Just index files where they are
-		else {
-			hooya_importdir($_POST['path'], $tags);
-		}
-
+		hooya_importdir($_POST['path'], $_POST['method'], $tags);
 	} ?></textarea>
 	</div>
 </div>

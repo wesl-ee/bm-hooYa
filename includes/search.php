@@ -9,19 +9,20 @@ function hooya_search($query)
 
 	$tagspaces = db_get_tagspaces();
 
-	// Determine the strictness of each search term
 	foreach ($terms as $key => $value) {
+		// Determine the *inclusive* strictness of each term
 		if ($value[0] == '+') {
 			$value = substr($terms[$key], 1);
 			$terms[$key] = $value;
 			$search_rules[$value] = 'strict';
-		} 
+		}
+		// Determine the *exclusive* strictness of each term
 		if ($value[0] == '-') {
 			$value = substr($terms[$key], 1);
 			$terms[$key] = $value;
 			$search_rules[$value] = 'forbid';
 		}
-		// Search for tagspace:member pairs like series:magica
+		// Determine if the term is a tagspace:member pair
 		$index = strpos($value, ':');
 		if ($index) {
 			$space = substr($value, 0, $index);
@@ -39,7 +40,7 @@ function hooya_search($query)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	// TODO Approximate tags which are not exact by levenshtien distance
 
-	$query = "SELECT Files.Id, COUNT(*) AS Relevancy FROM Files, TagMap, Tags WHERE "
+	$query = "SELECT Files.Id, COUNT(*) AS Relevance FROM Files, TagMap, Tags WHERE "
 	. "Files.Id = TagMap.FileId AND TagMap.TagId = Tags.Id ";
 	if (isset($mediaclass)) $query .= "AND Files.Class = '$mediaclass' ";
 	$query .= "AND (";
@@ -50,7 +51,7 @@ function hooya_search($query)
 		}*/
 //		else {
 			if ($i > 0) $query .= " OR ";
-			$query .= " (Member = '$term'";
+			$query .= "(Member = '$term'";
 			// Account for any tagspace specification like series:
 			if ($space = $search_spaces[$term])
 				$query .= " AND Space = '$space'";
@@ -61,11 +62,11 @@ function hooya_search($query)
 
 	// Display all items on an empty query
 	if (empty($terms)) {
-		$query = "SELECT Id, COUNT(*) AS Matches FROM Files ";
+		$query = "SELECT Id, COUNT(*) AS Relevance FROM Files ";
 		if (isset($mediaclass)) $query .= " WHERE Files.Class = '$mediaclass' ";
 	}
 
-	$query .= " GROUP BY Files.Id ORDER BY Relevancy DESC";
+	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$results[] = $row["Id"];

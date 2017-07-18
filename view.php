@@ -152,7 +152,7 @@ $ftype = explode('/', $mimetype)[0];
 	</div>
 </div>
 <div id="right_frame_flex">
-	<header>File</header>
+	<header style="text-align:center;"><?php echo $key?></header>
 	<header>
 		<div style="width:33%;float:left;">
 			<a onClick="window.history.back();">back</a>

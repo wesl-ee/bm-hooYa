@@ -21,7 +21,7 @@ include "../includes/database.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="right_frame">
-	<div id="title"><h1>select a tag</h1></div>
+	<div id="title"><h1>select a space</h1></div>
 	<div id="header" style="overflow:auto;padding-bottom:10px;">
 		<div style="width:100%;float:left;"><a href="../">back</a></div>
 	</div>

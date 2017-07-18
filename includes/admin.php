@@ -1,6 +1,6 @@
 <?php
 /* Probably merge this and database.php files later */
-function hooya_mergedir($path, $method, $tags)
+function hooya_importdir($path, $method, $tags)
 {
 	$files = getDirFiles($path);
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -9,105 +9,104 @@ function hooya_mergedir($path, $method, $tags)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
 	foreach ($files as $file) {
+		// This is the key we'll use to talk about the file from now on
 		$id = hash_file('md5', $file);
-		$size = filesize($file);
-		$mimetype = mime_content_type($file);
-		$ftype = explode('/', $mimetype)[0];
-		$extension = pathinfo($file)['extension'];
-		switch ($ftype) {
-		case 'image':
-			$class = 'single_image';
-			break;
-		case 'video':
-			$class = 'video';
-			break;
-		case 'audio':
-			$class = 'audio';
-			break;
-		default:
-			$class = 'single_image';
-		}
+
+		// Destructively move files into storage
 		if ($method == 'mv') {
-			if (!file_exists(CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension)
-			&& !rename($file, CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension)) {
+			$newfile = CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extentsion;
+			if (file_exists($newfile)) {
+				print "Already indexed: " . basename($file) . " ";
+				if (unlink($file))
+					print "so deleted copy\n" ;
+				else
+					print "but could not delete copy\n";
+				continue;
+			}
+			if (!rename($file, $newfile)) {
 				print "Failed to rename ". basename($file) . "\n";
 				print "*Check permissions on $file and "
 				. CONFIG_HOOYA_STORAGE_PATH . "\n";
 				$failcount++;
 				continue;
 			}
-			$file = CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension;
+			$file = $newfile;
 		}
+		// Preserve the original file while copying it into storage
 		else if ($method == 'cp') {
-			if (!file_exists(CONFIG_HOOYA_STORAGE_PATH . '.' . $extension)
-			&& !copy($file, CONFIG_HOOYA_STORAGE_PATH . $id) . '.' . $extension) {
+			$newfile = CONFIG_HOOYA_STORAGE_PATH . '.' . $extension;
+			if (file_exists($newfile)) {
+				print "Already indexed: " . basename($file) . " ";
+				if (unlink($file))
+					print "so deleted copy\n" ;
+				else
+					print "but could not delete copy\n";
+				continue;
+			}
+			if (!copy($file, $newfile)) {
 				print "Failed to copy " . basename($file) . "\n"
 				. "*Check permissions on " . CONFIG_HOOYA_STORAGE_PATH
 				. "\n";
 				$failcount++;
 				continue;
 			}
-			$file = CONFIG_HOOYA_STORAGE_PATH . $id . '.' . $extension;
+			$file = $newfile;
 		}
-		$query = "INSERT INTO `Files`"
-		. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
-		. " ('$id', '$file', '$size', '$class', '$mimetype')"
-		. " ON DUPLICATE KEY UPDATE `Path` = '$file'";
-		if (mysqli_query($dbh, $query) === false) {
-			print "Failed to index " . basename($file) . "!\n";
-			$failcount++;
-			continue;
+		// Do nothing if we are not meant to merge this file into storage
+		else {
 		}
-		$totalsize += $size;
-		$successcount++;
-	}
-	print "\n\nREPORT";
-	if ($successcount > 0) print "\nIndexed $successcount files (" . human_filesize($totalsize) . ")";
-	if ($failcount > 0) print "\nFailed to index $failcount files";
-	mysqli_close($dbh);
-}
-function hooya_importdir($path, $tags)
-{
-	$files = getDirFiles($path);
-	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
-		CONFIG_MYSQL_HOOYA_USER,
-		CONFIG_MYSQL_HOOYA_PASSWORD,
-		CONFIG_MYSQL_HOOYA_DATABASE);
-	mysqli_set_charset($dbh, 'utf8');
-	foreach ($files as $file) {
-		$id = hash_file('md5', $file);
+
+		// Gather general properties about this file
 		$size = filesize($file);
 		$mimetype = mime_content_type($file);
 		$ftype = explode('/', $mimetype)[0];
 		$extension = pathinfo($file)['extension'];
+
+		// Determine the files's class in our storage schema
 		switch ($ftype) {
 		case 'image':
 			$class = 'single_image';
 			break;
 		case 'video':
 			$class = 'video';
-			break;
-		case 'audio':
-			$class = 'audio';
-			break;
-		default:
-			$class = 'single_image';
 		}
+
+		// Formulate a query for our storage
 		$query = "INSERT INTO `Files`"
 		. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
 		. " ('$id', '$file', '$size', '$class', '$mimetype')"
 		. " ON DUPLICATE KEY UPDATE `Path` = '$file'";
+
+		// Execute the query, catch any errors
 		if (mysqli_query($dbh, $query) === false) {
 			print "Failed to index " . basename($file) . "!\n";
 			$failcount++;
 			continue;
 		}
-		print "Indexed " . basename($file)
-		. " (" . human_filesize($size). ") as $class\n";
+
+		// Gather specific properties for each type of file
+		switch($class) {
+		case 'single_image':
+			list($width, $height) = getimagesize($file);
+			$query = "INSERT INTO `single_image` "
+			. " (`Id`, `Width`, `Height`) VALUES"
+			. " ('$id', $width, $height)"
+			. " ON DUPLICATE KEY UPDATE `Id` = '$id'";
+			break;
+		// TODO
+		case 'video':
+		}
+
+		// Execute the query, catch any errors
+		if ($query && mysqli_query($dbh, $query) === false) {
+			print "Failed to index " . basename($file) . "!\n";
+			$failcount++;
+			continue;
+		}
 		$totalsize += $size;
 		$successcount++;
 	}
-	print "\n\nREPORT";
+	print "\nREPORT";
 	if ($successcount > 0) print "\nIndexed $successcount files (" . human_filesize($totalsize) . ")";
 	if ($failcount > 0) print "\nFailed to index $failcount files";
 	mysqli_close($dbh);

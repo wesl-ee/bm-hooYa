@@ -115,7 +115,7 @@ include "includes/database.php";
 		?>
 	</div>
 	<div style="width:100%;text-align:center;">
-		<a href="popular/">check out our popular tags!</a>
+		or <a href="popular/">just browse</a>
 	</div>
 
 </div>
