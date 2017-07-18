@@ -66,7 +66,7 @@ function hooya_search($query)
 		if (isset($mediaclass)) $query .= " WHERE Files.Class = '$mediaclass' ";
 	}
 
-	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC";
+	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$results[] = $row["Id"];

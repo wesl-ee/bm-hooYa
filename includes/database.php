@@ -158,6 +158,49 @@ function db_get_tagspaces()
 	}
 	return $ret;
 }
+
+// Might do a SQL query here if we want to allow user-defined properties
+function db_get_class_properties($class)
+{
+	if ($class == 'single_image')
+		return ['Width', 'Height'];
+}
+function db_get_file_properties($key, $class, $properties)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	// Escape all potential user input
+	$key = mysqli_real_escape_string($dbh, $key);
+	// Construct the SQL query
+	$query = "SELECT";
+	foreach ($properties as $property) {
+		$property = mysqli_real_escape_string($dbh, $property);
+		$query .= " $property,";
+	}
+	// Remove trailing comma
+	$query = substr($query, 0, -1);
+	$query .= " FROM $class WHERE Id = '$key'";
+	$res = mysqli_query($dbh, $query);
+	$row = mysqli_fetch_assoc($res);
+	mysqli_close($dbh);
+	return $row;
+}
+function db_get_immutable_properties()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT Property, Immutable FROM Properties";
+	while ($row = mysqli_fetch_assoc($res)) {
+		if ($row['Immuatable'] == 'y') $ret[$row['Immutable']] = 1;
+	}
+	return $ret;
+}
 function db_info($req)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,

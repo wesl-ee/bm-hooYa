@@ -123,6 +123,22 @@ $ftype = explode('/', $mimetype)[0];
 				</option>
 				</select>
 			</div>
+			<?php
+			$properties = db_get_class_properties($class);
+			if ($properties) {
+				$properties = db_get_file_properties($key, $class, $properties);
+				foreach ($properties as $property => $value) {
+					print '<input id="space_box"'
+					. ' name="property_space[]"'
+					. ' value="'.$property.'" disalbed'
+					. '>';
+					print '<input id="member_box"'
+					. ' name="property_member[]"'
+					. ' value="'.$value.'" disabled'
+					. '>';
+				}
+			}
+			?>
 		</div><hr/>
 		<h3 style="text-align:left;">tags</h3>
 		<div id="tagform">
@@ -146,7 +162,6 @@ $ftype = explode('/', $mimetype)[0];
 	<div style="text-align:center;">
 		<a onClick="addTagField()">add a tag</a>
 	</div><hr/>
-	<h3 style="text-align:center;">extended attributes (soon)</h3>
 	<input type="submit" value="commit changes" style="margin:auto;display:block;">
 	</form>
 	</div>
