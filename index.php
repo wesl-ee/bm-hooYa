@@ -6,6 +6,7 @@ include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
 include "includes/database.php";
+include "includes/render.php";
 ?>
 <html>
 <head>
@@ -93,11 +94,9 @@ include "includes/database.php";
 		<div style="float:left;vertical-align:bottom;margin-bottom:10px;">Media Type</div>
 			<select name="media_class" onChange="changeExtAttrs(this.value)" style="margin-bottom:10px;width:30%;text-align:center;float:right;border-bottom:0px;">
 			<option value=""> </option>
-			<option value="anime">anime</option>
-			<option value="single_image">single_image</option>
-			<option value="movie">movie</option>
-			<option value="music">music</option>
-			<option value="video">video</option>
+			<?php foreach (DB_MEDIA_CLASSES as $c) {
+				print "<option value='$c'>$c</option>";
+			}?>
 			</select>
 		<div id="ext_attrs" style="display:table;width:100%;padding-bottom:50px;"></div>
 		</div>

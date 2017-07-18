@@ -7,6 +7,7 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
 include "includes/database.php";
 include "includes/video.php";
+include "includes/render.php";
 
 // Grab the primary key for addressing the file
 if (!isset($_GET['key']))
@@ -90,57 +91,14 @@ $ftype = explode('/', $mimetype)[0];
 	</div>
 	<div id="tag_frame" style="padding:10px;">
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>">
-		<h3 style="text-align:left;">Properties</h3>
-		<div style="overflow:auto;">
-			<div style="float:left;">media class</div>
-			<div style="float:right;">
-				<select name="class">
-				<option style="display:none;"> </option>
-				<option
-					<?php if ($class == 'anime') echo 'Selected' ?>
-					value="anime">
-					Anime
-				</option>
-				<option
-					<?php if ($class == 'single_image') echo 'Selected' ?>
-					value="single_image">
-					Single Image
-				</option>
-				<option
-					<?php if ($class == 'movie') echo 'Selected' ?>
-					value="movie">
-					Movie
-				</option>
-				<option
-					<?php if ($class == 'music') echo 'Selected' ?>
-					value="music">
-					Music
-				</option>
-				<option
-					<?php if ($class == 'video') echo 'Selected' ?>
-					value="video">
-					Video
-				</option>
-				</select>
-			</div>
-			<?php
-			$properties = db_get_class_properties($class);
-			if ($properties) {
-				$properties = db_get_file_properties($key, $class, $properties);
-				foreach ($properties as $property => $value) {
-					print '<input id="space_box"'
-					. ' name="property_space[]"'
-					. ' value="'.$property.'" disalbed'
-					. '>';
-					print '<input id="member_box"'
-					. ' name="property_member[]"'
-					. ' value="'.$value.'" disabled'
-					. '>';
-				}
-			}
-			?>
+		<h3 style="text-align:left;">Class</h3>
+		<div style="text-align:center;">
+			<?php render_classmenu($class); ?>
 		</div><hr/>
-		<h3 style="text-align:left;">tags</h3>
+		<h3 style="text-align:left;">Properties</h3>
+			<?php render_properties($key, $class); ?>
+		<hr/>
+		<h3 style="text-align:left;">Tags</h3>
 		<div id="tagform">
 		<?php
 			// Populate a list of existing tags

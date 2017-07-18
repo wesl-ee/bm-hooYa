@@ -1,4 +1,21 @@
 <?php
+
+define('DB_MEDIA_CLASSES', ['single_image', 'video', 'anime', 'movie']);
+define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
+define('DB_FILE_EXTENDED_PROPERTIES',
+[
+	'single_image' => [
+		'Width' => ['Type' => 'Number', 'Immutable' => 1],
+		'Height' => ['Type' => 'Number', 'Immutable' => 1],
+	],
+	'video',
+	'anime' => [
+//		'Title' => [],
+		'Season' => ['Type' => 'Number'],
+		'Episode' => ['Type' => 'Number'],
+	],
+	'movie',
+]);
 function db_get_tags($key)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -162,8 +179,7 @@ function db_get_tagspaces()
 // Might do a SQL query here if we want to allow user-defined properties
 function db_get_class_properties($class)
 {
-	if ($class == 'single_image')
-		return ['Width', 'Height'];
+	return (DB_FILE_EXTENDED_PROPERTIES[$class]);
 }
 function db_get_file_properties($key, $class, $properties)
 {
@@ -176,7 +192,7 @@ function db_get_file_properties($key, $class, $properties)
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Construct the SQL query
 	$query = "SELECT";
-	foreach ($properties as $property) {
+	foreach ($properties as $property => $value) {
 		$property = mysqli_real_escape_string($dbh, $property);
 		$query .= " $property,";
 	}

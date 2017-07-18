@@ -2,7 +2,8 @@
 /* Probably merge this and database.php files later */
 function hooya_importdir($path, $method, $tags)
 {
-	$files = getDirFiles($path);
+	if (is_file($path)) $files = [$path];
+	else $files = getDirFiles($path);
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
@@ -83,6 +84,7 @@ function hooya_importdir($path, $method, $tags)
 			$failcount++;
 			continue;
 		}
+		unset($query);
 
 		// Gather specific properties for each type of file
 		switch($class) {
