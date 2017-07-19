@@ -11,7 +11,6 @@ include "includes/database.php";
 foreach($_GET as $param => $value) {
 	if ($param != 'page') $q[$param] = $value;
 }
-if (!isset($q)) die;
 ?>
 <html>
 <head>

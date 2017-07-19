@@ -57,7 +57,7 @@ include "includes/render.php";
 	<div style="width:100%;padding-bottom:20px;text-align:center;">
 		<h1>hooYa!</h1>
 	</div>
-	<form style="width:100%;" action="browse.php" method="get" >
+	<form id="tagform" style="width:100%;" action="browse.php" method="get" >
 		<div><input type="text" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></div>
 		<div style="width:70%;display:block;margin:auto;margin-bottom:10px;vertical-align:top;">
 		<input type="submit" style="width:20%;vertical-align:top;" value="いこう！"></input>
@@ -113,4 +113,13 @@ include "includes/render.php";
 </div>
 </div>
 </body>
+<script type="text/javascript">
+	var form = document.getElementById('tagform');
+	form.addEventListener("submit", function() {
+		var inputs = form.getElementsByTagName('input');
+		for (i = 0; i < inputs.length; i++) {
+			if (inputs[i].value === '') inputs[i].disabled = true;
+		}
+	}, false);
+</script>
 </html>
