@@ -58,7 +58,7 @@ include "includes/render.php";
 		<h1>hooYa!</h1>
 	</div>
 	<form id="tagform" style="width:100%;" action="browse.php" method="get" >
-		<div><input type="text" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></div>
+		<div><input type="search" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></div>
 		<div style="width:70%;display:block;margin:auto;margin-bottom:10px;vertical-align:top;">
 		<input type="submit" style="width:20%;vertical-align:top;" value="いこう！"></input>
 		<a onClick="toggleFilter()" style="float:right;">filter</a>
@@ -69,9 +69,7 @@ include "includes/render.php";
 			<div style="float:left;vertical-align:bottom;margin-bottom:10px;">Media Type</div>
 				<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)" disabled style="margin-bottom:10px;width:30%;max-width:200px;float:right;border-bottom:0px;">
 				<option value="" selected> </option>
-				<?php foreach (DB_MEDIA_CLASSES as $c) {
-					print "<option value='$c'>$c</option>";
-				}?>
+				<?php render_classmenu(); ?>
 				</select>
 			</div>
 				<?php

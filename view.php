@@ -93,7 +93,9 @@ $ftype = explode('/', $mimetype)[0];
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>">
 		<h3 style="text-align:left;">Class</h3>
 		<div style="text-align:center;">
+			<select id="class">
 			<?php render_classmenu($class); ?>
+			</select>
 		</div><hr/>
 		<h3 style="text-align:left;">Properties</h3>
 			<?php render_properties($key, $class); ?>

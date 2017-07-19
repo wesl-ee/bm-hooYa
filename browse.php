@@ -7,6 +7,7 @@ include "includes/search.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
 include "includes/database.php";
+include "includes/render.php";
 
 foreach($_GET as $param => $value) {
 	if ($param != 'page') $q[$param] = $value;
@@ -38,16 +39,7 @@ foreach($_GET as $param => $value) {
 </div>
 <div id="right_frame">
 	<header>
-		<?php
-		// Construct a pretty header on the fly from the given query
-		foreach ($q as $a => $b) {
-			if ($a == 'query' && !$b) {echo 'all '; continue;}
-			if (!$b) continue;
-			if ($a != 'media_class' && $a != 'query')
-				echo "$a ";
-			echo "$b ";
-		}
-		?>
+		<?php render_prettyquery($q); ?>
 	</header>
 	<header style="overflow:auto;padding-bottom:10px;">
 		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
