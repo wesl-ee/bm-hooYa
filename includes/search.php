@@ -4,8 +4,13 @@ function hooya_search($query)
 	if (!empty($query['media_class'])) $mediaclass = $query['media_class'];
 
 	// First, tokenikze the search string
-	if (!empty($query['query'])) $terms = explode(' ', strtolower($query['query']));
+	if (!empty($query['query']))
+		$terms = explode(' ', strtolower($query['query']));
 	unset($query['query']);
+
+	// Extract all properties
+	if (!empty($query['properties']))
+		$properties = $query['properties'];
 
 	$tagspaces = db_get_tagspaces();
 
@@ -40,31 +45,48 @@ function hooya_search($query)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	// TODO Approximate tags which are not exact by levenshtien distance
 
-	$query = "SELECT Files.Id, COUNT(*) AS Relevance FROM Files, TagMap, Tags WHERE "
-	. "Files.Id = TagMap.FileId AND TagMap.TagId = Tags.Id ";
-	if (isset($mediaclass)) $query .= "AND Files.Class = '$mediaclass' ";
-	$query .= "AND (";
-	foreach ($terms as $i => $term) {
-/*		if ($search_rules[$term] == 'forbid') {
-			if ($i > 0) $query .= " OR";
-			$query .= " Member != '$term'";
-		}*/
-//		else {
-			if ($i > 0) $query .= " OR ";
-			$query .= "(Member = '$term'";
-			// Account for any tagspace specification like series:
-			if ($space = $search_spaces[$term])
-				$query .= " AND Space = '$space'";
-			$query .= ")";
-//		}
+	$query = "SELECT Files.Id, COUNT(*) AS Relevance FROM Files";
+	if (!empty($terms))
+		$query .= ", TagMap, Tags";
+	if (isset($properties, $mediaclass)) {
+		$query .= ", " . $mediaclass;
+		$query .= " WHERE $mediaclass.Id = Files.Id";
+		foreach ($properties as $property => $value) {
+			if (empty($property) || empty($value)) continue;
+			$query .= " AND $property = $value";
+		}
+		$query .= " AND";
 	}
-	$query .= ")";
+	else if (isset($mediaclass) || !empty($terms)) {
+		$query .= " WHERE";
+	}
+	if (isset($mediaclass)) $query .= " Files.Class = '$mediaclass'";
+	if (!empty($terms)) {
+		if (isset($mediaclass)) $query .= " AND";
+		$query .= " Files.Id = TagMap.FileId AND TagMap.TagId = Tags.Id ";
+		$query .= "AND (";
+		foreach ($terms as $i => $term) {
+	/*		if ($search_rules[$term] == 'forbid') {
+				if ($i > 0) $query .= " OR";
+				$query .= " Member != '$term'";
+			}*/
+	//		else {
+				if ($i > 0) $query .= " OR ";
+				$query .= "(Member = '$term'";
+				// Account for any tagspace specification like series:
+				if ($space = $search_spaces[$term])
+					$query .= " AND Space = '$space'";
+				$query .= ")";
+	//		}
+		}
+		$query .= ")";
+	}
 
 	// Display all items on an empty query
-	if (empty($terms)) {
+/*	if (empty($terms)) {
 		$query = "SELECT Id, COUNT(*) AS Relevance FROM Files ";
 		if (isset($mediaclass)) $query .= " WHERE Files.Class = '$mediaclass' ";
-	}
+	}*/
 
 	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);

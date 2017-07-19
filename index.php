@@ -14,55 +14,29 @@ include "includes/render.php";
 	<title>bigmike — hooYa!</title>
 	<script src="js/f.js"></script>
 	<script type="text/javascript">
+	var classes = <?php echo json_encode(DB_MEDIA_CLASSES);?>;
 	function toggleFilter() {
 		var filter = document.getElementById('filter');
 		if (filter.style.display == 'none') filter.style.display = 'block';
 		else filter.style.display = 'none';
+		document.getElementById('media_class').disabled = !document.getElementById('media_class').disabled;
 	}
 	function changeExtAttrs(media_class) {
-		var ext_attrs = document.getElementById('ext_attrs');
-		ext_attrs.innerHTML = '';
-		if (media_class == 'anime') {
-			var row = document.createElement('div');
-			row.style.display = 'table-row';
-			row.style.height = '30px';
-			row.style.width = '100%';
-			ext_attrs.appendChild(row);
-
-			var episode = document.createElement('div');
-			episode.style.display = 'table-cell';
-			episode.style.height = '100%';
-			episode.style.float = 'left';
-			episode.innerHTML = 'Episode';
-			row.appendChild(episode);
-
-			episode = document.createElement('div');
-			episode.style.display = 'table-cell';
-			episode.style.height = '100%';
-			episode.innerHTML = '<input type="number" name="episode"></input>';
-			episode.style.float = 'right';
-			row.appendChild(episode);
-
-			row = document.createElement('div');
-			row.style.display = 'table-row';
-			row.style.height = '30px';
-			row.style.width = '100%';
-			ext_attrs.appendChild(row);
-
-			var season = document.createElement('div');
-			season.style.display = 'table-cell';
-			season.style.height = '100%';
-			season.style.float = 'left';
-			season.innerHTML = 'Season';
-			row.appendChild(season);
-
-			var season = document.createElement('div');
-			season.style.display = 'table-cell';
-			season.style.height = '100%';
-			season.style.float = 'right';
-			season.innerHTML = '<input type="number" name="season"></input>';
-			row.appendChild(season);
-		}
+		classes.forEach(function (c) {
+			var classdiv = document.getElementById(c);
+			classdiv.style.display = 'none';
+			toggleinputs(classdiv, false)
+		});
+		if (!media_class) return;
+		var currclass = document.getElementById(media_class);
+		currclass.style.display = 'block';
+		toggleinputs(currclass, 'true');
+	}
+	function toggleinputs(div, doenable) {
+		var inputs = div.getElementsByTagName("input")
+		for(i = 0; i < inputs.length; i++) {
+			inputs[i].disabled = !doenable;
+		};
 	}
 	</script>
 </head>
@@ -90,15 +64,34 @@ include "includes/render.php";
 		<a onClick="toggleFilter()" style="float:right;">filter</a>
 
 		</div>
-		<div id="filter" style="width:70%;margin:auto;display:none;">
-		<div style="float:left;vertical-align:bottom;margin-bottom:10px;">Media Type</div>
-			<select name="media_class" onChange="changeExtAttrs(this.value)" style="margin-bottom:10px;width:30%;text-align:center;float:right;border-bottom:0px;">
-			<option value=""> </option>
-			<?php foreach (DB_MEDIA_CLASSES as $c) {
-				print "<option value='$c'>$c</option>";
-			}?>
-			</select>
-		<div id="ext_attrs" style="display:table;width:100%;padding-bottom:50px;"></div>
+		<div id="filter" style="width:70%;margin:auto;overflow:auto;display:none;">
+			<div style="overflow:auto;">
+			<div style="float:left;vertical-align:bottom;margin-bottom:10px;">Media Type</div>
+				<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)" disabled style="margin-bottom:10px;width:30%;max-width:200px;float:right;border-bottom:0px;">
+				<option value="" selected> </option>
+				<?php foreach (DB_MEDIA_CLASSES as $c) {
+					print "<option value='$c'>$c</option>";
+				}?>
+				</select>
+			</div>
+				<?php
+				foreach (DB_MEDIA_CLASSES as $c) {
+					$properties = db_get_class_properties($c);
+					print "<div id='$c' style='display:none;'>";
+					foreach ($properties as $p => $value) {
+						print "<div style='overflow:auto;'>";
+						print "<div style='float:left;width:50%;'>"
+						. "$p</div>"
+						. "<input style='width:30%;max-width:200px;float:right;text-align:right;box-sizing:border-box;'";
+						if ($value['Type']) {
+							print " type='" . $value['Type'] . "'";
+						}
+						print " name='properties[$p]'"
+						. " disabled></div>";
+					}
+					print "</div>";
+				}
+				?>
 		</div>
 	</form>
 	<div style="width:100%;text-align:center;">
