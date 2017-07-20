@@ -41,7 +41,9 @@ function render_prettyquery($query)
 			echo ' ' . $query['media_class'];
 		if (isset($query['properties'])) {
 			echo ' (';
+			$i = 0;
 			foreach ($query['properties'] as $property => $value) {
+				if ($i++) echo " ";
 				echo "$property: $value";
 			}
 			echo ')';

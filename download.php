@@ -93,6 +93,7 @@ bmfft_xsendfile($file);
 
 function bmfft_xsendfile($file) {
 	header('Content-Type:'.mime_content_type($file));
+	header('Content-Disposition: inline; filename="bigmike-' . basename($file) . '"');
 	header('X-Sendfile: '.$file);
 }
 ?>

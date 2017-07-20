@@ -72,9 +72,13 @@ foreach($_GET as $param => $value) {
 		<form method="GET" style="text-align:center;display:inline;">
 			<input style="text-align:center;width:50px"
 				name="page" type="text" Value=<?php echo $page?>>
-			<?php foreach($_GET as $a => $b)
-				if ($a != "page")
-				print "<input type='hidden' name='$a' value='$b'>"
+			<?php
+			// This is currently broken; need to think of a clever way to
+			// preserve the $_GET parameters through a page change
+				array_walk_recursive($_GET, function($value, $param) {
+					if ($param != "page")
+					print "<input type='hidden' name='" . htmlspecialchars($param) . "' value='". htmlspecialchars($value) . "'>";
+				});
 			?>
 		</form>
 		<?php if ($page < round(count($keys)/15))
