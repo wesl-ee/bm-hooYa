@@ -17,7 +17,7 @@ $key = rawurldecode($_GET['key']);
 // Discriminate by media Class (video, single_image etc. . .)
 if (isset($_POST['class'])) {
 	$class = $_POST['class'];
-	db_set_main_attrs($key, ['Class' => $class]);
+	db_setclass($key, $class);
 }
 
 // Grab tag {space => member pairs} (e.g. 'character' => 'madoka')
@@ -45,6 +45,11 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	// just read in
 	db_set_tags($key, $tags);
 }
+// Grab tag {space => member pairs} (e.g. 'season' => '1')
+if (isset($_POST['properties'])) {
+	$properties = $_POST['properties'];
+	db_setproperties($key, $properties);
+}
 if (count($_POST)) {
 	// Hack to make sure the user can navigate back to the query page
 	// without actually storing the query across page navigations
@@ -53,10 +58,10 @@ if (count($_POST)) {
 }
 
 // Get some information about the file our $key maps to
-$main_attrs = db_get_main_attrs($key, ['Class', 'Path', 'Mimetype']);
-$class = $main_attrs['Class'];
-$path = $main_attrs['Path'];
-$mimetype = $main_attrs['Mimetype'];
+$fileinfo = db_getfileinfo($key);
+$class = $fileinfo['Class'];
+$path = $fileinfo['Path'];
+$mimetype = $fileinfo['Mimetype'];
 
 // Filetype is the first half of the mimetype
 $ftype = explode('/', $mimetype)[0];

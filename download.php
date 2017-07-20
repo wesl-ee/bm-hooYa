@@ -11,11 +11,10 @@ if (!isset($_GET['key']))
 	die;
 $key = rawurldecode($_GET['key']);
 
-$main_attrs = db_get_main_attrs($key, ['Class', 'Path', 'Mimetype']);
-$class = $main_attrs['Class'];
-$path = $main_attrs['Path'];
-$mimetype = $main_attrs['Mimetype'];
-
+$fileinfo = db_getfileinfo($key);
+$class = $fileinfo['Class'];
+$path = $fileinfo['Path'];
+$mimetype = $fileinfo['Mimetype'];
 $ftype = explode('/', $mimetype)[0];
 
 // Throw a 404 img if that key is not in the database

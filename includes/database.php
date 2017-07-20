@@ -6,7 +6,7 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 [
 	'single_image' => [
 		'Width' => ['Type' => 'Number', 'Immutable' => 1],
-		'Height' => ['Type' => 'Number', 'Immutable' => 1],
+		'Height' => ['Type' => 'Number'],
 	],
 	'video',
 	'anime' => [
@@ -84,50 +84,6 @@ function db_set_tags($key, $tags)
 	mysqli_query($dbh, $query);
 	mysqli_close($dbh);
 }
-function db_set_main_attrs($key, $attrs)
-{
-	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
-		CONFIG_MYSQL_HOOYA_USER,
-		CONFIG_MYSQL_HOOYA_PASSWORD,
-		CONFIG_MYSQL_HOOYA_DATABASE);
-	mysqli_set_charset($dbh, 'utf8');
-	// Escape all potential user input
-	$key = mysqli_real_escape_string($dbh, $key);
-	// Construct the SQL query
-	$query = "UPDATE Files SET";
-	foreach ($attrs as $attr => $value) {
-		$value = mysqli_real_escape_string($dbh, $value);
-		$query .= " $attr = '$value',";
-	}
-	// Remove trailing comma
-	$query = substr($query, 0, -1);
-	$query .= " WHERE Id = '$key'";
-	mysqli_query($dbh, $query);
-	mysqli_close($dbh);
-}
-function db_get_main_attrs($key, $attrs)
-{
-	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
-		CONFIG_MYSQL_HOOYA_USER,
-		CONFIG_MYSQL_HOOYA_PASSWORD,
-		CONFIG_MYSQL_HOOYA_DATABASE);
-	mysqli_set_charset($dbh, 'utf8');
-	// Escape all potential user input
-	$key = mysqli_real_escape_string($dbh, $key);
-	// Construct the SQL query
-	$query = "SELECT";
-	foreach ($attrs as $attr) {
-		$attr = mysqli_real_escape_string($dbh, $attr);
-		$query .= " $attr,";
-	}
-	// Remove trailing comma
-	$query = substr($query, 0, -1);
-	$query .= " FROM Files WHERE Id = '$key'";
-	$res = mysqli_query($dbh, $query);
-	$row = mysqli_fetch_assoc($res);
-	mysqli_close($dbh);
-	return $row;
-}
 function db_getrandom($n)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -175,13 +131,7 @@ function db_get_tagspaces()
 	}
 	return $ret;
 }
-
-// Might do a SQL query here if we want to allow user-defined properties
-function db_get_class_properties($class)
-{
-	return (DB_FILE_EXTENDED_PROPERTIES[$class]);
-}
-function db_get_file_properties($key, $class, $properties)
+function db_getfileinfo($key)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
@@ -191,18 +141,73 @@ function db_get_file_properties($key, $class, $properties)
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Construct the SQL query
-	$query = "SELECT";
-	foreach ($properties as $property => $value) {
-		$property = mysqli_real_escape_string($dbh, $property);
-		$query .= " $property,";
-	}
-	// Remove trailing comma
-	$query = substr($query, 0, -1);
-	$query .= " FROM $class WHERE Id = '$key'";
+	$query = "SELECT Path, Class, Size, Mimetype"
+	. " FROM Files WHERE Id = '$key'";
 	$res = mysqli_query($dbh, $query);
 	$row = mysqli_fetch_assoc($res);
 	mysqli_close($dbh);
 	return $row;
+}
+function db_setclass($key, $class)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	// Escape all potential user input
+	$class = mysqli_real_escape_string($dbh, $class);
+	$query = 'UPDATE Files SET Class = "' . $class . '"'
+	. ' WHERE Id = "' . $key . '"';
+	return mysqli_query($dbh, $query);
+}
+function db_setproperties($key, $props)
+{
+	$class = db_getfileinfo($key)['Class'];
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	// TODO filter immutable properties from array
+	// TODO quote non-integers
+	$query = "UPDATE $class SET "
+	. aa_join($props, ', ', '=')
+	. " WHERE Id='$key'";
+	var_dump($query);die;
+}
+function db_getproperties($key)
+{
+	$class = db_getfileinfo($key)['Class'];
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$properties = array_keys(db_get_class_properties($class));
+
+	$query = "SELECT "
+	. join(',', $properties)
+	. " FROM $class WHERE Id = '$key'";
+	$res = mysqli_query($dbh, $query);
+	$row = mysqli_fetch_assoc($res);
+	mysqli_close($dbh);
+	return $row;
+}
+
+function aa_join($aa, $seperator, $inbetween)
+{
+	unset($i);
+	foreach($aa as $k => $v) {
+		if (!($i != count($aa) && !$i++)) $final .= $seperator;
+		$final .= $k . $inbetween . $v;
+	}
+	return $final;
+}
+// Might do a SQL query here if we want to allow user-defined properties
+function db_get_class_properties($class)
+{
+	return (DB_FILE_EXTENDED_PROPERTIES[$class]);
 }
 function db_get_immutable_properties()
 {

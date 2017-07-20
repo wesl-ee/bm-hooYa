@@ -52,7 +52,11 @@ include "includes/render.php";
 	<div id="header" style="margin-bottom:20px;">
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;"><a href='help/'>search help</a><br/><a href="random.php">random</a></div>
+		<div style="width:33%;float:left;text-align:right;">
+			<a href="nightly/">download the daily dump</a><br/>
+			<a href='help/'>search help</a><br/>
+			<a href="random.php">random</a>
+		</div>
 	</div>
 	<div style="width:100%;padding-bottom:20px;text-align:center;">
 		<h1>hooYa!</h1>

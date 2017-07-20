@@ -15,18 +15,27 @@ my %files;
 # Associate file key with series
 my %series;
 
-my ($sqlhost, $sqluser, $sqlpass, $sqldb);
-my $tmppath;
+my ($CONFIG_MYSQL_HOOYA_HOST,
+$CONFIG_MYSQL_HOOYA_USER,
+$CONFIG_MYSQL_HOOYA_PASSWORD,
+$CONFIG_MYSQL_HOOYA_DATABASE,
+$CONFIG_TEMPORARY_PATH,
+$CONFIG_DAILY_DUMP_PATH);
+
 open(FILE, '/var/http/hub/hooYa/includes/config.php');
 while (<FILE>) {
-	$sqlhost = $1 if (/"CONFIG_MYSQL_HOOYA_HOST", ["'](.+)["']/);
-	$sqluser = $1 if (/"CONFIG_MYSQL_HOOYA_USER", ["'](.+)["']/);
-	$sqlpass = $1 if (/"CONFIG_MYSQL_HOOYA_PASSWORD", ["'](.+)["']/);
-	$sqldb = $1 if (/"CONFIG_MYSQL_HOOYA_DATABASE", ["'](.+)["']/);
-	$tmppath = $1 if (/"CONFIG_TEMPORARY_PATH", ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_HOST = $1 if (/["']CONFIG_MYSQL_HOOYA_HOST["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_USER = $1 if (/"CONFIG_MYSQL_HOOYA_USER", ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_PASSWORD = $1 if (/["']CONFIG_MYSQL_HOOYA_PASSWORD["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_DATABASE = $1 if (/["']CONFIG_MYSQL_HOOYA_DATABASE["'], ["'](.+)["']/);
+	$CONFIG_TEMPORARY_PATH = $1 if (/["']CONFIG_TEMPORARY_PATH["'], ["'](.+)["']/);
+	$CONFIG_DAILY_DUMP_FILE = $1 if (/["']CONFIG_DAILY_DUMP_FILE["'], ["'](.+)["']/);
 }
-my $dsn = "DBI:mysql:database=" . $sqldb . ";host=" . $sqlhost;
-my $dbh = DBI->connect($dsn, $sqluser, $sqlpass);
+my $dsn = "DBI:mysql:database=" . $CONFIG_MYSQL_HOOYA_DATABASE
+. ";host=" . $CONFIG_MYSQL_HOOYA_HOST;
+my $dbh = DBI->connect($dsn,
+$CONFIG_MYSQL_HOOYA_USER,
+$CONFIG_MYSQL_HOOYA_PASSWORD);
 
 my $sth = $dbh->prepare("SELECT Files.Id, Path FROM Files WHERE"
 . " Files.class = 'single_image'");
@@ -38,17 +47,18 @@ my $total = keys %files;
 my $current = 0;
 my $percent = 0;
 my $change = 100 / $total;
-unlink($tmppath . 'tmp.zip');
+unlink($CONFIG_TEMPORARY_PATH . 'nightly-tmp.zip');
 
 foreach my $key (keys %files) {
 	$percent += $change;
 	$current++;
 	printf("\33[2K\r");
 	printf("%.f%% done (%d / %d)", $percent, $current, $total);
-	system("zip -j -q -0 -g '".$tmppath."tmp.zip' '$files{$key}'");
+	system("zip -j -q -0 -g '" . $CONFIG_TEMPORARY_PATH
+	. "nightly-tmp.zip' '$files{$key}'");
 	die if $?;
 #	system("printf \"zip -z store -u '/var/a/nightly.zip' '$files{$key}'\"");die;
 }
 printf "\nMoving to serving path. . .\n";
-system("mv ".$tmppath."tmp.zip ".$tmppath.DAILY_DUMP_FILENAME);
-#system("zip -9 '/var/a/nightly.zip' '/var/a/nightly.zip'");
+system("mv " . $CONFIG_TEMPORARY_PATH . "nightly-tmp.zip "
+. $CONFIG_DAILY_DUMP_FILE);

@@ -8,9 +8,10 @@ if (CONFIG_REQUIRE_AUTHENTICATION)
 include CONFIG_HOOYA_PATH."includes/database.php";
 include CONFIG_HOOYA_PATH."includes/render.php";
 
-
-if (is_file(CONFIG_DAILY_DUMP_FILE) && isset($_GET['download'])) {
+if (is_file(CONFIG_DAILY_DUMP_FILE) && isset($_POST['download'])) {
 	header('Content-Type: application/zip');
+	header('Content-Disposition: attachment; filename="'
+	. basename(CONFIG_DAILY_DUMP_FILE) . '"');
 	header('X-Sendfile: ' . CONFIG_DAILY_DUMP_FILE);
 	die;
 }
@@ -47,7 +48,10 @@ if (is_file(CONFIG_DAILY_DUMP_FILE) && isset($_GET['download'])) {
 	</div>
 	<div style="width:100%;text-align:center;">
 		<?php if (is_file(CONFIG_DAILY_DUMP_FILE))
-			print "<a href='?download'>download</a>";
+			print "<form method='POST'>"
+			. "<input type='hidden' name='download'>"
+			. "<input type='submit' value='download'>"
+			. "</form>";
 		?>
 	</div>
 </div>
