@@ -1,12 +1,11 @@
 #!/usr/bin/perl -w
 use strict;
 use Data::Dumper;
+use File::Basename;
 use DBI;
-use Archive::Zip;
+#use Archive::Zip qw (:ERROR_CODES :CONSTANTS);
+use Archive::Tar;
 #
-use constant {
-	DAILY_DUMP_FILENAME => 'bigmike-nightly.zip',
-};
 
 # Turn off STDOUT buffering
 $| = 1;
@@ -15,12 +14,16 @@ my %files;
 # Associate file key with series
 my %series;
 
+# Hash of directories to sort files by
+my %directories;
+
 my ($CONFIG_MYSQL_HOOYA_HOST,
 $CONFIG_MYSQL_HOOYA_USER,
 $CONFIG_MYSQL_HOOYA_PASSWORD,
 $CONFIG_MYSQL_HOOYA_DATABASE,
 $CONFIG_TEMPORARY_PATH,
-$CONFIG_DAILY_DUMP_PATH);
+$CONFIG_DAILY_DUMP_PATH,
+$CONFIG_DAILY_DUMP_FILE);
 
 open(FILE, '/var/http/hub/hooYa/includes/config.php');
 while (<FILE>) {
@@ -37,28 +40,60 @@ my $dbh = DBI->connect($dsn,
 $CONFIG_MYSQL_HOOYA_USER,
 $CONFIG_MYSQL_HOOYA_PASSWORD);
 
-my $sth = $dbh->prepare("SELECT Files.Id, Path FROM Files WHERE"
-. " Files.class = 'single_image'");
+# Get a list of all single images
+my $sth = $dbh->prepare("SELECT Id, Path FROM Files WHERE"
+. " Files.Class = 'single_image'");
 $sth->execute();
 while (my $ref = $sth->fetchrow_hashref()) {
 	$files{$ref->{'Id'}} = $ref->{'Path'};
 }
+
+# Get a list of all single images with a 'series' tag
+$sth = $dbh->prepare("SELECT Files.Id, Member AS Series FROM"
+. " Files, TagMap, Tags WHERE Files.Id = TagMap.FileId AND TagMap.TagId = Tags.Id"
+. " AND Files.Class = 'single_image'"
+. " AND Tags.Space = 'series'");
+$sth->execute();
+while (my $ref = $sth->fetchrow_hashref()) {
+	$series{$ref->{'Id'}} = $ref->{'Series'};
+	$directories{$ref->{'Series'}} = 1;
+}
+
+# Create a tar file
+unlink($CONFIG_DAILY_DUMP_FILE);
+my $tar = Archive::Tar->new();
+
+# Create the archive's directory structure
+foreach (keys %directories) {
+	$tar->add_data($_, '', {'type' => Archive::Tar::Constant::DIR});
+}
+$tar->add_data('Unsorted', '', {'type' => Archive::Tar::Constant::DIR});
+#$zip->addDirectory("Unsorted");
+
 my $total = keys %files;
 my $current = 0;
 my $percent = 0;
 my $change = 100 / $total;
-unlink($CONFIG_TEMPORARY_PATH . 'nightly-tmp.zip');
 
 foreach my $key (keys %files) {
 	$percent += $change;
 	$current++;
+
+	my $prefix;
+	if ($series{$key}) {
+		$prefix = $series{$key};
+	}
+	else {
+		$prefix = 'Unsorted'
+	}
+	open(FILE, $files{$key});
+	while (read(FILE, my $chunk, 512*(2**10))) {
+		$tar->add_data($prefix . '/bigmike-' . basename($files{$key})
+		, $chunk);
+	}
 	printf("\33[2K\r");
 	printf("%.f%% done (%d / %d)", $percent, $current, $total);
-	system("zip -j -q -0 -g '" . $CONFIG_TEMPORARY_PATH
-	. "nightly-tmp.zip' '$files{$key}'");
-	die if $?;
-#	system("printf \"zip -z store -u '/var/a/nightly.zip' '$files{$key}'\"");die;
 }
-printf "\nMoving to serving path. . .\n";
-system("mv " . $CONFIG_TEMPORARY_PATH . "nightly-tmp.zip "
-. $CONFIG_DAILY_DUMP_FILE);
+print "\nWriting to " . $CONFIG_DAILY_DUMP_FILE;
+$tar->write($CONFIG_DAILY_DUMP_FILE, Archive::Tar::Constant::COMPRESS_GZIP);
+print "\n";
