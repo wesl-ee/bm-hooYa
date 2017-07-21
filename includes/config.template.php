@@ -14,7 +14,7 @@ define("CONFIG_MYSQL_HOOYA_PASSWORD", "MYSQL_PASSWORD");
 define("CONFIG_MYSQL_HOOYA_DATABASE", "MYSQL_DB");
 
 // All pictures, update daily with the cron script
-define("CONFIG_DAILY_DUMP_FILE", "/var/a/bigmike-nightly.tgz");
+define("CONFIG_DAILY_DUMP_FILE", "/var/a/bigmike-nightly.tar");
 
 // Where you want to keep hooYa files
 define("CONFIG_HOOYA_STORAGE_PATH", "/var/media/")

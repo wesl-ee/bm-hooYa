@@ -3,9 +3,11 @@ use strict;
 use Data::Dumper;
 use File::Basename;
 use DBI;
-#use Archive::Zip qw (:ERROR_CODES :CONSTANTS);
-use Archive::Tar;
-#
+use Archive::Tar::Wrapper;
+
+use constant {
+	USE_COMPRESSION => 0,
+};
 
 # Turn off STDOUT buffering
 $| = 1;
@@ -13,9 +15,6 @@ $| = 1;
 my %files;
 # Associate file key with series
 my %series;
-
-# Hash of directories to sort files by
-my %directories;
 
 my ($CONFIG_MYSQL_HOOYA_HOST,
 $CONFIG_MYSQL_HOOYA_USER,
@@ -25,7 +24,8 @@ $CONFIG_TEMPORARY_PATH,
 $CONFIG_DAILY_DUMP_PATH,
 $CONFIG_DAILY_DUMP_FILE);
 
-open(FILE, '/var/http/hub/hooYa/includes/config.php');
+my $incfile =  dirname(__FILE__) . '/../includes/config.php';
+open(FILE, $incfile);
 while (<FILE>) {
 	$CONFIG_MYSQL_HOOYA_HOST = $1 if (/["']CONFIG_MYSQL_HOOYA_HOST["'], ["'](.+)["']/);
 	$CONFIG_MYSQL_HOOYA_USER = $1 if (/"CONFIG_MYSQL_HOOYA_USER", ["'](.+)["']/);
@@ -56,19 +56,10 @@ $sth = $dbh->prepare("SELECT Files.Id, Member AS Series FROM"
 $sth->execute();
 while (my $ref = $sth->fetchrow_hashref()) {
 	$series{$ref->{'Id'}} = $ref->{'Series'};
-	$directories{$ref->{'Series'}} = 1;
 }
 
 # Create a tar file
-unlink($CONFIG_DAILY_DUMP_FILE);
-my $tar = Archive::Tar->new();
-
-# Create the archive's directory structure
-foreach (keys %directories) {
-	$tar->add_data($_, '', {'type' => Archive::Tar::Constant::DIR});
-}
-$tar->add_data('Unsorted', '', {'type' => Archive::Tar::Constant::DIR});
-#$zip->addDirectory("Unsorted");
+my $tar = Archive::Tar::Wrapper->new();
 
 my $total = keys %files;
 my $current = 0;
@@ -86,14 +77,14 @@ foreach my $key (keys %files) {
 	else {
 		$prefix = 'Unsorted'
 	}
-	open(FILE, $files{$key});
-	while (read(FILE, my $chunk, 512*(2**10))) {
-		$tar->add_data($prefix . '/bigmike-' . basename($files{$key})
-		, $chunk);
-	}
+	$tar->add($prefix . '/bigmike-' . basename($files{$key})
+	, $files{$key}, {binmode => ":utf8"});
 	printf("\33[2K\r");
 	printf("%.f%% done (%d / %d)", $percent, $current, $total);
 }
 print "\nWriting to " . $CONFIG_DAILY_DUMP_FILE;
-$tar->write($CONFIG_DAILY_DUMP_FILE, Archive::Tar::Constant::COMPRESS_GZIP);
+unlink($CONFIG_DAILY_DUMP_FILE);
+$tar->write($CONFIG_DAILY_DUMP_FILE, USE_COMPRESSION);
+print "\nCleaning up";
+unlink($tar->tardir());
 print "\n";
