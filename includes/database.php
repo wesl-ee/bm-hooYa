@@ -6,7 +6,7 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 [
 	'single_image' => [
 		'Width' => ['Type' => 'Number', 'Immutable' => 1],
-		'Height' => ['Type' => 'Number'],
+		'Height' => ['Type' => 'Number', 'Immutable' => 1],
 	],
 	'video',
 	'anime' => [
@@ -171,10 +171,16 @@ function db_setproperties($key, $props)
 	mysqli_set_charset($dbh, 'utf8');
 	// TODO filter immutable properties from array
 	// TODO quote non-integers
+	foreach ($props as $p => $v) {
+		if (DB_FILE_EXTENDED_PROPERTIES[$class][$p]['Type'] != 'Number')
+			$props[$p] = "'$v'";
+		if (DB_FILE_EXTENDED_PROPERTIES[$class][$p]['Immutable'])
+			unset($props[$p]);
+	}
 	$query = "UPDATE $class SET "
 	. aa_join($props, ', ', '=')
 	. " WHERE Id='$key'";
-	var_dump($query);die;
+	return mysqli_query($dbh, $query);
 }
 function db_getproperties($key)
 {

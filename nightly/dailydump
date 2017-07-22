@@ -6,7 +6,7 @@ use DBI;
 use Archive::Tar::Wrapper;
 
 use constant {
-	USE_COMPRESSION => 0,
+	USE_COMPRESSION => 1,
 };
 
 # Turn off STDOUT buffering

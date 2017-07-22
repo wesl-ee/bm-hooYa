@@ -6,9 +6,6 @@ include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
 include "includes/database.php";
-$main_attrs = db_get_main_attrs($key, ['Class', 'Path']);
-$class = $main_attrs['Class'];
-$path = $main_attrs['Path'];
 ?>
 <html>
 <head>
