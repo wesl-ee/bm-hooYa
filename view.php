@@ -155,14 +155,17 @@ $ftype = explode('/', $mimetype)[0];
 	}
 	elseif ($ftype == 'video') {
 		print '<div class="flexrow">';
-		foreach (range(0, 100, 10) as $percent) {
+		foreach (range(0, 100, 100/5) as $percent) {
 			print '<img src="download.php?key='.rawurlencode($key).''
 			. '&preview&percent=' . $percent . '"'
-			. ' width="250"'
+			. ' style="max-width:33%;"'
 			. ' onClick="window.open(this.src)">'
 			. '&nbsp</img>';
 		}
-		print '</div>';
+		print '</div>'
+		. '<footer><a href="download.php?key=' . rawurlencode($key) . '">'
+		. 'Download this file!'
+		. '</a></footer>';
 	}
 	?>
 	</div>
