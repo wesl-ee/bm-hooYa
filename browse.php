@@ -57,11 +57,11 @@ foreach($_GET as $param => $value) {
 	// And mark them up nicely
 	$results = array_slice($keys, $page*15, 15);
 	foreach ($results as $key) {
-		print '<img';
-		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
-		print ' src="download.php?key='.rawurlencode($key).'&thumb"';
-		print ' title="'.''.'">';
-		print '&nbsp</img>';
+		print '<img'
+		. ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"'
+		. ' src="download.php?key='.rawurlencode($key).'&thumb"'
+		. ' title="'.''.'">'
+		. '&nbsp</img>';
 	}
 	?>
 	</div>

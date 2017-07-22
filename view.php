@@ -131,7 +131,7 @@ $ftype = explode('/', $mimetype)[0];
 	</form>
 	</div>
 </div>
-<div id="right_frame_flex">
+<div id="right_frame" class="flexcolumn">
 	<header style="text-align:center;"><?php echo $key?></header>
 	<header>
 		<div style="width:33%;float:left;">
@@ -144,20 +144,25 @@ $ftype = explode('/', $mimetype)[0];
 			<a href="help/guidelines.php">tagging guidelines</a>
 		</div>
 	</header>
-	<div id="content">
 	<?php
 	// Vary the output based on the filetype, how smart!
 	if ($ftype == 'image') {
-		print '<img src="download.php?key='.rawurlencode($key).'"';
-		print ' onClick="window.open(this.src)">';
-		print '&nbsp</img>';
+		print '<div id="content">'
+		. '<img src="download.php?key='.rawurlencode($key).'"'
+		. ' onClick="window.open(this.src)">'
+		. '&nbsp</img>'
+		. '</div>';
 	}
 	elseif ($ftype == 'video') {
-		print '<video poster="'.CONFIG_COMMON_WEBPATH.'img/loading.gif" ';
-		print 'autoplay loop controls>';
-		video_print($key);
-		print 'Your browser cannot play this video~';
-		print '</video>';
+		print '<div class="flexrow">';
+		foreach (range(0, 100, 10) as $percent) {
+			print '<img src="download.php?key='.rawurlencode($key).''
+			. '&preview&percent=' . $percent . '"'
+			. ' width="250"'
+			. ' onClick="window.open(this.src)">'
+			. '&nbsp</img>';
+		}
+		print '</div>';
 	}
 	?>
 	</div>

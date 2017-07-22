@@ -5,10 +5,6 @@ use File::Basename;
 use DBI;
 use Archive::Tar::Wrapper;
 
-use constant {
-	USE_COMPRESSION => 1,
-};
-
 # Turn off STDOUT buffering
 $| = 1;
 # Associate file key with path
@@ -77,14 +73,14 @@ foreach my $key (keys %files) {
 	else {
 		$prefix = 'Unsorted'
 	}
-	$tar->add($prefix . '/bigmike-' . basename($files{$key})
+	$tar->add('bigmike/' . $prefix . '/bigmike-' . basename($files{$key})
 	, $files{$key}, {binmode => ":utf8"});
 	printf("\33[2K\r");
 	printf("%.f%% done (%d / %d)", $percent, $current, $total);
 }
 print "\nWriting to " . $CONFIG_DAILY_DUMP_FILE;
 unlink($CONFIG_DAILY_DUMP_FILE);
-$tar->write($CONFIG_DAILY_DUMP_FILE, USE_COMPRESSION);
+$tar->write($CONFIG_DAILY_DUMP_FILE, 0);
 print "\nCleaning up";
 unlink($tar->tardir());
 print "\n";

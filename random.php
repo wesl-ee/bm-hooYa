@@ -34,7 +34,6 @@ include "includes/database.php";
 		print '<img';
 		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
 		print ' src="download.php?key='.rawurlencode($key).'&t=img&thumb"';
-		print ' title="'.basename($path).'">';
 		print ' &nbsp</img>';
 	}
 	?>
