@@ -5,7 +5,8 @@ include "includes/config.php";
 include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
-include "includes/database.php";
+include CONFIG_HOOYA_PATH."includes/database.php";
+include CONFIG_HOOYA_PATH."includes/render.php";
 ?>
 <html>
 <head>
@@ -27,15 +28,9 @@ include "includes/database.php";
 		<div style="width:33%;float:left;">&nbsp</div>
 		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="location.reload()">more!</a></div>
 	</header><hr/>
-	<div id="thumbs">
 	<?php
 	$keys = db_getrandom(15);
-	foreach ($keys as $key) {
-		print '<img';
-		print ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"';
-		print ' src="download.php?key='.rawurlencode($key).'&t=img&thumb"';
-		print ' &nbsp</img>';
-	}
+	render_thumbnails($keys);
 	?>
 	</div>
 </div>

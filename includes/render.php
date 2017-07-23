@@ -54,4 +54,44 @@ function render_prettyquery($query)
 		echo ')';
 	}
 }
+function render_thumbnails($keys)
+{
+	print '<div id="thumbs">';
+	foreach ($keys as $key) {
+		print '<img'
+		. ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"'
+		. ' src="download.php?key='.rawurlencode($key).'&thumb"'
+		. ' title="'.''.'">'
+		. '&nbsp</img>';
+	}
+	print '</div>';
+}
+function render_pagenav($currpage, $totalpages, $q)
+{
+	if ($currpage > 0)
+		print "<a href='?".http_build_query($query)."&page=".($currpage-1)."'><</a> ";
+	print '<form method="GET" style="text-align:center;display:inline;">'
+	. '<input style="text-align:center;width:50px;"'
+	. ' name="page" type="text" Value=' . $currpage . '>';
+	render_hidden_inputs($q);
+	if ($currpage < $totalpages)
+		print " <a href='?".http_build_query($query)."&page=".($currpage+1)."'>></a>";
+}
+function render_hidden_inputs($array, $path = NULL) {
+	foreach ($array as $k => $v) {
+		if (!is_array($v)) {
+			// leaf node
+			if ($path)
+				$fullpath = $path.'['.$k.']';
+			else
+				$fullpath = $k;
+#			print "$fullpath = $v<br/>";
+			print "<input type='hidden' name='$fullpath' value='$v'>";
+		}
+		else {
+			// directory node
+			render_hidden_inputs($v, $path.$k);
+		}
+	}
+}
 ?>
