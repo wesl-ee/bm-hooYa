@@ -1,6 +1,5 @@
 #!/usr/bin/perl -w
 use strict;
-use Data::Dumper;
 use File::Basename;
 use DBI;
 use Archive::Tar::Wrapper;
@@ -20,7 +19,7 @@ $CONFIG_TEMPORARY_PATH,
 $CONFIG_DAILY_DUMP_PATH,
 $CONFIG_DAILY_DUMP_FILE);
 
-my $incfile =  dirname(__FILE__) . '/../includes/config.php';
+my $incfile =  '/var/http/hub/hooYa/includes/config.php';
 open(FILE, $incfile);
 while (<FILE>) {
 	$CONFIG_MYSQL_HOOYA_HOST = $1 if (/["']CONFIG_MYSQL_HOOYA_HOST["'], ["'](.+)["']/);

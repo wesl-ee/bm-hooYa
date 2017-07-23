@@ -74,7 +74,7 @@ my $dbh = DBI->connect($dbs, $sqluser, $sqlpass,
 {'PrintError' => 0});
 my $sth;
 if (!defined $dbh) {
-	die_error(DBI::errstr);
+	die_error DBI::errstr;
 }
 
 # Database creation

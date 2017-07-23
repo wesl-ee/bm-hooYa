@@ -1,0 +1,120 @@
+#!/usr/bin/perl
+use strict;
+use Getopt::Long;
+use DBI;
+
+# Cute formatting; ANSI escape codes
+use constant HOOYA_VERSION => '0.5';
+use constant {
+	FG_BLACK => '[0;30m',
+	FG_RED => '[0;31m',
+	FG_GREEN => '[0;32m',
+	FG_YELLOW => '[0;33m',
+	FG_BLUE => '[0;34m',
+	FG_MAGENTA => '[0;35m',
+	FG_CYAN => '[0;36m',
+	FG_WHITE => '[0;37m',
+	FG_DEFAULT => '[0;39m',
+
+	BG_BLACK => '[0;40m',
+	BG_RED => '[0;41m',
+	BG_GREEN => '[0;42m',
+	BG_YELLOW => '[0;43m',
+	BG_BLUE => '[0;44m',
+	BG_MAGENTA => '[0;45m',
+	BG_CYAN => '[0;46m',
+	BG_WHITE => '[0;47m',
+	BG_DEFAULT => '[0;49m',
+
+	TEXT_RESET => '[0;0m',
+	TEXT_BOLD => '[0;1m',
+	TEXT_STANDOUT => '[0;3m',
+	TEXT_BLINK => '[0;5m',
+	TEXT_REVERSE => '[0;7m',
+};
+sub die_error { die FG_RED . @_[0] . FG_DEFAULT . "\n"; }
+sub notify_success { print FG_GREEN . @_[0] . FG_DEFAULT . "\n"; }
+sub notify_warn { print FG_YELLOW . @_[0] . FG_DEFAULT . "\n"; }
+
+GetOptions(
+	# Import directory options
+	'import' => \my $import,
+	'directory=s' => \my $directory,
+
+	# Unmap key options
+	'unmap' => \my $unmap,
+	'delete' => \my $delete,
+	'key=s' => \my $key,
+) or die "Invalid options provided to $0\n";
+
+# Read SQL settings from the config file
+my ($CONFIG_MYSQL_HOOYA_HOST,
+$CONFIG_MYSQL_HOOYA_USER,
+$CONFIG_MYSQL_HOOYA_PASSWORD,
+$CONFIG_MYSQL_HOOYA_DATABASE);
+
+# Definitely going to need to make a config file in /etc
+my $incfile =  '/var/http/hub/hooYa/includes/config.php';
+open(FILE, $incfile);
+while (<FILE>) {
+	$CONFIG_MYSQL_HOOYA_HOST = $1 if (/["']CONFIG_MYSQL_HOOYA_HOST["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_USER = $1 if (/"CONFIG_MYSQL_HOOYA_USER", ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_PASSWORD = $1 if (/["']CONFIG_MYSQL_HOOYA_PASSWORD["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_DATABASE = $1 if (/["']CONFIG_MYSQL_HOOYA_DATABASE["'], ["'](.+)["']/);
+}
+close(FILE);
+
+# Introduction, version identification
+print FG_GREEN
+	. "hooYa v" . HOOYA_VERSION
+	. " mangement interface\n"
+. FG_DEFAULT;
+
+# SQL
+my $dsn = "DBI:mysql:database=" . $CONFIG_MYSQL_HOOYA_DATABASE
+. ";host=" . $CONFIG_MYSQL_HOOYA_HOST;
+
+my $dbh = DBI->connect(
+	$dsn,
+	$CONFIG_MYSQL_HOOYA_USER,
+	$CONFIG_MYSQL_HOOYA_PASSWORD,
+	{'PrintError' => 0}
+);
+if (!defined $dbh) {
+	die_error DBI::errstr;
+}
+my $sth;
+
+# Importing
+if (defined $import) {
+	if (!defined $directory) {
+		die_error "Please supply a --directory to import";
+	}
+}
+
+# Unmapping
+if (defined $unmap) {
+	if (!defined $key) {
+		print "Key to unmap: ";
+		$key = <STDIN>;
+		chomp $key;
+	}
+	if (defined $delete) {
+		$sth = $dbh->prepare("SELECT Path FROM `Files` WHERE Id='"
+			. $key . "'");
+		$sth->execute or die_error DBI::errstr;
+		my $row = $sth->fetchrow_hashref;
+		if (!defined $row) {
+			die_error "No such key $key is mapped";
+		}
+		my $path = $row->{'Path'};
+		unlink $path or die_error "Could not unlink file $path";
+		notify_success "Deleted file $path";
+	}
+	$sth = $dbh->prepare("DELETE FROM `Files` WHERE Id='" . $key . "'");
+	$sth->execute or die_error DBI::errstr;
+	if (!$sth->rows) {
+		die_error "No such key $key is mapped";
+	}
+	notify_success "Successfully unmapped $key";
+}
