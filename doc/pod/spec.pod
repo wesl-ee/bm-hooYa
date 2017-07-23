@@ -1,0 +1,78 @@
+=head1 How files are tagged
+
+=head2 `Files` table
+
+One row for each file indexed by hooYa
+
+=over
+
+=item Id
+
+This is an MD5 hash of the file; this is a fast way to organize files.
+Typically, a user supplies the MD5 hash of the file s/he wants and hooYa
+looks up that hash and serves w/e content is asked for.
+
+=item Path
+
+Path where the indexed file can be accessed
+
+=item Size
+
+Filesize in bytes
+
+=item Class
+
+Type of media. Supported values are I<anime>, I<single_image>, and I<video> but
+adding a new class only involves writing the code to render it.
+
+=item Mimetype
+
+Content type determined by your OS's magic.mime file
+
+=back
+
+=head2 `TagMap` Table
+
+One row for each file's tag
+
+=over
+
+=item FileId
+
+MD5 hash of the file that this tag describes. This can describe at
+most one (1) entry in L<`Files`|"`Files` Table">
+
+=item Added
+
+Date that the tag was added. Not used for anything but cute to have
+
+=item TagId
+
+Selects which Namespace -> Member pair this tag describes. This can describe
+at most one (1) entry in L<`Tags`|"`Tags` Table">.
+
+=back
+
+=head2 `Tags` Table
+
+One row for each Namespace -> Member pair. These are pairs like
+'series' -> 'puella_magi_madoka_magica'
+
+=over
+
+=item Id
+
+Primary Key for each pair
+
+=item Space
+
+Describes a namespace, such as I<series>, I<character>, or some other similar
+category. These spaces are B<not static>, so feel free to add as many spaces
+as you want!
+
+=item Member
+
+Describes a member in a namespace, such as I<puella_magi_madoka_magica> or
+I<kaname_madoka>
+
+=back
