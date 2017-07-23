@@ -1,4 +1,30 @@
 <?php
+function render_file($key, $ftype)
+{
+	switch($ftype) {
+	case 'image':
+		print '<div id="content">'
+		. '<img src="download.php?key='.rawurlencode($key).'"'
+		. ' onClick="window.open(this.src)">'
+		. '</img>'
+		. '</div>';
+		break;
+	case 'video':
+		print '<div class="flexrow">';
+		foreach (range(0, 100, 100/5) as $percent) {
+			print '<img src="download.php?key='.rawurlencode($key).''
+			. '&preview&percent=' . $percent . '"'
+			. ' style="max-width:33%;"'
+			. ' onClick="window.open(this.src)">'
+			. '&nbsp</img>';
+		}
+		print '</div>'
+		. '<footer><a href="download.php?key=' . rawurlencode($key) . '">'
+		. 'Download this file!'
+		. '</a></footer>';
+		break;
+	}
+}
 function render_properties($key, $class)
 {
 	if (!isset(DB_FILE_EXTENDED_PROPERTIES[$class]))
@@ -25,6 +51,22 @@ function render_properties($key, $class)
 		}
                 print '</div>';
         }
+}
+function render_tags($key)
+{
+	$tags = db_get_tags($key);
+	foreach ($tags as $tag) {
+		print '<input id="space_box"'
+		. ' name="tag_space[]"'
+		. ' value="'.$tag['Space'].'"'
+		. ' onKeyDown="inputFilter(event)"'
+		. '>';
+		print '<input id="member_box"'
+		. ' name="tag_member[]"'
+		. ' value="'.$tag['Member'].'"'
+		. ' onKeyDown="inputFilter(event)"'
+		. '>';
+	}
 }
 function render_classmenu($class = NULL)
 {

@@ -5,7 +5,7 @@ include "../includes/config.php";
 include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
-include "../includes/database.php";
+include CONFIG_HOOYA_PATH."includes/database.php";
 ?>
 <html>
 <head>
@@ -27,7 +27,7 @@ include "../includes/database.php";
 	</div>
 	<?php
 		foreach(array_keys(db_get_tagspaces()) as $space) {
-			print '<div style="width:50%;float:left;text-align:center;">';
+			print '<div style="width:100%;float:left;text-align:center;">';
 			print "<a href=view.php?n=$space>$space</a>";
 			print '</div>';
 		}

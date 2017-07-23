@@ -31,6 +31,7 @@ function db_get_tags($key)
 		"AND TagMap.FileId = Files.Id " .
 		"AND Tags.Id = TagMap.TagId";
 	$res = mysqli_query($dbh, $query);
+	// We allow more than one of the same tag space
 	while ($row = mysqli_fetch_assoc($res)) {
 		$ret[] = ['Space' => $row['Space'], 'Member' => $row['Member']];
 	}
@@ -253,5 +254,14 @@ function db_info($req)
 	}
 	mysqli_close($dbh);
 	return $ret;
+}
+function db_update_highscore($userid, $diff)
+{
+	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME
+	,CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
+	// Keep a high-score count for every logged-in user!
+	$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + '
+	. $diff . ' WHERE `id`=' . $userid;
+	return $conn->query($cmd);
 }
 ?>

@@ -5,9 +5,9 @@ include "includes/config.php";
 include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
-include "includes/database.php";
-include "includes/video.php";
-include "includes/render.php";
+include CONFIG_HOOYA_PATH."includes/database.php";
+include CONFIG_HOOYA_PATH."includes/video.php";
+include CONFIG_HOOYA_PATH."includes/render.php";
 
 // Grab the primary key for addressing the file
 if (!isset($_GET['key']))
@@ -32,14 +32,8 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 		$tags[$i]['Member'] = $tag_member[$i];
 	}
 	$new_tags =  count($tags) - count(db_get_tags($key));
-	if (isset($_SESSION['userid'])) {
-		$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME
-		,CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
-		// Keep a high-score count for every logged-in user!
-		$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + '
-		. ($new_tags+$new_namespaces) . ' WHERE `id`=' . $_SESSION['userid'] . '';
-		$conn->query($cmd);
-	}
+	if ($new_tags && isset($_SESSION['userid']))
+		db_update_highscore($_SESSION['userid'], $newtags);
 
 	// Replace the previous tags with the space -> member pairs we
 	// just read in
@@ -107,22 +101,7 @@ $ftype = explode('/', $mimetype)[0];
 		<hr/>
 		<h3 style="text-align:left;">Tags</h3>
 		<div id="tagform">
-		<?php
-			// Populate a list of existing tags
-			$tags = db_get_tags($key);
-			foreach ($tags as $tag) {
-				print '<input id="space_box"'
-				. ' name="tag_space[]"'
-				. ' value="'.$tag['Space'].'"'
-				. ' onKeyDown="inputFilter(event)"'
-				. '>';
-				print '<input id="member_box"'
-				. ' name="tag_member[]"'
-				. ' value="'.$tag['Member'].'"'
-				. ' onKeyDown="inputFilter(event)"'
-				. '>';
-			}
-		?>
+		<?php render_tags($key);?>
 		</div>
 	<div style="text-align:center;">
 		<a onClick="addTagField()">add a tag</a>
@@ -132,43 +111,18 @@ $ftype = explode('/', $mimetype)[0];
 	</div>
 </div>
 <div id="right_frame" class="flexcolumn">
-	<header style="text-align:center;"><?php echo $key?></header>
 	<header>
 		<div style="width:33%;float:left;">
 			<a onClick="window.history.back();">back</a>
 		</div>
 		<div style="width:33%;float:left;text-align:center;">
-			&nbsp
+			<?php echo $key;?>
 		</div>
 		<div style="width:33%;float:left;text-align:right;overflow:hidden;">
 			<a href="help/guidelines.php">tagging guidelines</a>
 		</div>
 	</header>
-	<?php
-	// Vary the output based on the filetype, how smart!
-	if ($ftype == 'image') {
-		print '<div id="content">'
-		. '<img src="download.php?key='.rawurlencode($key).'"'
-		. ' onClick="window.open(this.src)">'
-		. '&nbsp</img>'
-		. '</div>';
-	}
-	elseif ($ftype == 'video') {
-		print '<div class="flexrow">';
-		foreach (range(0, 100, 100/5) as $percent) {
-			print '<img src="download.php?key='.rawurlencode($key).''
-			. '&preview&percent=' . $percent . '"'
-			. ' style="max-width:33%;"'
-			. ' onClick="window.open(this.src)">'
-			. '&nbsp</img>';
-		}
-		print '</div>'
-		. '<footer><a href="download.php?key=' . rawurlencode($key) . '">'
-		. 'Download this file!'
-		. '</a></footer>';
-	}
-	?>
-	</div>
+	<?php render_file($key, $ftype);?>
 </div>
 </div>
 </body>
