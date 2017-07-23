@@ -1,0 +1,136 @@
+#!/usr/bin/perl
+use strict;
+use DBI;
+
+use constant HOOYA_VERSION => '0.5';
+use constant {
+	FOREGROND_BLACK => '[0;30m',
+	FOREGROUND_RED => '[0;31m',
+	FOREGROUND_GREEN => '[0;32m',
+	FOREGROUND_YELLOW => '[0;33m',
+	FOREGROUND_BLUE => '[0;34m',
+	FOREGROUND_MAGENTA => '[0;35m',
+	FOREGROUND_CYAN => '[0;36m',
+	FOREGROUND_WHITE => '[0;37m',
+	FOREGROUND_DEFAULT => '[0;39m',
+
+	BACKGROUND_BLACK => '[0;40m',
+	BACKGROUND_RED => '[0;41m',
+	BACKGROUND_GREEN => '[0;42m',
+	BACKGROUND_YELLOW => '[0;43m',
+	BACKGROUND_BLUE => '[0;44m',
+	BACKGROUND_MAGENTA => '[0;45m',
+	BACKGROUND_CYAN => '[0;46m',
+	BACKGROUND_WHITE => '[0;47m',
+	BACKGROUND_DEFAULT => '[0;49m',
+
+	TEXT_RESET => '[0;0m',
+	TEXT_BOLD => '[0;1m',
+	TEXT_STANDOUT => '[0;3m',
+	TEXT_BLINK => '[0;5m',
+	TEXT_REVERSE => '[0;7m',
+};
+sub die_error
+{
+	die FOREGROUND_RED . @_[0] . FOREGROUND_DEFAULT . "\n";
+}
+sub notify_success
+{
+	print FOREGROUND_GREEN . @_[0] . FOREGROUND_DEFAULT . "\n";
+}
+sub notify_warn
+{
+	print FOREGROUND_YELLOW . @_[0] . FOREGROUND_DEFAULT . "\n";
+}
+
+print FOREGROUND_GREEN
+	. "hooYa v" . HOOYA_VERSION
+	. " installer\n"
+. FOREGROUND_DEFAULT;
+
+print TEXT_BOLD
+	. "Please ensure you have installed all the necessary"
+	. " components first!\n"
+. TEXT_RESET;
+
+# SQL hostname
+print "\nMySQL host: ";
+my $sqlhost = <STDIN>;
+chomp $sqlhost;
+
+# SQL username
+print "MySQL user: ";
+my $sqluser = <STDIN>;
+chomp $sqluser;
+
+# SQL password
+print "MySQL password: ";
+my $sqlpass = <STDIN>;
+chomp $sqlpass;
+
+# Jack in
+my $dbs = "DBI:mysql:host=$sqlhost";
+my $dbh = DBI->connect($dbs, $sqluser, $sqlpass,
+{'PrintError' => 0});
+my $sth;
+if (!defined $dbh) {
+	die_error(DBI::errstr);
+}
+
+# Database creation
+$sth = $dbh->prepare(
+	"CREATE DATABASE hooya"
+);
+if ($sth->execute) {
+	notify_success "Created the `hooya` database";
+}
+else {
+	notify_warn DBI::errstr;
+}
+$sth = $dbh->prepare(
+	"USE hooya;"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+
+# Table creation
+$sth = $dbh->prepare(
+	"CREATE TABLE `Files` ("
+	. "`Id` VARCHAR(128) NOT NULL,"
+	. "`Path` VARCHAR(4096) DEFAULT NULL,"
+	. "`Size` BIGINT(20) unsigned DEFAULT NULL,"
+	. "`Class` VARCHAR(128) DEFAULT NULL,"
+	. "`Mimetype` VARCHAR(128) DEFAULT NULL,"
+	. "PRIMARY KEY (`Id`)"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+$sth = $dbh->prepare(
+	"CREATE TABLE `TagMap` ("
+	. "`FileId` VARCHAR(128) NOT NULL,"
+	. "`Added` DATETIME DEFAULT CURRENT_TIMESTAMP,"
+	. "`TagId` INT(11) NOT NULL,"
+	. "UNIQUE KEY `FileId` (`FileId`, `TagId`),"
+	. "CONSTRAINT `files` FOREIGN KEY (`FileId`)"
+	. " REFERENCES `Files` (`Id`) ON DELETE CASCADE"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+$sth = $dbh->prepare(
+	"CREATE TABLE `Tags` ("
+	. "`Id` INT(11) NOT NULL AUTO_INCREMENT,"
+	. "`Space` VARCHAR(128) DEFAULT NULL,"
+	. "`Member` VARCHAR(128) DEFAULT NULL,"
+	. "PRIMARY KEY (`Id`),"
+	. "UNIQUE KEY `Space` (`Space`, `Member`)"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+notify_success "Created the SQL structure";
