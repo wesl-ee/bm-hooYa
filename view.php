@@ -33,8 +33,15 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 		$tags[$i]['Member'] = $tag_member[$i];
 	}
 	$new_tags =  count($tags) - count(db_get_tags($key));
-	if ($new_tags && isset($_SESSION['userid']))
-		db_update_highscore($_SESSION['userid'], $newtags);
+	if ($new_tags && isset($_SESSION['userid'])) {
+		if ($new_tags > 0)
+			syslog(LOG_INFO, "User " . $_SESSION['username']
+				. " added $new_tags new tags to $key");
+		else
+			syslog(LOG_INFO, "User " . $_SESSION['username']
+				. " removed " . abs($new_tags) . " tags from $key");
+		db_update_highscore($_SESSION['userid'], $new_tags);
+	}
 
 	// Replace the previous tags with the space -> member pairs we
 	// just read in
