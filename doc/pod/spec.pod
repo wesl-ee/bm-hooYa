@@ -56,7 +56,7 @@ at most one (1) entry in L<`Tags`|"`Tags` Table">.
 =head2 `Tags` Table
 
 One row for each Namespace -> Member pair. These are pairs like
-'series' -> 'puella_magi_madoka_magica'
+I<series> -> I<puella_magi_madoka_magica>
 
 =over
 
