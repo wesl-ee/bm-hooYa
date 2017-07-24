@@ -23,6 +23,7 @@ function addTagField()
 	for (var i=0; i < boxes.length; i++)
 		// Why do you need another box?
 		if (!boxes[i].value) {boxes[i].focus(); return;}
+		if (i/2 >= maxtags) { alert("Too many tags!"); return; }
 	var space = document.createElement('input');
 	var member = document.createElement('input');
 	space.type = 'text';

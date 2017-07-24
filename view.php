@@ -22,7 +22,8 @@ if (isset($_POST['class'])) {
 
 // Grab tag {space => member pairs} (e.g. 'character' => 'madoka')
 if (isset($_POST['tag_space'], $_POST['tag_member'])
-	&& count($_POST['tag_space']) == count($_POST['tag_space'])) {
+	&& count($_POST['tag_space']) == count($_POST['tag_space'])
+	&& count($_POST['tag_space']) <= CONFIG_HOOYA_MAX_TAGS) {
 	$tag_space = $_POST['tag_space'];
 	$tag_member = $_POST['tag_member'];
 	for ($i = 0; $i < count($tag_space); $i++) {
@@ -66,6 +67,7 @@ $ftype = explode('/', $mimetype)[0];
 	<title>bmffd — view</title>
 	<script src="js/f.js"></script>
 	<script>
+		var maxtags = <?php echo CONFIG_HOOYA_MAX_TAGS?>;
 		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {
 		// alt + n generates new tag inputs
 		case (78):
