@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 use strict;
-use Getopt::Long;
+use Getopt::Long 'HelpMessage';
 use DBI;
+use File::Find;
+use File::MimeInfo 'mimetype';
 
 # Cute formatting; ANSI escape codes
 use constant HOOYA_VERSION => '0.5';
@@ -37,6 +39,8 @@ sub notify_success { print FG_GREEN . @_[0] . FG_DEFAULT . "\n"; }
 sub notify_warn { print FG_YELLOW . @_[0] . FG_DEFAULT . "\n"; }
 
 GetOptions(
+	'help' => sub { HelpMessage(0) },
+
 	# Import directory options
 	'import' => \my $import,
 	'directory=s' => \my $directory,
@@ -45,7 +49,9 @@ GetOptions(
 	'unmap' => \my $unmap,
 	'delete' => \my $delete,
 	'key=s' => \my $key,
-) or die "Invalid options provided to $0\n";
+) or HelpMessage(1);
+
+HelpMessage(1) unless (defined $unmap || $import);
 
 # Read SQL settings from the config file
 my ($CONFIG_MYSQL_HOOYA_HOST,
@@ -88,12 +94,15 @@ my $sth;
 # Importing
 if (defined $import) {
 	if (!defined $directory) {
-		die_error "Please supply a --directory to import";
+		print "Directory to map: ";
+		$key = <STDIN>;
+		chomp $key;
 	}
+	notify_warn "Feature not yet implemented";
 }
 
 # Unmapping
-if (defined $unmap) {
+elsif (defined $unmap || $delete) {
 	if (!defined $key) {
 		print "Key to unmap: ";
 		$key = <STDIN>;
@@ -108,7 +117,9 @@ if (defined $unmap) {
 			die_error "No such key $key is mapped";
 		}
 		my $path = $row->{'Path'};
-		unlink $path or die_error "Could not unlink file $path";
+		if (!unlink $path) {
+			die_error "Could not unlink file $path";
+		}
 		notify_success "Deleted file $path";
 	}
 	$sth = $dbh->prepare("DELETE FROM `Files` WHERE Id='" . $key . "'");
@@ -118,3 +129,53 @@ if (defined $unmap) {
 	}
 	notify_success "Successfully unmapped $key";
 }
+
+=pod
+
+=head1 NAME
+
+divinity - hooYa management interface
+
+=head1 SYNOPSIS
+
+One of the following must be specified:
+
+=over
+
+=item --import
+
+Import a directory
+
+=item --unmap
+
+Unmap a key from the database
+
+=item --delete
+
+Unmap a key and delete it from the underlying file system
+
+=back
+
+Optional arguments
+
+=over
+
+=item --key
+
+Specifies a key to operate on. Only relevant where keys are used, kd.
+
+=item --directory
+
+Specifies a directory to operate on. Only relevant where dirs are used, kd.
+
+=item --help
+
+Help menu, of course
+
+=back
+
+=head1 VERSION
+
+0.5
+
+=cut
