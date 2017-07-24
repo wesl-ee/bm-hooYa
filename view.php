@@ -35,10 +35,10 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	$new_tags =  count($tags) - count(db_get_tags($key));
 	if ($new_tags && isset($_SESSION['userid'])) {
 		if ($new_tags > 0)
-			syslog(LOG_INFO, "User " . $_SESSION['username']
+			syslog(LOG_INFO|LOG_DAEMON, "User " . $_SESSION['username']
 				. " added $new_tags new tags to $key");
 		else
-			syslog(LOG_INFO, "User " . $_SESSION['username']
+			syslog(LOG_INFO|LOG_DAEMON, "User " . $_SESSION['username']
 				. " removed " . abs($new_tags) . " tags from $key");
 		db_update_highscore($_SESSION['userid'], $new_tags);
 	}
@@ -119,7 +119,7 @@ $ftype = explode('/', $mimetype)[0];
 	</form>
 	</div>
 </div>
-<div id="right_frame" class="flexcolumn">
+<div id="right_frame">
 	<header>
 		<div style="width:33%;float:left;">
 			<a onClick="window.history.back();">back</a>
