@@ -3,22 +3,21 @@ function render_file($key, $ftype)
 {
 	switch($ftype) {
 	case 'image':
-		print '<div id="content">'
+		print '<main id="single">'
 		. '<img src="download.php?key='.rawurlencode($key).'"'
 		. ' onClick="window.open(this.src)">'
 		. '</img>'
-		. '</div>';
+		. '</main>';
 		break;
 	case 'video':
-		print '<div class="flexrow">';
+		print '<main class="thumbs">';
 		foreach (range(0, 100, 100/5) as $percent) {
 			print '<img src="download.php?key='.rawurlencode($key).''
 			. '&preview&percent=' . $percent . '"'
-			. ' style="max-width:33%;"'
 			. ' onClick="window.open(this.src)">'
-			. '&nbsp</img>';
+			. '</img>';
 		}
-		print '</div>'
+		print '</main>'
 		. '<footer><a href="download.php?key=' . rawurlencode($key) . '">'
 		. 'Download this file!'
 		. '</a></footer>';
@@ -56,13 +55,12 @@ function render_tags($key)
 {
 	$tags = db_get_tags($key);
 	foreach ($tags as $tag) {
-		print '<input id="space_box"'
-		. ' name="tag_space[]"'
+		print '<figure>'
+		. '<input name="tag_space[]"'
 		. ' value="'.$tag['Space'].'"'
 		. ' onKeyDown="inputFilter(event)"'
 		. '>';
-		print '<input id="member_box"'
-		. ' name="tag_member[]"'
+		print '<input name="tag_member[]"'
 		. ' value="'.$tag['Member'].'"'
 		. ' onKeyDown="inputFilter(event)"'
 		. '>';
@@ -98,7 +96,6 @@ function render_prettyquery($query)
 }
 function render_thumbnails($keys)
 {
-	print '<div id="thumbs">';
 	foreach ($keys as $key) {
 		print '<img'
 		. ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"'
@@ -106,7 +103,6 @@ function render_thumbnails($keys)
 		. ' title="'.''.'">'
 		. '&nbsp</img>';
 	}
-	print '</div>';
 }
 function render_pagenav($currpage, $totalpages, $q)
 {

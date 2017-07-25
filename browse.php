@@ -25,13 +25,13 @@ if (isset($_GET['page']))
 </head>
 <body>
 <div id="container">
-<div id="left_frame">
-	<div id="logout">
+<div id="leftframe">
+	<nav>
 		<?php print_login();?>
-	</div>
+	</nav>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
-<div id="right_frame">
+<div id="rightframe">
 	<header>
 		<div style="width:33%;float:left;">
 			<a href=".">back to search</a>
@@ -41,9 +41,10 @@ if (isset($_GET['page']))
 		</div>
 		<div style="width:33%;float:left;text-align:right;">&nbsp</div>
 	</header>
-	<?php
-	// Choose the page that is displayed
 
+	<main id="thumbs">
+	<?php
+	// Get all results
 	$keys = hooya_search($q);
 
 	// Take the current page's slice of the array to be the results
@@ -52,16 +53,16 @@ if (isset($_GET['page']))
 		CONFIG_THUMBS_PER_PAGE);
 	render_thumbnails($results);
 	?>
-	<div style="text-align:center;">
+	</main>
+
+	<footer style="text-align:center;">
 	<hr/>
 	<?php
 		$totalpages = round(count($keys)/CONFIG_THUMBS_PER_PAGE);
 		render_pagenav($page, $totalpages, $q);
 	?>
-	</div>
-	<div style="width:100%;text-align:center;">
-		<?php print ($totalpages . " pages")?>
-	</div>
+		<br/><?php print ($totalpages . " pages")?>
+	</footer>
 </div>
 </body>
 </html>

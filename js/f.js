@@ -18,25 +18,30 @@ function inputFilter(e)
 // Insert an additional space => member pair of input boxes
 function addTagField()
 {
-	var tagform = document.getElementById('tagform');
-	var boxes = tagform.querySelectorAll('input');
+	var tags = document.getElementById('tags');
+	var boxes = tags.querySelectorAll('input');
 	for (var i=0; i < boxes.length; i++)
 		// Why do you need another box?
 		if (!boxes[i].value) {boxes[i].focus(); return;}
 		if (i/2 >= maxtags) { alert("Too many tags!"); return; }
+
+	// Generate a new figure with two inputs
+	var figure = document.createElement('figure');
 	var space = document.createElement('input');
 	var member = document.createElement('input');
+
 	space.type = 'text';
-	space.id = 'space_box';
 	space.name = 'tag_space[]';
 	space.addEventListener('keydown', inputFilter);
 
 	member.type='text';
-	member.id = 'member_box';
 	member.name='tag_member[]';
 	member.addEventListener('keydown', inputFilter);
 
-	document.getElementById('tagform').appendChild(space);
-	document.getElementById('tagform').appendChild(member);
+	// Ship the inputs with the other tags
+	figure.appendChild(space);
+	figure.appendChild(member);
+	document.getElementById('tags').appendChild(figure);
+
 	space.focus();
 }
