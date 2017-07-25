@@ -25,23 +25,29 @@ function addTagField()
 		if (!boxes[i].value) {boxes[i].focus(); return;}
 		if (i/2 >= maxtags) { alert("Too many tags!"); return; }
 
-	// Generate a new figure with two inputs
-	var figure = document.createElement('figure');
+	// Generate a new row with two inputs
+	var tr = document.createElement('tr');
+	var td;
 	var space = document.createElement('input');
 	var member = document.createElement('input');
 
+
+	td = document.createElement('td');
 	space.type = 'text';
 	space.name = 'tag_space[]';
 	space.addEventListener('keydown', inputFilter);
+	td.appendChild(space);
+	tr.appendChild(td);
 
+	td = document.createElement('td');
 	member.type='text';
 	member.name='tag_member[]';
 	member.addEventListener('keydown', inputFilter);
+	td.appendChild(member);
+	tr.appendChild(td);
 
 	// Ship the inputs with the other tags
-	figure.appendChild(space);
-	figure.appendChild(member);
-	document.getElementById('tags').appendChild(figure);
+	tags.appendChild(tr);
 
 	space.focus();
 }

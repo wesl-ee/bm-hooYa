@@ -26,21 +26,22 @@ function render_file($key, $ftype)
 }
 function render_properties($key, $class)
 {
+
 	if (!isset(DB_FILE_EXTENDED_PROPERTIES[$class]))
 		return;
 	if (!($fileproperties = db_getproperties($key)))
 		print "Query failed. . . check that table `$class` has the rows: "
 		. join(array_keys(DB_FILE_EXTENDED_PROPERTIES[$class]), ', ');
-	else foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
-		print '<div style="overflow:auto;">';
-		print '<div style="float:left;width:50%;text-align:center;">'
+	else { print '<table id="properties">';
+	foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
+		print '<tr>';
+		print '<td>'
 		. $property
-		. '</div>';
+		. '</td>';
 
+		print '<td>';
 		if ($value['Immutable']) {
-			print '<div style="float:left;width:50%;text-align:center;">'
-			. $fileproperties[$property]
-			. '</div>';
+			print $fileproperties[$property];
 		}
 		else {
 			print "<input name='properties[$property]' id='box'";
@@ -48,23 +49,26 @@ function render_properties($key, $class)
 				print " type='" . $value['Type'] . "'";
 			print " value='" . $fileproperties[$property] . "'>";
 		}
-                print '</div>';
-        }
+                print '</td></tr>';
+        }}
+	print '</table>';
 }
 function render_tags($key)
 {
 	$tags = db_get_tags($key);
+	print '<table id="tags">';
 	foreach ($tags as $tag) {
-		print '<figure>'
-		. '<input name="tag_space[]"'
+		print '<tr>'
+		. '<td><input name="tag_space[]"'
 		. ' value="'.$tag['Space'].'"'
 		. ' onKeyDown="inputFilter(event)"'
-		. '>';
-		print '<input name="tag_member[]"'
+		. '></td>';
+		print '<td><input name="tag_member[]"'
 		. ' value="'.$tag['Member'].'"'
 		. ' onKeyDown="inputFilter(event)"'
-		. '>';
+		. '></td></tr>';
 	}
+	print '</table>';
 }
 function render_classmenu($class = NULL)
 {
@@ -125,7 +129,6 @@ function render_hidden_inputs($array, $path = NULL) {
 				$fullpath = $path.'['.$k.']';
 			else
 				$fullpath = $k;
-#			print "$fullpath = $v<br/>";
 			print "<input type='hidden' name='$fullpath' value='$v'>";
 		}
 		else {

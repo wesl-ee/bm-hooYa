@@ -109,12 +109,10 @@ $ftype = explode('/', $mimetype)[0];
 			<?php render_properties($key, $class); ?>
 		<hr/>
 		<h3>Tags</h3>
-		<section id="tags">
 			<?php render_tags($key);?>
-		</section>
-	<div style="text-align:center;">
-		<a onClick="addTagField()">add a tag</a>
-	</div><hr/>
+			<div style="text-align:center;">
+				<a onClick="addTagField()">add a tag</a>
+			</div><hr/>
 	<input type="submit" value="commit changes" style="margin:auto;display:block;">
 	</form>
 	</aside>

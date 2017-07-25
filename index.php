@@ -5,8 +5,8 @@ include "includes/config.php";
 include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
-include "includes/database.php";
-include "includes/render.php";
+include CONFIG_HOOYA_PATH."includes/database.php";
+include CONFIG_HOOYA_PATH."includes/render.php";
 ?>
 <html>
 <head>
