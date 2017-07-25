@@ -106,6 +106,7 @@ function render_thumbnails($keys)
 }
 function render_pagenav($currpage, $totalpages, $q)
 {
+	print '<div>';
 	if ($currpage > 0)
 		print "<a href='?".http_build_query($query)."&page=".($currpage-1)."'><</a> ";
 	print '<form method="GET" style="text-align:center;display:inline;">'
@@ -114,6 +115,7 @@ function render_pagenav($currpage, $totalpages, $q)
 	render_hidden_inputs($q);
 	if ($currpage < $totalpages)
 		print " <a href='?".http_build_query($query)."&page=".($currpage+1)."'>></a>";
+	print '</div>';
 }
 function render_hidden_inputs($array, $path = NULL) {
 	foreach ($array as $k => $v) {

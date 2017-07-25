@@ -33,13 +33,8 @@ if (isset($_GET['page']))
 </div>
 <div id="rightframe">
 	<header>
-		<div style="width:33%;float:left;">
-			<a href=".">back to search</a>
-		</div>
-		<div style="width:33%;float:left;text-align:center;">
-			<?php render_prettyquery($q); ?>
-		</div>
-		<div style="width:33%;float:left;text-align:right;">&nbsp</div>
+		<a href=".">back to search</a>
+		<?php render_prettyquery($q); ?>
 	</header>
 
 	<main id="thumbs">
@@ -56,12 +51,11 @@ if (isset($_GET['page']))
 	</main>
 
 	<footer style="text-align:center;">
-	<hr/>
 	<?php
 		$totalpages = round(count($keys)/CONFIG_THUMBS_PER_PAGE);
 		render_pagenav($page, $totalpages, $q);
 	?>
-		<br/><?php print ($totalpages . " pages")?>
+		<?php print ($totalpages . " pages")?>
 	</footer>
 </div>
 </body>

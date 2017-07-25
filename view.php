@@ -122,7 +122,7 @@ $ftype = explode('/', $mimetype)[0];
 <div id="rightframe">
 	<header>
 		<a onClick="window.history.back();">back</a>
-		<?php echo $key;?>
+<!--		<?php echo $key;?>-->
 		<a href="help/guidelines.php">tagging guidelines</a>
 	</header>
 	<?php render_file($key, $ftype);?>
