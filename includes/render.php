@@ -3,7 +3,7 @@ function render_file($key, $ftype)
 {
 	switch($ftype) {
 	case 'image':
-		print '<main id="single">'
+		print '<main class="single">'
 		// Wrap the img in a div to preserve the aspect ratio
 		. '<div id="hack">'
 		. '<img src="download.php?key='.rawurlencode($key).'"'
@@ -16,10 +16,12 @@ function render_file($key, $ftype)
 		. '</footer>';
 		break;
 	case 'video':
+		/* Number of thumbnails to show */
+		$n = 9;
 		print '<main class="thumbs">';
-		foreach (range(0, 100, 100/5) as $percent) {
+		foreach (range($n, 100, round(100/$n)) as $percent) {
 			print '<img src="download.php?key='.rawurlencode($key).''
-			. '&preview&percent=' . $percent . '"'
+			. '&preview&percent=' . round($percent) . '"'
 			. ' onClick="window.open(this.src)">'
 			. '</img>';
 		}
@@ -36,8 +38,9 @@ function render_properties($key, $class)
 	if (!isset(DB_FILE_EXTENDED_PROPERTIES[$class]))
 		return;
 	if (!($fileproperties = db_getproperties($key)))
-		print "Query failed. . . check that table `$class` has the rows: "
-		. join(array_keys(DB_FILE_EXTENDED_PROPERTIES[$class]), ', ');
+/*		print "Query failed. . . check that table `$class` has the rows: "
+		. join(array_keys(DB_FILE_EXTENDED_PROPERTIES[$class]), ', ');*/
+		return;
 	else { print '<table id="properties">';
 	foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
 		print '<tr>';
@@ -116,16 +119,17 @@ function render_thumbnails($keys)
 }
 function render_pagenav($currpage, $totalpages, $q)
 {
-	print '<div>';
+	print '<form method="GET">';
 	if ($currpage > 0)
-		print "<a href='?".http_build_query($query)."&page=".($currpage-1)."'><</a> ";
-	print '<form method="GET" style="text-align:center;display:inline;">'
-	. '<input style="text-align:center;width:50px;"'
+		print "<a href='?".http_build_query($q)."&page=".($currpage-1)."'><</a> ";
+	print '<input style="text-align:center;width:50px;"'
 	. ' name="page" type="text" Value=' . $currpage . '>';
+
 	render_hidden_inputs($q);
+
 	if ($currpage < $totalpages)
-		print " <a href='?".http_build_query($query)."&page=".($currpage+1)."'>></a>";
-	print '</div>';
+		print " <a href='?".http_build_query($q)."&page=".($currpage+1)."'>></a>";
+	print '</form>';
 }
 function render_hidden_inputs($array, $path = NULL) {
 	foreach ($array as $k => $v) {

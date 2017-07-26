@@ -71,7 +71,7 @@ if (isset($_GET['partyhat'])) {
 }
 if ($ftype == 'video' && isset($_GET['preview'])) {
 	$percent = (isset($_GET['percent']) ? $_GET['percent']: '0');
-	$file = CONFIG_TEMPORARY_PATH . $key . '_preview_' . $percent . '.png';
+	$file = CONFIG_TEMPORARY_PATH . $key . '_preview_' . round($percent) . '.png';
 	if (!file_exists($file))
 		exec('ffmpegthumbnailer -i ' . escapeshellarg($path)
 		. ' -s 0 -o ' . $file . ' -t ' . $percent);

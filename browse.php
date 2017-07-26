@@ -37,7 +37,7 @@ if (isset($_GET['page']))
 		<?php render_prettyquery($q); ?>
 	</header>
 
-	<main id="thumbs">
+	<main class="thumbs">
 	<?php
 	// Get all results
 	$keys = hooya_search($q);
@@ -55,7 +55,7 @@ if (isset($_GET['page']))
 		$totalpages = round(count($keys)/CONFIG_THUMBS_PER_PAGE);
 		render_pagenav($page, $totalpages, $q);
 	?>
-		<?php print ($totalpages . " pages")?>
+	<div><?php print ($totalpages . " pages")?></div>
 	</footer>
 </div>
 </body>

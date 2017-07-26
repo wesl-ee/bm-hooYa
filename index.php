@@ -51,8 +51,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 </div>
 <div id="rightframe">
 	<header>
-		<a href="nightly/">download the daily dump</a>
-		<a href='help/'>search help</a>
+		<a href="nightly/">daily dump</a>
 		<a href="random.php">random</a>
 	</header>
 	<h1>hooYa!</h1>
@@ -90,8 +89,8 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 			</div>
 		</div>
 	</form>
-	<footer style="text-align:center;">
-		<span><?php print("now serving ");
+	<section style="text-align:center;">
+		<?php print("now serving ");
 		$info = db_info(['Files' => 1, 'Version' => 1]);
 
 		print number_format($info['Files']);
@@ -100,9 +99,9 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 
 		// See mysql_get_server_info
 		print ("(".$info['Version'].")");
-		?></span>
-		<span>or <a href="popular/">just browse</a></span>
-	</footer>
+		?>
+		<br/>or <a href="popular/">just browse</a>
+	</section>
 
 </div>
 </div>
