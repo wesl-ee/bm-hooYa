@@ -4,10 +4,16 @@ function render_file($key, $ftype)
 	switch($ftype) {
 	case 'image':
 		print '<main id="single">'
+		// Wrap the img in a div to preserve the aspect ratio
+		. '<div id="hack">'
 		. '<img src="download.php?key='.rawurlencode($key).'"'
 		. ' onClick="window.open(this.src)">'
 		. '</img>'
-		. '</main>';
+		. '</div>'
+		. '</main>'
+		. '<footer style="text-align:center;">'
+		. "<span>$key</span>"
+		. '</footer>';
 		break;
 	case 'video':
 		print '<main class="thumbs">';
