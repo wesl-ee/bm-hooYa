@@ -24,7 +24,8 @@ $namespace = $_GET['n'];
 <div id="rightframe">
 	<main class="selectmenu">
 	<header>
-		<?php print_titleblock($namespace); ?>
+		<h3>select a</h3>
+		<h1><?php print $namespace; cursor()?></h1>
 		<a href=".">go back</a>
 	</header>
 	<nav><table>

@@ -23,7 +23,8 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 <div id="rightframe">
 	<main class="selectmenu">
 		<header>
-			<?php print_titleblock('space', 'select a'); ?>
+			<h3>select a</h3>
+			<h1>space<?php cursor()?></h1>
 			<nav>
 				<a href="../">back</a>
 			</nav>
