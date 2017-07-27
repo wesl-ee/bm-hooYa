@@ -34,7 +34,7 @@ if (isset($_GET['page']))
 <div id="rightframe">
 	<header>
 		<a href=".">back to search</a>
-		<?php render_prettyquery($q); ?>
+		<div><?php render_prettyquery($q); ?></div>
 	</header>
 
 	<main class="thumbs">
@@ -50,7 +50,7 @@ if (isset($_GET['page']))
 	?>
 	</main>
 
-	<footer style="text-align:center;">
+	<footer>
 	<?php
 		$totalpages = round(count($keys)/CONFIG_THUMBS_PER_PAGE);
 		render_pagenav($page, $totalpages, $q);

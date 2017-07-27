@@ -54,7 +54,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		<a href="nightly/">daily dump</a>
 		<a href="random.php">random</a>
 	</header>
-	<h1>hooYa!</h1>
+	<h1 style="text-align:center;padding-top:30px;padding-bottom:30px;">hooYa!</h1>
 	<form id="search" action="browse.php" method="get" >
 		<input id="searchbox" type="search" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></td>
 		<div id="params">
