@@ -98,6 +98,9 @@ $ftype = explode('/', $mimetype)[0];
 		<?php print_login(); ?>
 	</nav>
 	<aside style="padding:10px;">
+	<header>
+		<span><?php print $key?></span>
+	</header>
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>">
 		<h3 style="text-align:left;">Class</h3>
 		<div style="text-align:center;">

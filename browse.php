@@ -33,7 +33,7 @@ if (isset($_GET['page']))
 </div>
 <div id="rightframe">
 	<header>
-		<a href=".">back to search</a>
+		<a onClick="history.back()">back to search</a>
 		<div><?php render_prettyquery($q); ?></div>
 	</header>
 
