@@ -10,10 +10,7 @@ function render_file($key, $ftype)
 		. ' onClick="window.open(this.src)">'
 		. '</img>'
 		. '</div>'
-		. '</main>'
-		. '<footer style="text-align:center;">'
-		. "<span>$key</span>"
-		. '</footer>';
+		. '</main>';
 		break;
 	case 'video':
 		/* Number of thumbnails to show */
