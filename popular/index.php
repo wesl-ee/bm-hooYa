@@ -14,24 +14,29 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 </head>
 <body>
 <div id="container">
-<div id="left_frame">
-	<div id="logout">
+<div id="leftframe">
+	<nav>
 		<?php print_login(); ?>
-	</div>
+	</nav>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
-<div id="right_frame">
-	<div id="title"><h1>select a space</h1></div>
-	<div id="header" style="overflow:auto;padding-bottom:10px;">
-		<div style="width:100%;float:left;"><a href="../">back</a></div>
-	</div>
+<div id="rightframe">
+	<main class="selectmenu">
+		<header>
+			<h3>select a</h3>
+			<h1>space<?php cursor()?></h1>
+			<nav>
+				<a href="../">back</a>
+			</nav>
+		</header>
+	<nav><ul>
 	<?php
 		foreach(array_keys(db_get_tagspaces()) as $space) {
-			print '<div style="width:100%;float:left;text-align:center;">';
-			print "<a href=view.php?n=$space>$space</a>";
-			print '</div>';
+			print "<li><a href=view.php?n=$space>$space</a></li>";
 		}
 	?>
+	</ul></nav>
+	</main>
 </div>
 </div>
 </body>

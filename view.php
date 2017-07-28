@@ -93,11 +93,14 @@ $ftype = explode('/', $mimetype)[0];
 </head>
 <body>
 <div id="container">
-<div id="left_frame">
-	<div id="logout">
+<div id="leftframe">
+	<nav>
 		<?php print_login(); ?>
-	</div>
-	<div id="tag_frame" style="padding:10px;">
+	</nav>
+	<aside style="padding:10px;">
+	<header>
+		<span><?php print $key?></span>
+	</header>
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>">
 		<h3 style="text-align:left;">Class</h3>
 		<div style="text-align:center;">
@@ -105,31 +108,23 @@ $ftype = explode('/', $mimetype)[0];
 			<?php render_classmenu($class); ?>
 			</select>
 		</div><hr/>
-		<h3 style="text-align:left;">Properties</h3>
+		<h3>Properties</h3>
 			<?php render_properties($key, $class); ?>
 		<hr/>
-		<h3 style="text-align:left;">Tags</h3>
-		<div id="tagform">
-		<?php render_tags($key);?>
-		</div>
-	<div style="text-align:center;">
-		<a onClick="addTagField()">add a tag</a>
-	</div><hr/>
+		<h3>Tags</h3>
+			<?php render_tags($key);?>
+			<div style="text-align:center;">
+				<a onClick="addTagField()">add a tag</a>
+			</div><hr/>
 	<input type="submit" value="commit changes" style="margin:auto;display:block;">
 	</form>
-	</div>
+	</aside>
 </div>
-<div id="right_frame">
+<div id="rightframe">
 	<header>
-		<div style="width:33%;float:left;">
-			<a onClick="window.history.back();">back</a>
-		</div>
-		<div style="width:33%;float:left;text-align:center;">
-			<?php echo $key;?>
-		</div>
-		<div style="width:33%;float:left;text-align:right;overflow:hidden;">
-			<a href="help/guidelines.php">tagging guidelines</a>
-		</div>
+		<a onClick="window.history.back();">back</a>
+<!--		<?php echo $key;?>-->
+		<a href="help/guidelines.php">tagging guidelines</a>
 	</header>
 	<?php render_file($key, $ftype);?>
 </div>

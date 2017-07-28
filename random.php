@@ -15,24 +15,25 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 </head>
 <body>
 <div id="container">
-<div id="left_frame">
-	<div id="logout">
+<div id="leftframe">
+	<nav>
 		<?php print_login(); ?>
-	</div>
+	</nav>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
-<div id="right_frame">
-	<header>random untagged fifteen</header>
+<div id="rightframe">
+	<h2>random untagged fifteen</h2>
 	<header>
-		<div style="width:33%;float:left;"><a href=".">back to search</a></div>
-		<div style="width:33%;float:left;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;"><a href="#" onClick="location.reload()">more!</a></div>
-	</header><hr/>
+		<a href=".">back to search</a>
+		<a href="#" onClick="location.reload()">more!</a>
+	</header>
+	<main class="thumbs">
 	<?php
 	$keys = db_getrandom(15);
 	render_thumbnails($keys);
 	?>
-	</div>
+	</main>
+	<footer/>
 </div>
 </body>
 </html>

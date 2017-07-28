@@ -5,8 +5,8 @@ include "includes/config.php";
 include CONFIG_COMMON_PATH."includes/core.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
-include "includes/database.php";
-include "includes/render.php";
+include CONFIG_HOOYA_PATH."includes/database.php";
+include CONFIG_HOOYA_PATH."includes/render.php";
 ?>
 <html>
 <head>
@@ -16,10 +16,11 @@ include "includes/render.php";
 	<script type="text/javascript">
 	var classes = <?php echo json_encode(DB_MEDIA_CLASSES);?>;
 	function toggleFilter() {
-		var filter = document.getElementById('filter');
+		var filter = document.getElementById('filters');
 		if (filter.style.display == 'none') filter.style.display = 'block';
 		else filter.style.display = 'none';
-		document.getElementById('media_class').disabled = !document.getElementById('media_class').disabled;
+		var media_class = document.getElementById('media_class');
+		media_class.getElementsByTagName('select')[0].disabled = !media_class.getElementsByTagName('select')[0].disabled;
 	}
 	function changeExtAttrs(media_class) {
 		classes.forEach(function (c) {
@@ -42,49 +43,40 @@ include "includes/render.php";
 </head>
 <body>
 <div id="container">
-<div id="left_frame">
-	<div id="logout">
+<div id="leftframe">
+	<nav>
 		<?php print_login(); ?>
-	</div>
+	</nav>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
-<div id="right_frame">
-	<div id="header" style="margin-bottom:20px;">
-		<div style="width:33%;float:left;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:center;">&nbsp</div>
-		<div style="width:33%;float:left;text-align:right;">
-			<a href="nightly/">download the daily dump</a><br/>
-			<a href='help/'>search help</a><br/>
-			<a href="random.php">random</a>
-		</div>
-	</div>
-	<div style="width:100%;padding-bottom:20px;text-align:center;">
-		<h1>hooYa!</h1>
-	</div>
-	<form id="tagform" style="width:100%;" action="browse.php" method="get" >
-		<div><input type="search" style="margin:auto;display:block;width:70%;margin-bottom:10px;" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></div>
-		<div style="width:70%;display:block;margin:auto;margin-bottom:10px;vertical-align:top;">
-		<input type="submit" style="width:20%;vertical-align:top;" value="いこう！"></input>
-		<a onClick="toggleFilter()" style="float:right;">filter</a>
-
-		</div>
-		<div id="filter" style="width:70%;margin:auto;overflow:auto;display:none;">
-			<div style="overflow:auto;">
-			<div style="float:left;vertical-align:bottom;margin-bottom:10px;">Media Type</div>
-				<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)" disabled style="margin-bottom:10px;width:30%;max-width:200px;float:right;border-bottom:0px;">
-				<option value="" selected> </option>
-				<?php render_classmenu(); ?>
-				</select>
-			</div>
+<div id="rightframe">
+	<header>
+		<a href="nightly/">daily dump</a>
+		<a href="random.php">random</a>
+	</header>
+	<h1 style="text-align:center;padding-top:30px;padding-bottom:30px;">hooYa!</h1>
+	<form id="search" action="browse.php" method="get" >
+		<input id="searchbox" type="search" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></td>
+		<div id="params">
+			<section>
+				<div><input type="submit" value="いこう！"></input></div>
+				<div style="padding-top: 10px;"><a onClick="toggleFilter()">filter</a></div>
+			</section>
+			<div id="filters" style="display:none;text-align:right;">
+				<section id="media_class">
+					<label for="media_class">Media Class</label>
+					<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)" disabled>
+					<option selected> </option>
+					<?php render_classmenu(); ?>
+					</select>
+				</section>
 				<?php
 				foreach (DB_MEDIA_CLASSES as $c) {
 					$properties = db_get_class_properties($c);
 					print "<div id='$c' style='display:none;'>";
 					foreach ($properties as $p => $value) {
-						print "<div style='overflow:auto;'>";
-						print "<div style='float:left;width:50%;'>"
-						. "$p</div>"
-						. "<input style='width:30%;max-width:200px;float:right;text-align:right;box-sizing:border-box;'";
+						print "<div><label for='$p'>$p</label>";
+						print "<input";
 						if ($value['Type']) {
 							print " type='" . $value['Type'] . "'";
 						}
@@ -94,9 +86,10 @@ include "includes/render.php";
 					print "</div>";
 				}
 				?>
+			</div>
 		</div>
 	</form>
-	<div style="width:100%;text-align:center;">
+	<section style="text-align:center;">
 		<?php print("now serving ");
 		$info = db_info(['Files' => 1, 'Version' => 1]);
 
@@ -107,16 +100,14 @@ include "includes/render.php";
 		// See mysql_get_server_info
 		print ("(".$info['Version'].")");
 		?>
-	</div>
-	<div style="width:100%;text-align:center;">
-		or <a href="popular/">just browse</a>
-	</div>
+		<br/>or <a href="popular/">just browse</a>
+	</section>
 
 </div>
 </div>
 </body>
 <script type="text/javascript">
-	var form = document.getElementById('tagform');
+	var form = document.getElementById('search');
 	form.addEventListener("submit", function() {
 		var inputs = form.getElementsByTagName('input');
 		for (i = 0; i < inputs.length; i++) {
