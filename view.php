@@ -104,7 +104,7 @@ $ftype = explode('/', $mimetype)[0];
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>">
 		<h3 style="text-align:left;">Class</h3>
 		<div style="text-align:center;">
-			<select id="class">
+			<select name='class' id="class" onChange="this.form.submit()">
 			<?php render_classmenu($class); ?>
 			</select>
 		</div><hr/>

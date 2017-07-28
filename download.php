@@ -74,7 +74,7 @@ if ($ftype == 'video' && isset($_GET['preview'])) {
 	$file = CONFIG_TEMPORARY_PATH . $key . '_preview_' . round($percent) . '.png';
 	if (!file_exists($file))
 		exec('ffmpegthumbnailer -i ' . escapeshellarg($path)
-		. ' -s 0 -o ' . $file . ' -t ' . $percent);
+		. ' -s 350 -o ' . $file . ' -t ' . $percent);
 	bmfft_xsendfile($file);
 	return;
 }

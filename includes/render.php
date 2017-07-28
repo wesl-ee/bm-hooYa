@@ -14,7 +14,7 @@ function render_file($key, $ftype)
 		break;
 	case 'video':
 		/* Number of thumbnails to show */
-		$n = 9;
+		$n = 10;
 		print '<main class="thumbs">';
 		foreach (range($n, 100, round(100/$n)) as $percent) {
 			print '<img src="download.php?key='.rawurlencode($key).''
@@ -32,13 +32,13 @@ function render_file($key, $ftype)
 function render_properties($key, $class)
 {
 
-	if (!isset(DB_FILE_EXTENDED_PROPERTIES[$class]))
+	if (!isset(DB_FILE_EXTENDED_PROPERTIES[$class])) {
+		syslog(LOG_INFO|LOG_DAEMON, "$class not defined in"
+		. " DB_FILE_EXTENDED_PROPERTIES in includes/database.php");
 		return;
-	if (!($fileproperties = db_getproperties($key)))
-/*		print "Query failed. . . check that table `$class` has the rows: "
-		. join(array_keys(DB_FILE_EXTENDED_PROPERTIES[$class]), ', ');*/
-		return;
-	else { print '<table id="properties">';
+	}
+	$fileproperties = db_getproperties($key);
+	print '<table id="properties">';
 	foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
 		print '<tr>';
 		print '<td>'
@@ -56,7 +56,7 @@ function render_properties($key, $class)
 			print " value='" . $fileproperties[$property] . "'>";
 		}
                 print '</td></tr>';
-        }}
+	}
 	print '</table>';
 }
 function render_tags($key)

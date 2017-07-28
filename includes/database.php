@@ -1,5 +1,4 @@
 <?php
-
 define('DB_MEDIA_CLASSES', ['single_image', 'video', 'anime', 'movie']);
 define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
 define('DB_FILE_EXTENDED_PROPERTIES',
@@ -178,9 +177,10 @@ function db_setproperties($key, $props)
 		if (DB_FILE_EXTENDED_PROPERTIES[$class][$p]['Immutable'])
 			unset($props[$p]);
 	}
-	$query = "UPDATE $class SET "
+	$query = "INSERT INTO $class SET `Id`='$key', "
 	. aa_join($props, ', ', '=')
-	. " WHERE Id='$key'";
+	. " ON DUPLICATE KEY UPDATE "
+	. aa_join($props, ', ', '=');
 	return mysqli_query($dbh, $query);
 }
 function db_getproperties($key)
@@ -215,19 +215,6 @@ function aa_join($aa, $seperator, $inbetween)
 function db_get_class_properties($class)
 {
 	return (DB_FILE_EXTENDED_PROPERTIES[$class]);
-}
-function db_get_immutable_properties()
-{
-	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
-		CONFIG_MYSQL_HOOYA_USER,
-		CONFIG_MYSQL_HOOYA_PASSWORD,
-		CONFIG_MYSQL_HOOYA_DATABASE);
-	mysqli_set_charset($dbh, 'utf8');
-	$query = "SELECT Property, Immutable FROM Properties";
-	while ($row = mysqli_fetch_assoc($res)) {
-		if ($row['Immuatable'] == 'y') $ret[$row['Immutable']] = 1;
-	}
-	return $ret;
 }
 function db_info($req)
 {

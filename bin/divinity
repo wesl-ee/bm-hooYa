@@ -4,6 +4,7 @@ use Getopt::Long 'HelpMessage';
 use DBI;
 use File::Find;
 use File::MimeInfo 'mimetype';
+use Digest::MD5 'md5_hex';
 
 # Cute formatting; ANSI escape codes
 use constant HOOYA_VERSION => '0.5';
@@ -37,6 +38,14 @@ use constant {
 sub die_error { die FG_RED . @_[0] . FG_DEFAULT . "\n"; }
 sub notify_success { print FG_GREEN . @_[0] . FG_DEFAULT . "\n"; }
 sub notify_warn { print FG_YELLOW . @_[0] . FG_DEFAULT . "\n"; }
+sub status_update {
+	my ($current, $total) = @_;
+	my $percent = ($current/$total)*100;
+
+	printf("\33[2K\r");
+	printf("%.f%% done (%d / %d)", $percent, $current, $total);
+	print "\n" if ($current == $total);
+}
 
 GetOptions(
 	'help' => sub { HelpMessage(0) },
@@ -95,10 +104,36 @@ my $sth;
 if (defined $import) {
 	if (!defined $directory) {
 		print "Directory to map: ";
-		$key = <STDIN>;
-		chomp $key;
+		my $directory = <STDIN>;
+		chomp $directory;
 	}
-	notify_warn "Feature not yet implemented";
+	if (!-d $directory) {
+		die_error "$directory is not a directory";
+	}
+	my ($total, $n);
+	find(sub {$total++ if -f}, $directory);
+	find(sub {
+		return if !-f;
+		my $md5 = md5_hex($_);
+		my $path = $File::Find::name;
+		my $mtype = mimetype($_);
+		my $ftype = (split(/\//, $mtype))[0];
+		my $size = -s $_;
+		my $class;
+
+		# Default classes
+		$class = 'single_image' if $ftype eq 'image';
+		$class = 'video' if $ftype eq 'video';
+		$sth = $dbh->prepare("INSERT INTO `Files`"
+		. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
+		. " ('$md5', '$path', '$size', '$class', '$mtype')"
+		. "ON DUPLICATE KEY UPDATE"
+		. " `Id`='$md5', `Path`='$path', `Size`='$size',"
+		. " `Class`='$class', `Mimetype`='$mtype'");
+		$sth->execute or die_error DBI::errstr;
+		status_update (++$n, $total);
+	}, $directory);
+
 }
 
 # Unmapping
