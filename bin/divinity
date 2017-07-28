@@ -53,11 +53,16 @@ GetOptions(
 	# Import directory options
 	'import' => \my $import,
 	'directory=s' => \my $directory,
+	'class=s' => \my $class,
 
 	# Unmap key options
 	'unmap' => \my $unmap,
 	'delete' => \my $delete,
 	'key=s' => \my $key,
+
+	#For both
+	'namespace=s' => \my @namespaces,
+	'tag=s' => \my @tags,
 ) or HelpMessage(1);
 
 HelpMessage(1) unless (defined $unmap || $import || $delete);
@@ -110,6 +115,18 @@ if (defined $import) {
 	if (!-d $directory) {
 		die_error "$directory is not a directory";
 	}
+
+	if (@namespaces && @tags) {
+		die_error "Number of namespaces does not match"
+		. " the number of tags" if (@namespaces != @tags);
+		for (my $i = 0; $i < @namespaces; $i++) {
+			$sth = $dbh->prepare('INSERT INTO `Tags`'
+			. ' (`Space`, `Member`) VALUES'
+			. " ('" . $namespaces[$i] . "', '" . $tags[$i] . "')"
+			. " ON DUPLICATE KEY UPDATE `Member`='" . $tags[$i] . "'\n");
+			$sth->execute or die_error DBI::errstr;
+		}
+	}
 	my ($total, $n);
 	find(sub {$total++ if -f}, $directory);
 	find(sub {
@@ -119,11 +136,12 @@ if (defined $import) {
 		my $mtype = mimetype($_);
 		my $ftype = (split(/\//, $mtype))[0];
 		my $size = -s $_;
-		my $class;
 
-		# Default classes
-		$class = 'single_image' if $ftype eq 'image';
-		$class = 'video' if $ftype eq 'video';
+		if (!defined $class) {
+			# Default classes
+			if ($ftype eq 'image') {$class = 'single_image'}
+			if ($ftype eq 'video') {$class = 'video'}
+		}
 		$sth = $dbh->prepare("INSERT INTO `Files`"
 		. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
 		. " ('$md5', '$path', '$size', '$class', '$mtype')"
@@ -131,6 +149,17 @@ if (defined $import) {
 		. " `Id`='$md5', `Path`='$path', `Size`='$size',"
 		. " `Class`='$class', `Mimetype`='$mtype'");
 		$sth->execute or die_error DBI::errstr;
+
+
+		if (@namespaces && @tags) {
+			for (my $i = 0; $i < @namespaces; $i++) {
+				$sth = $dbh->prepare('INSERT INTO `TagMap`'
+				. " (`FileId`, `TagId`) SELECT '$md5' AS FileId, Id AS TagId"
+				. " FROM `Tags` WHERE `Space`='" . $namespaces[$i] . "'"
+				. " AND `Member`='" . $tags[$i] . "'");
+				$sth->execute or die_error DBI::errstr;
+			}
+		}
 		status_update (++$n, $total);
 	}, $directory);
 
@@ -173,44 +202,40 @@ divinity - hooYa management interface
 
 =head1 SYNOPSIS
 
-One of the following must be specified:
+Exactly one of the following must be specified:
 
 =over
 
 =item --import
 
-Import a directory
+=item --delete
 
 =item --unmap
 
-Unmap a key from the database
-
-=item --delete
-
-Unmap a key and delete it from the underlying file system
-
 =back
 
-Optional arguments
+Delete / unmap options
 
 =over
 
 =item --key
 
-Specifies a key to operate on. Only relevant where keys are used, kd.
+=back
+
+Import options
+
+=over
 
 =item --directory
 
-Specifies a directory to operate on. Only relevant where dirs are used, kd.
+=item --class
 
-=item --help
+=item --namespace
 
-Help menu, of course
+=item --tag
 
 =back
 
 =head1 VERSION
 
 0.5
-
-=cut
