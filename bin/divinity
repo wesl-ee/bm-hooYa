@@ -51,7 +51,7 @@ GetOptions(
 	'key=s' => \my $key,
 ) or HelpMessage(1);
 
-HelpMessage(1) unless (defined $unmap || $import);
+HelpMessage(1) unless (defined $unmap || $import || $delete);
 
 # Read SQL settings from the config file
 my ($CONFIG_MYSQL_HOOYA_HOST,
