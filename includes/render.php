@@ -117,7 +117,7 @@ function render_thumbnails($keys)
 function render_pagenav($currpage, $totalpages, $q)
 {
 	print '<form method="GET">';
-	if ($currpage > 0)
+	if ($currpage > 1)
 		print "<a href='?".http_build_query($q)."&page=".($currpage-1)."'><</a> ";
 	print '<input style="text-align:center;width:50px;"'
 	. ' name="page" type="text" Value=' . $currpage . '>';

@@ -12,7 +12,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 foreach($_GET as $param => $value) {
 	if ($param != 'page') $q[$param] = $value;
 }
-$page = 0;
+$page = 1;
 if (isset($_GET['page']))
 	$page = $_GET['page'];
 ?>
@@ -44,7 +44,7 @@ if (isset($_GET['page']))
 
 	// Take the current page's slice of the array to be the results
 	// And mark them up nicely
-	$results = array_slice($keys, $page * CONFIG_THUMBS_PER_PAGE,
+	$results = array_slice($keys, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 		CONFIG_THUMBS_PER_PAGE);
 	render_thumbnails($results);
 	?>
@@ -52,7 +52,7 @@ if (isset($_GET['page']))
 
 	<footer>
 	<?php
-		$totalpages = round(count($keys)/CONFIG_THUMBS_PER_PAGE);
+		$totalpages = floor(count($keys)/CONFIG_THUMBS_PER_PAGE) + 1;
 		render_pagenav($page, $totalpages, $q);
 	?>
 	<div><?php print ($totalpages . " pages")?></div>
