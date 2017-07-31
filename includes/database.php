@@ -9,11 +9,12 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 	],
 	'video',
 	'anime' => [
-//		'Title' => [],
 		'Season' => ['Type' => 'Number'],
 		'Episode' => ['Type' => 'Number'],
 	],
-	'movie',
+	'movie' => [
+		'Year' => [],
+	],
 ]);
 function db_get_tags($key)
 {
@@ -128,6 +129,20 @@ function db_get_tagspaces()
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$ret[$row['Space']] = 1;
+	}
+	return $ret;
+}
+function db_get_allmembers()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT Member FROM Tags GROUP BY Member";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[$row['Member']] = 1;
 	}
 	return $ret;
 }

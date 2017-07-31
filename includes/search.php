@@ -13,6 +13,7 @@ function hooya_search($query)
 		$properties = $query['properties'];
 
 	$tagspaces = db_get_tagspaces();
+	$members = db_get_allmembers();
 
 	foreach ($terms as $key => $value) {
 		// Determine the *inclusive* strictness of each term
@@ -36,6 +37,31 @@ function hooya_search($query)
 				$terms[$key] = $value;
 				$search_spaces[$value] = $space;
 			}
+		}
+		// Special handling if you typed something that isn't a tag
+		if (!$members[$value]) {
+			// Maybe you typed it in first, family name order
+			if (strpos($value, '_')) {
+				list($first, $last) = explode('_', $value);
+				if ($members[($last . '_' . $first)])
+					$closest_member = $last . '_' . $first;
+			}
+			// Maybe you just can't spell
+			if (!isset($closest_member))
+			foreach ($members as $m => $a) {
+				$d = levenshtein($m, $value);
+				if ($d < $d_closest || !isset($d_closest)) {
+					$d_closest = $d;
+					$closest_member = $m;
+				}
+			}
+			$terms[$key] = $closest_member;
+			$query['query'] = join(' ', $terms);
+			print "<span>Did you mean <a href='?"
+			. http_build_query($query) . "'>"
+			. $query['query']
+			. "?</a></span>";
+			return;
 		}
 	}
 
@@ -81,12 +107,6 @@ function hooya_search($query)
 		}
 		$query .= ")";
 	}
-
-	// Display all items on an empty query
-/*	if (empty($terms)) {
-		$query = "SELECT Id, COUNT(*) AS Relevance FROM Files ";
-		if (isset($mediaclass)) $query .= " WHERE Files.Class = '$mediaclass' ";
-	}*/
 
 	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
