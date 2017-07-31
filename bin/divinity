@@ -122,9 +122,9 @@ if (defined $import) {
 		for (my $i = 0; $i < @namespaces; $i++) {
 			$sth = $dbh->prepare('INSERT INTO `Tags`'
 			. ' (`Space`, `Member`) VALUES'
-			. " ('" . $namespaces[$i] . "', '" . $tags[$i] . "')"
-			. " ON DUPLICATE KEY UPDATE `Member`='" . $tags[$i] . "'\n");
-			$sth->execute or die_error DBI::errstr;
+			. " (?, ?)"
+			. " ON DUPLICATE KEY UPDATE `Member`=?");
+			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]) or die_error DBI::errstr;
 		}
 	}
 	my ($total, $n);
@@ -144,20 +144,22 @@ if (defined $import) {
 		}
 		$sth = $dbh->prepare("INSERT INTO `Files`"
 		. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
-		. " ('$md5', '$path', '$size', '$class', '$mtype')"
+		. " (?, ?, ?, ?, ?)"
 		. "ON DUPLICATE KEY UPDATE"
-		. " `Id`='$md5', `Path`='$path', `Size`='$size',"
-		. " `Class`='$class', `Mimetype`='$mtype'");
-		$sth->execute or die_error DBI::errstr;
+		. " `Id`=?, `Path`=?, `Size`=?,"
+		. " `Class`=?, `Mimetype`=?");
+		$sth->execute($md5, $path, $size, $class, $mtype,
+			$md5, $path, $size, $class, $mtype)
+			or die_error DBI::errstr;
 
 
 		if (@namespaces && @tags) {
 			for (my $i = 0; $i < @namespaces; $i++) {
 				$sth = $dbh->prepare('INSERT INTO `TagMap`'
-				. " (`FileId`, `TagId`) SELECT '$md5' AS FileId, Id AS TagId"
-				. " FROM `Tags` WHERE `Space`='" . $namespaces[$i] . "'"
-				. " AND `Member`='" . $tags[$i] . "'");
-				$sth->execute or die_error DBI::errstr;
+				. " (`FileId`, `TagId`) SELECT ? AS FileId, Id AS TagId"
+				. " FROM `Tags` WHERE `Space`=?"
+				. " AND `Member`='?' ON DUPLICATE KEY UPDATE `FileId`=?");
+				$sth->execute($md5, $tags[$i], $md5) or die_error DBI::errstr;
 			}
 		}
 		status_update (++$n, $total);
