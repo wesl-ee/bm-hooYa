@@ -29,8 +29,8 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	</header>
 	<main class="thumbs">
 	<?php
-	$keys = db_getrandom(15);
-	render_thumbnails($keys);
+	$results = db_getrandom(15);
+	render_thumbnails($results);
 	?>
 	</main>
 	<footer/>

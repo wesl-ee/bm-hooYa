@@ -92,12 +92,15 @@ function db_getrandom($n)
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
-	$query = "SELECT Id FROM Files WHERE NOT Id in ("
+	$query = "SELECT Id, Class FROM Files WHERE NOT Id in ("
 	. "SELECT FileId AS Id FROM TagMap) ORDER BY RAND()"
 	. " LIMIT " . $n;
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res))
-		$ret[] = $row['Id'];
+		$ret[] = [
+			'key' => $row['Id'],
+			'class' => $row['Class'],
+		];
 	mysqli_close($dbh);
 	return $ret;
 }

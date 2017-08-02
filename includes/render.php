@@ -62,7 +62,6 @@ function render_properties($key, $class)
 function render_tags($key)
 {
 	$tags = db_get_tags($key);
-	if (!count($tags)) return;
 	print '<table id="tags">';
 	foreach ($tags as $tag) {
 		print '<tr>'
