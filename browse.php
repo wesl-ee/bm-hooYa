@@ -16,13 +16,21 @@ $page = 1;
 if (isset($_GET['page']))
 	$page = $_GET['page'];
 
+// Get all results
+$results = hooya_search($q);
+$totalpages = floor(count($results)/CONFIG_THUMBS_PER_PAGE) + 1;
+
+// Take the current page's slice of the array to be the results
+// And mark them up nicely
+$results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
+	CONFIG_THUMBS_PER_PAGE);
 ?>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
 	<title>bigmike — hooYa! <?php echo $_GET['q']?></title>
 	<script>var currpage = <?php echo $page?></script>
-        <script type="text/javascript" src="js/hotkeys.js"></script>
+	<script type="text/javascript" src="js/hotkeys.js"></script>
 	<script type="text/javascript" src="js/browse.js"></script>
 </head>
 <body>
@@ -32,6 +40,17 @@ if (isset($_GET['page']))
 		<?php print_login();?>
 	</nav>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
+	<?php
+	foreach ($results as $result)
+	{
+		print "<aside id='" . $result['key'] . "'"
+		. " style='display:none'>";
+		print "<header>" . $result['class'] . "</header>";
+		render_properties($result['key'], $result['class']);
+		render_tags($result['key']);
+		print "</aside>";
+	}
+	?>
 </div>
 <div id="rightframe">
 	<header>
@@ -41,13 +60,7 @@ if (isset($_GET['page']))
 
 	<main class="thumbs">
 	<?php
-	// Get all results
-	$keys = hooya_search($q);
-
-	// Take the current page's slice of the array to be the results
-	// And mark them up nicely
-	$results = array_slice($keys, ($page-1) * CONFIG_THUMBS_PER_PAGE,
-		CONFIG_THUMBS_PER_PAGE);
+	if ($results['message']) print $results['message'];
 
 	render_thumbnails($results);
 	?>
@@ -55,11 +68,12 @@ if (isset($_GET['page']))
 
 	<footer>
 	<?php
-		$totalpages = floor(count($keys)/CONFIG_THUMBS_PER_PAGE) + 1;
+
 		render_pagenav($page, $totalpages, $q);
 	?>
 	<div><?php print ($totalpages . " pages")?></div>
 	</footer>
 </div>
+
 </body>
 </html>

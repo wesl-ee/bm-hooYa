@@ -105,9 +105,10 @@ function render_prettyquery($query)
 		echo ')';
 	}
 }
-function render_thumbnails($keys)
+function render_thumbnails($results)
 {
-	foreach ($keys as $key) {
+	foreach ($results as $result) {
+		$key = $result['key'];
 		print "<img"
 		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
 		. " onMouseOver='showThumbInfo(\"$key\")'"

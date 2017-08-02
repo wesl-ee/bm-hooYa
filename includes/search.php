@@ -57,11 +57,11 @@ function hooya_search($query)
 			}
 			$terms[$key] = $closest_member;
 			$query['query'] = join(' ', $terms);
-			print "<span>Did you mean <a href='?"
+			$message = "<span>Did you mean <a href='?"
 			. http_build_query($query) . "'>"
 			. $query['query']
 			. "?</a></span>";
-			return;
+			return ['message' => $message];
 		}
 	}
 
@@ -71,7 +71,7 @@ function hooya_search($query)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	// TODO Approximate tags which are not exact by levenshtien distance
 
-	$query = "SELECT Files.Id, COUNT(*) AS Relevance FROM Files";
+	$query = "SELECT Files.Id, Class, COUNT(*) AS Relevance FROM Files";
 	if (!empty($terms))
 		$query .= ", TagMap, Tags";
 	if (isset($properties, $mediaclass)) {
@@ -111,7 +111,7 @@ function hooya_search($query)
 	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		$results[] = $row["Id"];
+		$results[] = ['key' => $row['Id'], 'class' => $row['Class']];
 	}
 	return $results;
 }
