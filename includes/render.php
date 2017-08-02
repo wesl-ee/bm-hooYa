@@ -107,11 +107,13 @@ function render_prettyquery($query)
 function render_thumbnails($keys)
 {
 	foreach ($keys as $key) {
-		print '<img'
-		. ' onClick="window.location.href=\'view.php?key='.rawurlencode($key).'\'"'
-		. ' src="download.php?key='.rawurlencode($key).'&thumb"'
-		. ' title="'.''.'">'
-		. '&nbsp</img>';
+		print "<img"
+		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
+		. " onMouseOver='showThumbInfo(\"$key\")'"
+		. " onMouseOut='hideThumbInfo(\"$key\")'"
+		. " src='download.php?key=".rawurlencode($key)."&thumb'"
+		. " >"
+		. "&nbsp</img>";
 	}
 }
 function render_pagenav($currpage, $totalpages, $q)

@@ -15,6 +15,7 @@ foreach($_GET as $param => $value) {
 $page = 1;
 if (isset($_GET['page']))
 	$page = $_GET['page'];
+
 ?>
 <html>
 <head>
@@ -22,6 +23,7 @@ if (isset($_GET['page']))
 	<title>bigmike — hooYa! <?php echo $_GET['q']?></title>
 	<script>var currpage = <?php echo $page?></script>
         <script type="text/javascript" src="js/hotkeys.js"></script>
+	<script type="text/javascript" src="js/browse.js"></script>
 </head>
 <body>
 <div id="container">
@@ -46,6 +48,7 @@ if (isset($_GET['page']))
 	// And mark them up nicely
 	$results = array_slice($keys, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 		CONFIG_THUMBS_PER_PAGE);
+
 	render_thumbnails($results);
 	?>
 	</main>
