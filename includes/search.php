@@ -40,22 +40,7 @@ function hooya_search($query)
 		}
 		// Special handling if you typed something that isn't a tag
 		if (!$members[$value]) {
-			// Maybe you typed it in first, family name order
-			if (strpos($value, '_')) {
-				list($first, $last) = explode('_', $value);
-				if ($members[($last . '_' . $first)])
-					$closest_member = $last . '_' . $first;
-			}
-			// Maybe you just can't spell
-			if (!isset($closest_member))
-			foreach ($members as $m => $a) {
-				$d = levenshtein($m, $value);
-				if ($d < $d_closest || !isset($d_closest)) {
-					$d_closest = $d;
-					$closest_member = $m;
-				}
-			}
-			$terms[$key] = $closest_member;
+			$terms[$key] = hooya_bestguess($members, $value);
 			$query['query'] = join(' ', $terms);
 			$message = "<span>Did you mean <a href='?"
 			. http_build_query($query) . "'>"
@@ -114,5 +99,34 @@ function hooya_search($query)
 		$results[] = ['key' => $row['Id'], 'class' => $row['Class']];
 	}
 	return $results;
+}
+function hooya_bestguess($members, $member)
+{
+	// Maybe you typed it in first, family name order
+	if (strpos($member, '_')) {
+		list($first, $last) = explode('_', $member);
+		if ($members[($last . '_' . $first)]) {
+			$bestguess = $last . '_' . $first;
+			return $bestguess;
+		}
+	}
+	// Maybe you only put in a first name
+	foreach ($members as $m => $a) {
+		if (!strpos($m, '_')) continue;
+		$first = explode('_', $m)[1];
+		if ($first === $member) {
+			$bestguess = $m;
+			return $bestguess;
+		}
+	}
+	// Maybe you just can't spell
+	foreach ($members as $m => $a) {
+		$d = levenshtein($m, $member);
+		if ($d < $d_closest || !isset($d_closest)) {
+			$d_closest = $d;
+			$bestguess = $m;
+		}
+	}
+	return $bestguess;
 }
 ?>
