@@ -78,7 +78,6 @@ function render_tags($key)
 }
 function render_classmenu($class = NULL)
 {
-	print "<option style='display:none;'> </option>";
 	foreach(DB_MEDIA_CLASSES as $c) {
 		print "<option value='$c'";
 		if ($c == $class) print " selected";

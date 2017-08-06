@@ -105,6 +105,8 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		for (i = 0; i < inputs.length; i++) {
 			if (inputs[i].value === '') inputs[i].disabled = true;
 		}
+		var mediaclass = form.getElementsByTagName('select')[0];
+		if (mediaclass.value === '') mediaclass.disabled = true;
 	}, false);
 </script>
 </html>
