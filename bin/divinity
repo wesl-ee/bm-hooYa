@@ -108,12 +108,12 @@ my $sth;
 # Importing
 if (defined $import) {
 	if (!defined $directory) {
-		print "Directory to map: ";
+		print "Directory or file to map: ";
 		my $directory = <STDIN>;
 		chomp $directory;
 	}
-	if (!-d $directory) {
-		die_error "$directory is not a directory";
+	if (!(-d $directory || -f $directory)) {
+		die_error "$directory is not a directory or a file";
 	}
 
 	if (@namespaces && @tags) {
@@ -127,44 +127,16 @@ if (defined $import) {
 			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]) or die_error DBI::errstr;
 		}
 	}
-	my ($total, $n);
-	find(sub {$total++ if -f}, $directory);
-	find(sub {
-		return if !-f;
-		my $md5 = md5_hex($_);
-		my $path = $File::Find::name;
-		my $mtype = mimetype($_);
-		my $ftype = (split(/\//, $mtype))[0];
-		my $size = -s $_;
-
-		if (!defined $class) {
-			# Default classes
-			if ($ftype eq 'image') {$class = 'single_image'}
-			if ($ftype eq 'video') {$class = 'video'}
-		}
-		$sth = $dbh->prepare("INSERT INTO `Files`"
-		. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
-		. " (?, ?, ?, ?, ?)"
-		. "ON DUPLICATE KEY UPDATE"
-		. " `Id`=?, `Path`=?, `Size`=?,"
-		. " `Class`=?, `Mimetype`=?");
-		$sth->execute($md5, $path, $size, $class, $mtype,
-			$md5, $path, $size, $class, $mtype)
-			or die_error DBI::errstr;
-
-
-		if (@namespaces && @tags) {
-			for (my $i = 0; $i < @namespaces; $i++) {
-				$sth = $dbh->prepare('INSERT INTO `TagMap`'
-				. " (`FileId`, `TagId`) SELECT ? AS FileId, Id AS TagId"
-				. " FROM `Tags` WHERE `Space`=?"
-				. " AND `Member`='?' ON DUPLICATE KEY UPDATE `FileId`=?");
-				$sth->execute($md5, $tags[$i], $md5) or die_error DBI::errstr;
-			}
-		}
-		status_update (++$n, $total);
-	}, $directory);
-
+	if (-f $directory) {
+		importfile($directory);
+	}
+	else {
+		my ($total, $n);
+		find(sub {$total++ if -f}, $directory);
+		notify_success("Importing $total files. . . ");
+		find(\&importfile, $directory);
+	}
+	notify_success("Done!");
 }
 
 # Unmapping
@@ -194,6 +166,44 @@ elsif (defined $unmap || $delete) {
 		die_error "No such key $key is mapped";
 	}
 	notify_success "Successfully unmapped $key";
+}
+
+# Function definitions
+sub importfile {
+	return if !-f;
+	my $md5 = md5_hex($_);
+	my $path = $File::Find::name or @_[0];
+	my $mtype = mimetype($_);
+	my $ftype = (split(/\//, $mtype))[0];
+	my $size = -s $_;
+
+	if (!defined $class) {
+		# Default classes
+		if ($ftype eq 'image') {$class = 'single_image'}
+		if ($ftype eq 'video') {$class = 'video'}
+	}
+	$sth = $dbh->prepare("INSERT INTO `Files`"
+	. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
+	. " (?, ?, ?, ?, ?)"
+	. "ON DUPLICATE KEY UPDATE"
+	. " `Id`=?, `Path`=?, `Size`=?,"
+	. " `Class`=?, `Mimetype`=?");
+	$sth->execute($md5, $path, $size, $class, $mtype,
+		$md5, $path, $size, $class, $mtype)
+		or die_error DBI::errstr;
+
+
+	if (@namespaces && @tags) {
+		for (my $i = 0; $i < @namespaces; $i++) {
+			$sth = $dbh->prepare('INSERT INTO `TagMap`'
+			. " (`FileId`, `TagId`) SELECT ? AS FileId, Id AS TagId"
+			. " FROM `Tags` WHERE `Space`=?"
+			. " AND `Member`='?' ON DUPLICATE KEY UPDATE `FileId`=?");
+			$sth->execute($md5, $tags[$i], $md5) or die_error DBI::errstr;
+		}
+	}
+# Find some way to update the status here
+#	status_update (++$n, $total);
 }
 
 =pod
