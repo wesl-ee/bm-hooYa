@@ -28,7 +28,7 @@ $namespace = $_GET['n'];
 		<h1><?php print $namespace; cursor()?></h1>
 		<a href=".">go back</a>
 	</header>
-	<table>
+	<article><table>
 	<tr>
 		<th>number</th>
 		<th>tag</th>
@@ -47,7 +47,7 @@ $namespace = $_GET['n'];
 		print '</tr>';
 	}
 	?>
-	</table>
+	</table></article>
 	</main>
 </div>
 </body>

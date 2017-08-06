@@ -15,13 +15,6 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	<script src="js/f.js"></script>
 	<script type="text/javascript">
 	var classes = <?php echo json_encode(DB_MEDIA_CLASSES);?>;
-	function toggleFilter() {
-		var filter = document.getElementById('filters');
-		if (filter.style.display == 'none') filter.style.display = 'block';
-		else filter.style.display = 'none';
-		var media_class = document.getElementById('media_class');
-		media_class.getElementsByTagName('select')[0].disabled = !media_class.getElementsByTagName('select')[0].disabled;
-	}
 	function changeExtAttrs(media_class) {
 		classes.forEach(function (c) {
 			var classdiv = document.getElementById(c);
@@ -60,12 +53,11 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		<div id="params">
 			<section>
 				<div><input type="submit" value="いこう！"></input></div>
-				<div style="padding-top: 10px;"><a onClick="toggleFilter()">filter</a></div>
 			</section>
-			<div id="filters" style="display:none;text-align:right;">
+			<div id="filters" style="text-align:right;">
 				<section id="media_class">
 					<label for="media_class">Media Class</label>
-					<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)" disabled>
+					<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)">
 					<option selected> </option>
 					<?php render_classmenu(); ?>
 					</select>
