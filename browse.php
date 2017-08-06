@@ -41,7 +41,7 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 	</nav>
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 	<?php
-	foreach ($results as $result)
+	if (!$results['message']) foreach ($results as $result)
 	{
 		print "<aside id='" . $result['key'] . "'"
 		. " style='display:none'>";
@@ -61,8 +61,7 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 	<main class="thumbs">
 	<?php
 	if ($results['message']) print $results['message'];
-
-	render_thumbnails($results);
+	else render_thumbnails($results);
 	?>
 	</main>
 

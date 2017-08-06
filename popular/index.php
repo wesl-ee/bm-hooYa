@@ -21,7 +21,7 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="rightframe">
-	<main class="selectmenu">
+	<main class="widemenu">
 		<header>
 			<h3>select a</h3>
 			<h1>space<?php cursor()?></h1>
@@ -29,13 +29,13 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 				<a href="../">back</a>
 			</nav>
 		</header>
-	<nav><ul>
+	<ul>
 	<?php
 		foreach(array_keys(db_get_tagspaces()) as $space) {
 			print "<li><a href=view.php?n=$space>$space</a></li>";
 		}
 	?>
-	</ul></nav>
+	</ul>
 	</main>
 </div>
 </div>

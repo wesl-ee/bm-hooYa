@@ -22,16 +22,17 @@ $namespace = $_GET['n'];
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="rightframe">
-	<main class="selectmenu">
+	<main class="widemenu">
 	<header>
 		<h3>select a</h3>
 		<h1><?php print $namespace; cursor()?></h1>
 		<a href=".">go back</a>
 	</header>
-	<nav><table>
+	<table>
 	<tr>
 		<th>number</th>
 		<th>tag</th>
+	</tr>
 	<?php
 	// Definitely organize this into pages, like we did with browse.php
 	$heat = db_tagspace_sort($namespace);
@@ -46,7 +47,7 @@ $namespace = $_GET['n'];
 		print '</tr>';
 	}
 	?>
-	</table></nav>
+	</table>
 	</main>
 </div>
 </body>
