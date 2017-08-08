@@ -55,11 +55,9 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 				<div><input type="submit" value="いこう！"></input></div>
 			</section>
 			<div id="filters" style="text-align:right;">
-				<section id="media_class">
-					<label for="media_class">Media Class</label>
+				<section>
 					<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)">
-					<option selected> </option>
-					<?php render_classmenu(); ?>
+						<?php render_classmenu(); ?>
 					</select>
 				</section>
 				<?php
@@ -67,12 +65,13 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 					$properties = db_get_class_properties($c);
 					print "<div id='$c' style='display:none;'>";
 					foreach ($properties as $p => $value) {
-						print "<div><label for='$p'>$p</label>";
-						print "<input";
+						print "<div>"
+						. "<input";
 						if ($value['Type']) {
 							print " type='" . $value['Type'] . "'";
 						}
 						print " name='properties[$p]'"
+						. " placeholder=$p"
 						. " disabled></div>";
 					}
 					print "</div>";
@@ -108,5 +107,8 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		var mediaclass = form.getElementsByTagName('select')[0];
 		if (mediaclass.value === '') mediaclass.disabled = true;
 	}, false);
+
+	// Update the media class filter for its initial value
+	changeExtAttrs(document.getElementById('media_class').value);
 </script>
 </html>

@@ -113,7 +113,7 @@ function hooya_bestguess($members, $member)
 	// Maybe you only put in a first name
 	foreach ($members as $m => $a) {
 		if (!strpos($m, '_')) continue;
-		$first = explode('_', $m)[1];
+		$first = array_pop(explode('_', $m));
 		if ($first === $member) {
 			$bestguess = $m;
 			return $bestguess;
