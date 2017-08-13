@@ -31,10 +31,10 @@ if (is_file(CONFIG_DAILY_DUMP_FILE) && isset($_POST['download'])) {
 </div>
 <div id="rightframe">
 	<header>
-		<div style="width:33%;float:left;"><a href="../">back</a></div>
+		<a href="../">back</a>
+		<h1>hooYa! nightly</h1>
 	</header>
-	<main class="stack">
-	<h1>hooYa! nightly</h1>
+	<main style="text-align:center;">
 		<?php
 			if (is_file(CONFIG_DAILY_DUMP_FILE))
 				print("Generated at: " . date(DATE_RFC2822, filemtime(CONFIG_DAILY_DUMP_FILE)));

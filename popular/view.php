@@ -22,13 +22,15 @@ $namespace = $_GET['n'];
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="rightframe">
-	<main class="widemenu">
 	<header>
-		<h3>select a</h3>
-		<h1><?php print $namespace; cursor()?></h1>
 		<a href=".">go back</a>
+		<span>
+			<h3>select a</h3>
+			<h1><?php print $namespace; cursor()?></h1>
+		</span>
 	</header>
-	<article><table>
+	<main>
+	<table>
 	<tr>
 		<th>number</th>
 		<th>tag</th>
@@ -47,7 +49,7 @@ $namespace = $_GET['n'];
 		print '</tr>';
 	}
 	?>
-	</table></article>
+	</table>
 	</main>
 </div>
 </body>

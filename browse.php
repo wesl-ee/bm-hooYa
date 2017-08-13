@@ -73,9 +73,11 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 	<?php
 	if ($results['message']) print $results['message'];
 	else if (isset($_GET['list'])) {
-		print '<table>';
+		print '<main>'
+		. '<table>';
 		render_titles($results);
-		print '</table>';
+		print '</table>'
+		. '</main>';
 	}
 	else {
 		print '<main class="thumbs">';
@@ -86,7 +88,6 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 
 	<footer>
 	<?php
-
 		render_pagenav($page, $totalpages, $q);
 	?>
 	<div><?php print ($totalpages . " pages")?></div>

@@ -106,13 +106,14 @@ function render_thumbnails($results)
 {
 	foreach ($results as $result) {
 		$key = $result['key'];
-		print "<img"
-		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
+		print "<a"
+		. " href='view.php?key=".rawurlencode($key)."'>"
+		. "<img"
 		. " onMouseOver='showThumbInfo(\"$key\")'"
 		. " onMouseOut='hideThumbInfo(\"$key\")'"
 		. " src='download.php?key=".rawurlencode($key)."&thumb'"
 		. " >"
-		. "&nbsp</img>";
+		. "&nbsp</a></img>";
 	}
 }
 function render_titles($results)

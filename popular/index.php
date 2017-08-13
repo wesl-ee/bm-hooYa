@@ -21,21 +21,23 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="rightframe">
-	<main class="widemenu">
 		<header>
-			<h3>select a</h3>
-			<h1>space<?php cursor()?></h1>
-			<nav>
-				<a href="../">back</a>
-			</nav>
+			<a href="../">back</a>
+			<span>
+				<h3>select a</h3>
+				<h1>space<?php cursor()?></h1>
+			</span>
 		</header>
-	<ul>
+	<main>
+	<table>
 	<?php
 		foreach(array_keys(db_get_tagspaces()) as $space) {
-			print "<li><a href=view.php?n=$space>$space</a></li>";
+			print "<tr>"
+			. "<td><a href=view.php?n=$space>$space</a></td></tr>"
+			. "</tr>";
 		}
 	?>
-	</ul>
+	</table>
 	</main>
 </div>
 </div>

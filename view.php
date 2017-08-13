@@ -97,7 +97,7 @@ $ftype = explode('/', $mimetype)[0];
 	<nav>
 		<?php print_login(); ?>
 	</nav>
-	<aside style="padding:10px;">
+	<aside>
 	<header>
 		<span><?php print $key?></span>
 	</header>
