@@ -56,14 +56,33 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 	<header>
 		<a href=".">back to search</a>
 		<div><?php render_prettyquery($q); ?></div>
+		<?php
+		$newGET = $_GET;
+		if (!isset($_GET['list'])) {
+			print "<a href='?" . http_build_query($newGET) . "&list'>"
+			. "list view</a>";
+		}
+		else {
+			unset($newGET['list']);
+			print "<a href='?" . http_build_query($newGET) . "'>"
+			. "thumbnail view</a>";
+		}
+		?>
 	</header>
 
-	<main class="thumbs">
 	<?php
 	if ($results['message']) print $results['message'];
-	else render_thumbnails($results);
+	else if (isset($_GET['list'])) {
+		print '<table>';
+		render_titles($results);
+		print '</table>';
+	}
+	else {
+		print '<main class="thumbs">';
+		render_thumbnails($results);
+		print '</main>';
+	}
 	?>
-	</main>
 
 	<footer>
 	<?php

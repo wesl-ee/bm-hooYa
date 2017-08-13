@@ -31,7 +31,6 @@ function render_file($key, $ftype)
 }
 function render_properties($key, $class)
 {
-
 	if (!isset(DB_FILE_EXTENDED_PROPERTIES[$class])) {
 		syslog(LOG_INFO|LOG_DAEMON, "$class not defined in"
 		. " DB_FILE_EXTENDED_PROPERTIES in includes/database.php");
@@ -116,6 +115,19 @@ function render_thumbnails($results)
 		. "&nbsp</img>";
 	}
 }
+function render_titles($results)
+{
+	foreach ($results as $result) {
+		$key = $result['key'];
+		print "<span"
+		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
+		. " onMouseOver='showThumbInfo(\"$key\")'"
+		. " onMouseOut='hideThumbInfo(\"$key\")'"
+		. " >"
+		. render_title($key)
+		. "</span>";
+	}
+}
 function render_pagenav($currpage, $totalpages, $q)
 {
 	print '<form method="GET">';
@@ -130,7 +142,8 @@ function render_pagenav($currpage, $totalpages, $q)
 		print " <a href='?".http_build_query($q)."&page=".($currpage+1)."'>></a>";
 	print '</form>';
 }
-function render_hidden_inputs($array, $path = NULL) {
+function render_hidden_inputs($array, $path = NULL)
+{
 	foreach ($array as $k => $v) {
 		if (!is_array($v)) {
 			// leaf node
@@ -145,5 +158,11 @@ function render_hidden_inputs($array, $path = NULL) {
 			render_hidden_inputs($v, $path.$k);
 		}
 	}
+}
+function render_title($key)
+{
+	print '<tr><td>';
+	print "<a href=view.php?key=$key>$key</a>";
+	print '</td></tr>';
 }
 ?>
