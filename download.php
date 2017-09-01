@@ -34,7 +34,9 @@ if (isset($_GET['thumb'])) {
 		$file = CONFIG_TEMPORARY_PATH . $key . '.jpg';
 		if (!file_exists($file))
 			exec('ffmpegthumbnailer -i '.escapeshellarg($path)
-			.' -f -q 10 -s 500  -o '.$file);
+			. ' -q 10 -s 500  -o '.$file);
+			exec('convert '.$file
+			. ' img/play.png -gravity center -composite '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}
