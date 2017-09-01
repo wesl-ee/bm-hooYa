@@ -31,6 +31,10 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		for(i = 0; i < inputs.length; i++) {
 			inputs[i].disabled = !doenable;
 		};
+		var selects = div.getElementsByTagName("select")
+		for(i = 0; i < selects.length; i++) {
+			selects[i].disabled = !doenable;
+		};
 	}
 	</script>
 </head>
