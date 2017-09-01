@@ -19,7 +19,6 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	<nav>
 		<?php print_login(); ?>
 	</nav>
-	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 </div>
 <div id="rightframe">
 	<h2>random untagged fifteen</h2>

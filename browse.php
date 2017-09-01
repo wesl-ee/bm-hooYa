@@ -39,7 +39,6 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 	<nav>
 		<?php print_login();?>
 	</nav>
-	<img id="mascot" src=<?php echo $_SESSION['mascot'];?>>
 	<?php
 	if (!$results['message']) foreach ($results as $result)
 	{
