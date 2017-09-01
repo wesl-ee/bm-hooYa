@@ -133,4 +133,19 @@ $sth = $dbh->prepare(
 if (!$sth->execute) {
 	notify_warn DBI::errstr;
 }
+# Example media_types, which are very extensible; adding one just involves
+# adding a SQL table like this and putting its properties in
+# includes/database.php
+$sth = $dbh->prepare(
+	"CREATE TABLE `single_image` ("
+	. "`Id` varchar(128) NOT NULL,"
+	. "`Width` int(11) NOT NULL,"
+	. "`Height` int(11) NOT NULL,"
+	. "`Ratio` float(6,3) unsigned GENERATED ALWAYS AS (`Width` / `Height`) STORED,"
+	. "PRIMARY KEY (`Id`)"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
 notify_success "Created the SQL structure";

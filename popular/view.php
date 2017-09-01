@@ -23,11 +23,11 @@ $namespace = $_GET['n'];
 </div>
 <div id="rightframe">
 	<header>
-		<a href=".">go back</a>
 		<span>
 			<h3>select a</h3>
 			<h1><?php print $namespace; cursor()?></h1>
 		</span>
+		<a href=".">go back</a>
 	</header>
 	<main>
 	<table>

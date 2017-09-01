@@ -22,7 +22,6 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 </div>
 <div id="rightframe">
 		<header>
-			<a href="../">back</a>
 			<span>
 				<h3>select a</h3>
 				<h1>space<?php cursor()?></h1>

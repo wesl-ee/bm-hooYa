@@ -62,11 +62,10 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 				</section>
 				<?php
 				foreach (DB_MEDIA_CLASSES as $c) {
-					$properties = db_get_class_properties($c);
+					$properties = DB_FILE_EXTENDED_PROPERTIES[$c];
 					print "<div id='$c' style='display:none;'>";
 					foreach ($properties as $p => $value) {
-						print "<div>"
-						. "<input";
+						print "<div><input";
 						if ($value['Type']) {
 							print " type='" . $value['Type'] . "'";
 						}
@@ -74,7 +73,12 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 						. " placeholder=$p"
 						. " disabled></div>";
 					}
-					print "</div>";
+					if ($properties['Width'] && $properties['Height'])
+						print '<select name="properties[Ratio]">'
+						. '<option value>Exact Dimensions</option>'
+						. '<option value=ratio>Respect W:H Ratio</option>'
+						. '</select>';
+					print '</div>';
 				}
 				?>
 			</div>
@@ -82,11 +86,12 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	</form>
 	<section style="text-align:center;">
 		<?php print("now serving ");
-		$info = db_info(['Files' => 1, 'Version' => 1]);
+		$info = db_info(['Files' => 1, 'Version' => 1, 'Size' => 1]);
 
-		print number_format($info['Files']);
-		print " files";
-		print "<br/>";
+		print number_format($info['Files'])
+		. " files ("
+		. human_filesize($info['Size'])
+		. ")<br/>";
 
 		// See mysql_get_server_info
 		print ("(".$info['Version'].")");
@@ -100,12 +105,47 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 <script type="text/javascript">
 	var form = document.getElementById('search');
 	form.addEventListener("submit", function() {
-		var inputs = form.getElementsByTagName('input');
+		var media_type = document.getElementById(
+			document.getElementById('media_class').value
+		);
+		var width, height;
+
+		var inputs = media_type.getElementsByTagName('input');
 		for (i = 0; i < inputs.length; i++) {
-			if (inputs[i].value === '') inputs[i].disabled = true;
+			// Do not submit empty parameters for our search form
+			if (inputs[i].value === '') { inputs[i].disabled = true; continue }
+			if (inputs[i].name == 'properties[Width]') width = inputs[i].value;
+			if (inputs[i].name == 'properties[Height]') height = inputs[i].value;
 		}
-		var mediaclass = form.getElementsByTagName('select')[0];
-		if (mediaclass.value === '') mediaclass.disabled = true;
+		var selects = media_type.getElementsByTagName('select');
+		for (i = 0; i < selects.length; i++) {
+			if (selects[i].value === '') selects[i].disabled = true;
+			// Special handling for "Respect aspect ratio" parameter
+			if (selects[i].name === 'properties[Ratio]'
+			&& selects[i].value === 'ratio') {
+				// Remove the select button
+				selects[i].parentNode.removeChild(selects[i]);
+
+				// Calculate the ratio and add it the the form
+				// Fast round to the third decimal place in JS
+				var ratio = Math.round((width/height)*1000)/1000;
+				var ratio_input = document.createElement('input');
+				ratio_input.name = 'properties[Ratio]';
+				ratio_input.value = ratio;
+				media_type.appendChild(ratio_input);
+
+				// Since we only care about a ratio, ignore the exact dimensions
+				var inputs = form.getElementsByTagName('input');
+				for (j = 0; j < inputs.length; j++) {
+					if (inputs[j].name == 'properties[Width]')
+						inputs[j].disabled = true;
+					if (inputs[j].name == 'properties[Height]')
+						inputs[j].disabled = true;
+				}
+			}
+		}
+
+
 	}, false);
 
 	// Update the media class filter for its initial value
