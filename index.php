@@ -23,7 +23,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		});
 		if (!media_class) return;
 		var currclass = document.getElementById(media_class);
-		currclass.style.display = 'block';
+		currclass.style.display = '';
 		toggleinputs(currclass, 'true');
 	}
 	function toggleinputs(div, doenable) {
@@ -54,12 +54,10 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 			<section>
 				<div><input type="submit" value="いこう！"></input></div>
 			</section>
-			<div id="filters" style="text-align:right;">
-				<section>
-					<select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)">
-						<?php render_classmenu(); ?>
-					</select>
-				</section>
+			<section id="filters">
+				<div><select id="media_class" name="media_class" onChange="changeExtAttrs(this.value)">
+					<?php render_classmenu(); ?>
+				</select></div>
 				<?php
 				foreach (DB_MEDIA_CLASSES as $c) {
 					$properties = DB_FILE_EXTENDED_PROPERTIES[$c];
@@ -81,7 +79,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 					print '</div>';
 				}
 				?>
-			</div>
+			</section>
 		</div>
 	</form>
 	<section style="text-align:center;">
