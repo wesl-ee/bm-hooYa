@@ -208,7 +208,7 @@ sub importfile {
 			. " (`FileId`, `TagId`) SELECT ? AS FileId, Id AS TagId"
 			. " FROM `Tags` WHERE `Space`=?"
 			. " AND `Member`=? ON DUPLICATE KEY UPDATE `FileId`=?");
-			$sth->execute($md5, $namespaces[$i], $tags[$i], $md5) or die_error DBI::errstr;
+			$sth->execute($md5, $tags[$i], $namespaces[$i], $md5) or die_error DBI::errstr;
 		}
 	}
 }
