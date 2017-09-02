@@ -181,7 +181,7 @@ elsif (defined $unmap || $delete) {
 # Function definitions
 sub importfile {
 	return if !-f;
-	my $md5 = md5_hex($_);
+	my $md5 = md5_hex(do { local $/; IO::File->new($File::Find::name)->getline });
 	my $path = $_;
 	my $mtype = mimetype($_);
 	my $ftype = (split(/\//, $mtype))[0];
