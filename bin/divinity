@@ -139,12 +139,14 @@ if (defined $import) {
 	else {
 		my ($total, $size, @files, $n);
 		find(sub {$total++ if -f; $size+= -s if -f;
-			push @files, $File::Find::name}, $directory);
+			push @files, $File::Find::name if -f}, $directory);
 		notify_success("Importing $total files ("
 		. &scaledbytes($size) . "). . . ");
+		$n = 0;
 		foreach (@files) {
-			importfile($_);
 			status_update ($n++, $total);
+			importfile($_);
+
 		}
 	}
 	notify_success("Done!");
@@ -181,7 +183,7 @@ elsif (defined $unmap || $delete) {
 # Function definitions
 sub importfile {
 	return if !-f;
-	my $md5 = md5_hex(do { local $/; IO::File->new($File::Find::name)->getline });
+	my $md5 = md5_hex(do { local $/; IO::File->new($_)->getline }, 0);
 	my $path = $_;
 	my $mtype = mimetype($_);
 	my $ftype = (split(/\//, $mtype))[0];
