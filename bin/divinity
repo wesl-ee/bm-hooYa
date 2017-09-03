@@ -59,7 +59,7 @@ GetOptions(
 	'import' => \my $import,
 	'directory=s' => \my $directory,
 	'class=s' => \my $class,
-	'property=s' => \my $property,
+	'property=s' => \my @properties,
 
 	# Unmap key options
 	'unmap' => \my $unmap,
@@ -217,22 +217,34 @@ sub importfile {
 	$sth->execute($md5, $md5) or die_error DBI::errstr;
 	# Add file properties from the filename
 	# like season, episode, etc.
-	if ($property) {
+	if (@properties) { foreach my $property (@properties) {
+		my $p_value;
 		my $p_name = substr($property, 0, index($property, ':'));
-		my $p_regex = substr($property, index($property, ':') + 1);
-		if (!($path =~ /$p_regex/)) {
-			die_error "Could not match regex $p_regex on $path";
+		my $p_format = substr($property, index($property, ':') + 1);
+		# In case we are passed a regex
+		if (index($p_format, ')') > index($p_format, '(')) {
+			if (!($path =~ $p_format)) {
+				notify_warn "Ignoring regex error when matching
+				\"$p_format\" to $property";
+				next;
+			}
+			if (!$1) {
+				print $path;
+				die_error "Regex error matching \"$p_format\""
+				. " to $property";
+			}
+			$p_value = $1;
 		}
-		if (!$1) {
-			die_error "\"$p_regex\" has no parentheses"
-			. " so I'm not sure what to capture for the property value";
+		# Otherwise take the parameter literally
+		else {
+			$p_value = $p_format;
 		}
 
 		$sth = $dbh->prepare("UPDATE `$class` SET"
 		. " `$p_name` = ?"
 		. " WHERE Id=?");
-		$sth->execute($1, $md5) or die_error DBI::errstr;
-	}
+		$sth->execute($p_value, $md5) or die_error DBI::errstr;
+	}}
 
 	# Tag the file
 	if (@namespaces && @tags) {
