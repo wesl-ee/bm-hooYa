@@ -59,6 +59,7 @@ GetOptions(
 	'import' => \my $import,
 	'directory=s' => \my $directory,
 	'class=s' => \my $class,
+	'property=s' => \my $property,
 
 	# Unmap key options
 	'unmap' => \my $unmap,
@@ -126,12 +127,12 @@ if (defined $import) {
 		. " the number of tags" if (@namespaces != @tags);
 		for (my $i = 0; $i < @namespaces; $i++) {
 			$sth = $dbh->prepare('INSERT INTO `Tags`'
-			. ' (`Space`, `Member`) VALUES'
-			. " (?, ?)"
-			. " ON DUPLICATE KEY UPDATE `Member`=?");
+			. ' (`Space`, `Member`) VALUES (?, ?)'
+			. ' ON DUPLICATE KEY UPDATE `Member`=?');
 			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]) or die_error DBI::errstr;
 		}
 	}
+
 	if (-f $directory) {
 		notify_success("Importing 1 file of "
 		. scaledbytes(-s $directory) . " size");
@@ -151,7 +152,7 @@ if (defined $import) {
 		# 100% finished
 		status_update($n, $total);
 	}
-	notify_success("\nDone!");
+	notify_success("Done!");
 }
 
 # Unmapping
@@ -210,6 +211,29 @@ sub importfile {
 		$md5, $path, $size, $class, $mtype)
 		or die_error DBI::errstr;
 
+	$sth = $dbh->prepare("INSERT INTO `$class`"
+	. " (`Id`) VALUE (?) ON DUPLICATE KEY UPDATE"
+	. " `Id` = ?");
+	$sth->execute($md5, $md5) or die_error DBI::errstr;
+	# Add file properties from the filename
+	# like season, episode, etc.
+	if ($property) {
+		my $p_name = substr($property, 0, index($property, ':'));
+		my $p_regex = substr($property, index($property, ':') + 1);
+		if (!($path =~ /$p_regex/)) {
+			die_error "Could not match regex $p_regex on $path";
+		}
+		if (!$1) {
+			die_error "\"$p_regex\" has no parentheses"
+			. " so I'm not sure what to capture for the property value";
+		}
+
+		$sth = $dbh->prepare("UPDATE `$class` SET"
+		. " `$p_name` = ?"
+		. " WHERE Id=?");
+		$sth->execute($1, $md5) or die_error DBI::errstr;
+	}
+
 	# Tag the file
 	if (@namespaces && @tags) {
 		for (my $i = 0; $i < @namespaces; $i++) {
@@ -217,7 +241,7 @@ sub importfile {
 			$sth = $dbh->prepare('INSERT INTO `Tags`'
 			. ' (`Space`, `Member`) VALUES (?, ?)'
 			. ' ON DUPLICATE KEY UPDATE `Member`=?');
-			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]);
+			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]) or die_error DBI::errstr;
 			# Map the current file to every namespace pair that
 			# the user specified
 			$sth = $dbh->prepare('INSERT INTO `TagMap`'
