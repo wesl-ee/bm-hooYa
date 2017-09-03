@@ -77,7 +77,7 @@ function render_tags($key)
 }
 function render_classmenu($class = NULL)
 {
-	foreach(DB_MEDIA_CLASSES as $c) {
+	foreach(DB_MEDIA_CLASSES as $c => $value) {
 		print "<option value='$c'";
 		if ($c == $class) print " selected";
 		print ">$c</option>";

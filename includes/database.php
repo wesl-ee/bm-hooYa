@@ -1,5 +1,16 @@
 <?php
-define('DB_MEDIA_CLASSES', ['single_image', 'video', 'anime', 'movie']);
+define('DB_MEDIA_CLASSES', [
+	'single_image' => [
+	],
+	'video' => [
+	],
+	'anime' => [
+		'Default' => 'list',
+	],
+	'movie' => [
+		'Default' => 'list'
+	]
+]);
 define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
 define('DB_FILE_EXTENDED_PROPERTIES',
 [

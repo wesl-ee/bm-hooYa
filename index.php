@@ -14,7 +14,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	<title>bigmike — hooYa!</title>
 	<script src="js/f.js"></script>
 	<script type="text/javascript">
-	var classes = <?php echo json_encode(DB_MEDIA_CLASSES);?>;
+	var classes = <?php echo json_encode(array_keys(DB_MEDIA_CLASSES));?>;
 	function changeExtAttrs(media_class) {
 		classes.forEach(function (c) {
 			var classdiv = document.getElementById(c);
@@ -63,7 +63,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 					<?php render_classmenu(); ?>
 				</select></div>
 				<?php
-				foreach (DB_MEDIA_CLASSES as $c) {
+				foreach (DB_MEDIA_CLASSES as $c => $more) {
 					$properties = DB_FILE_EXTENDED_PROPERTIES[$c];
 					print "<div id='$c' style='display:none;'>";
 					foreach ($properties as $p => $value) {
@@ -75,6 +75,11 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 						. " placeholder=$p"
 						. " disabled></div>";
 					}
+					if ($more['Default'])
+						print '<input type="hidden"'
+						. ' name=' . $more['Default']
+						. ' value=y'
+						. '>';
 					if ($properties['Width'] && $properties['Height'])
 						print '<select name="properties[Ratio]">'
 						. '<option value>Exact Dimensions</option>'
