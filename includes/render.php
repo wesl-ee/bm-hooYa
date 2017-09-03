@@ -17,15 +17,12 @@ function render_file($key, $ftype)
 		$n = 10;
 		print '<main class="thumbs">';
 		foreach (range($n, 100, round(100/$n)) as $percent) {
-			print '<img src="download.php?key='.rawurlencode($key).''
+			print '<a href=download.php?key='.rawurlencode($key).'>'
+			. '<img src="download.php?key='.rawurlencode($key).''
 			. '&preview&percent=' . round($percent) . '"'
-			. ' onClick="window.open(this.src)">'
-			. '</img>';
+			. '</img></a>';
 		}
-		print '</main>'
-		. '<footer><a href="download.php?key=' . rawurlencode($key) . '">'
-		. 'Download this file!'
-		. '</a></footer>';
+		print '</main>';
 		break;
 	}
 }
