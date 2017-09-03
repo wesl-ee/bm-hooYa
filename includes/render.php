@@ -163,7 +163,24 @@ function render_hidden_inputs($array, $path = NULL)
 function render_title($key)
 {
 	print '<tr><td>';
-	print "<a href=view.php?key=$key>$key</a>";
+	print "<a href=view.php?key=$key>";
+
+	// Print the important part of tags
+	foreach (db_get_tags($key) as $pair) {
+		print $pair['Member'] . ' ';
+	}
+
+	// Output important properties by formatting them according to the
+	// formatting specified in includes/database.php
+	$class = db_getfileinfo($key)['Class'];
+	$properties = db_getproperties($key);
+	foreach ($properties as $p => $value) {
+		$format = DB_FILE_EXTENDED_PROPERTIES[$class][$p]['Format'];
+		if ($format) {
+			print str_replace('?', $value, $format);
+		}
+	}
+	print '</a>';
 	print '</td></tr>';
 }
 ?>

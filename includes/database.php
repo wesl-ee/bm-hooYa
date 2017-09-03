@@ -9,11 +9,11 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 	],
 	'video',
 	'anime' => [
-		'Season' => ['Type' => 'Number'],
-		'Episode' => ['Type' => 'Number'],
+		'Season' => ['Type' => 'Number', 'Format' => 'S?'],
+		'Episode' => ['Type' => 'Number', 'Format' => 'E?'],
 	],
 	'movie' => [
-		'Year' => [],
+		'Year' => ['Type' => 'Number', 'Format' => '(?)'],
 	],
 ]);
 function db_get_tags($key)
