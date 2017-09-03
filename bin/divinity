@@ -39,6 +39,7 @@ use constant {
 # Disable buffering
 $| = 1;
 
+# Notifications
 sub die_error { die FG_RED . @_[0] . FG_DEFAULT . "\n"; }
 sub notify_success { print FG_GREEN . @_[0] . FG_DEFAULT . "\n"; }
 sub notify_warn { print FG_YELLOW . @_[0] . FG_DEFAULT . "\n"; }
@@ -146,10 +147,11 @@ if (defined $import) {
 		foreach (@files) {
 			status_update ($n++, $total);
 			importfile($_);
-
 		}
+		# 100% finished
+		status_update($n, $total);
 	}
-	notify_success("Done!");
+	notify_success("\nDone!");
 }
 
 # Unmapping
@@ -183,17 +185,21 @@ elsif (defined $unmap || $delete) {
 # Function definitions
 sub importfile {
 	return if !-f;
+	# Hash file contents
 	my $md5 = md5_hex(do { local $/; IO::File->new($_)->getline }, 0);
 	my $path = $_;
-	my $mtype = mimetype($_);
+	my $mtype = mimetype($path);
 	my $ftype = (split(/\//, $mtype))[0];
-	my $size = -s $_;
+	my $size = -s $path;
 
 	if (!defined $class) {
 		# Default classes
 		if ($ftype eq 'image') {$class = 'single_image'}
-		if ($ftype eq 'video') {$class = 'video'}
+		elsif ($ftype eq 'video') {$class = 'video'}
+		else { die_error "Please specify a --class (mimetype of"
+		. " '$path' is not familiar"; }
 	}
+	# Index the file
 	$sth = $dbh->prepare("INSERT INTO `Files`"
 	. " (`Id`, `Path`, `Size`, `Class`, `Mimetype`) VALUES"
 	. " (?, ?, ?, ?, ?)"
@@ -204,13 +210,21 @@ sub importfile {
 		$md5, $path, $size, $class, $mtype)
 		or die_error DBI::errstr;
 
+	# Tag the file
 	if (@namespaces && @tags) {
 		for (my $i = 0; $i < @namespaces; $i++) {
+			# Add new namespace pairs to the list of tags
+			$sth = $dbh->prepare('INSERT INTO `Tags`'
+			. ' (`Space`, `Member`) VALUES (?, ?)'
+			. ' ON DUPLICATE KEY UPDATE `Member`=?');
+			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]);
+			# Map the current file to every namespace pair that
+			# the user specified
 			$sth = $dbh->prepare('INSERT INTO `TagMap`'
 			. " (`FileId`, `TagId`) SELECT ? AS FileId, Id AS TagId"
 			. " FROM `Tags` WHERE `Space`=?"
 			. " AND `Member`=? ON DUPLICATE KEY UPDATE `FileId`=?");
-			$sth->execute($md5, $tags[$i], $namespaces[$i], $md5) or die_error DBI::errstr;
+			$sth->execute($md5, $namespaces[$i], $tags[$i], $md5) or die_error DBI::errstr;
 		}
 	}
 }
