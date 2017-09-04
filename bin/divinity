@@ -60,6 +60,7 @@ GetOptions(
 	'directory=s' => \my $directory,
 	'class=s' => \my $class,
 	'property=s' => \my @properties,
+	'exclude=s' => \my @excludes,
 
 	# Unmap key options
 	'unmap' => \my $unmap,
@@ -140,9 +141,20 @@ if (defined $import) {
 		importfile($directory);
 	}
 	else {
-		my ($total, $size, @files, $n);
-		find(sub {$total++ if -f; $size+= -s if -f;
-			push @files, $File::Find::name if -f}, $directory);
+		my ($total, $total_excluded, $size, @files, $n);
+		# Generate a list of all files to be imported
+		find(sub {
+			return if !-f;
+			foreach my $exclude (@excludes) {
+				if ($_ =~ $exclude) {$total_excluded++; return;}
+			}
+			$total++;
+			$size+= -s;
+			push @files, $File::Find::name;
+		}, $directory);
+		if ($total_excluded) { notify_warn "Excluded $total_excluded files"; }
+
+		# Import the list
 		notify_success("Importing $total files ("
 		. &scaledbytes($size) . "). . . ");
 		$n = 0;
