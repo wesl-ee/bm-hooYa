@@ -67,7 +67,6 @@ GetOptions(
 	'key=s' => \my $key,
 
 	#For both
-	'namespace=s' => \my @namespaces,
 	'tag=s' => \my @tags,
 ) or HelpMessage(1);
 
@@ -122,14 +121,16 @@ if (defined $import) {
 		die_error "$directory is not a directory or a file";
 	}
 
-	if (@namespaces && @tags) {
-		die_error "Number of namespaces does not match"
-		. " the number of tags" if (@namespaces != @tags);
-		for (my $i = 0; $i < @namespaces; $i++) {
-			$sth = $dbh->prepare('INSERT INTO `Tags`'
-			. ' (`Space`, `Member`) VALUES (?, ?)'
-			. ' ON DUPLICATE KEY UPDATE `Member`=?');
-			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]) or die_error DBI::errstr;
+	if (@tags) { foreach my $tag (@tags) {
+		my $tag_space = substr($tag, 0, index($tag, ':'));
+		my $tag_value = substr($tag, index($tag, ':') + 1);
+		if (!defined $tag_value || !defined $tag_space) {
+			print 'Error parsing space:value tag $tag';
+		}
+		$sth = $dbh->prepare('INSERT INTO `Tags`'
+		. ' (`Space`, `Member`) VALUES (?, ?)'
+		. ' ON DUPLICATE KEY UPDATE `Member`=?');
+		$sth->execute($tag_space, $tag_value, $tag_value) or die_error DBI::errstr;
 		}
 	}
 
@@ -175,8 +176,8 @@ elsif (defined $unmap || $delete) {
 		}
 		notify_success "Deleted file $path";
 	}
-	$sth = $dbh->prepare("DELETE FROM `Files` WHERE Id='$key'");
-	$sth->execute or die_error DBI::errstr;
+	$sth = $dbh->prepare("DELETE FROM `Files` WHERE Id=?");
+	$sth->execute($key) or die_error DBI::errstr;
 	if (!$sth->rows) {
 		die_error "No such key $key is mapped";
 	}
@@ -198,7 +199,7 @@ sub importfile {
 		if ($ftype eq 'image') {$class = 'single_image'}
 		elsif ($ftype eq 'video') {$class = 'video'}
 		else { die_error "Please specify a --class (mimetype of"
-		. " '$path' is not familiar"; }
+		. " '$path' is not familiar)"; }
 	}
 	# Index the file
 	$sth = $dbh->prepare("INSERT INTO `Files`"
@@ -210,7 +211,6 @@ sub importfile {
 	$sth->execute($md5, $path, $size, $class, $mtype,
 		$md5, $path, $size, $class, $mtype)
 		or die_error DBI::errstr;
-
 	$sth = $dbh->prepare("INSERT INTO `$class`"
 	. " (`Id`) VALUE (?) ON DUPLICATE KEY UPDATE"
 	. " `Id` = ?");
@@ -221,17 +221,15 @@ sub importfile {
 		my $p_value;
 		my $p_name = substr($property, 0, index($property, ':'));
 		my $p_format = substr($property, index($property, ':') + 1);
+		if (!defined $p_name || !defined $p_format) {
+			print 'Error parsing space:value property $property';
+		}
 		# In case we are passed a regex
 		if (index($p_format, ')') > index($p_format, '(')) {
-			if (!($path =~ $p_format)) {
-				notify_warn "Ignoring regex error when matching
-				\"$p_format\" to $property";
+			if (!($path =~ $p_format) or !$1) {
+				notify_warn "Ignoring regex error when matching"
+				. " \"$p_format\" to $path";
 				next;
-			}
-			if (!$1) {
-				print $path;
-				die_error "Regex error matching \"$p_format\""
-				. " to $property";
 			}
 			$p_value = $1;
 		}
@@ -239,7 +237,6 @@ sub importfile {
 		else {
 			$p_value = $p_format;
 		}
-
 		$sth = $dbh->prepare("UPDATE `$class` SET"
 		. " `$p_name` = ?"
 		. " WHERE Id=?");
@@ -247,20 +244,22 @@ sub importfile {
 	}}
 
 	# Tag the file
-	if (@namespaces && @tags) {
-		for (my $i = 0; $i < @namespaces; $i++) {
-			# Add new namespace pairs to the list of tags
-			$sth = $dbh->prepare('INSERT INTO `Tags`'
-			. ' (`Space`, `Member`) VALUES (?, ?)'
-			. ' ON DUPLICATE KEY UPDATE `Member`=?');
-			$sth->execute($namespaces[$i], $tags[$i], $tags[$i]) or die_error DBI::errstr;
-			# Map the current file to every namespace pair that
-			# the user specified
-			$sth = $dbh->prepare('INSERT INTO `TagMap`'
-			. " (`FileId`, `TagId`) SELECT ? AS FileId, Id AS TagId"
-			. " FROM `Tags` WHERE `Space`=?"
-			. " AND `Member`=? ON DUPLICATE KEY UPDATE `FileId`=?");
-			$sth->execute($md5, $namespaces[$i], $tags[$i], $md5) or die_error DBI::errstr;
+	if (@tags) { foreach my $tag (@tags) {
+		my $tag_space = substr($tag, 0, index($tag, ':'));
+		my $tag_value = substr($tag, index($tag, ':') + 1);
+
+		# Add new namespace pairs to the list of tags
+		$sth = $dbh->prepare('INSERT INTO `Tags`'
+		. ' (`Space`, `Member`) VALUES (?, ?)'
+		. ' ON DUPLICATE KEY UPDATE `Member`=?');
+		$sth->execute($tag_space, $tag_value, $tag_value) or die_error DBI::errstr;
+		# Map the current file to every namespace pair that
+		# the user specified
+		$sth = $dbh->prepare('INSERT INTO `TagMap`'
+		. " (`FileId`, `TagId`) SELECT ? AS FileId, Id AS TagId"
+		. " FROM `Tags` WHERE `Space`=?"
+		. " AND `Member`=? ON DUPLICATE KEY UPDATE `FileId`=?");
+		$sth->execute($md5, $tag_space, $tag_value, $md5) or die_error DBI::errstr;
 		}
 	}
 }
