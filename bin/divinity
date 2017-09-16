@@ -4,10 +4,10 @@ use Getopt::Long 'HelpMessage';
 use DBI;
 use File::Find;
 use File::MimeInfo 'mimetype';
-use Digest::MD5 'md5_hex';
+use Digest::MD5::File 'file_md5_hex';
 
 # Cute formatting; ANSI escape codes
-use constant HOOYA_VERSION => '0.5';
+use constant HOOYA_VERSION => '0.6';
 use constant {
 	FG_BLACK => '[0;30m',
 	FG_RED => '[0;31m',
@@ -200,7 +200,7 @@ elsif (defined $unmap || $delete) {
 sub importfile {
 	return if !-f;
 	# Hash file contents
-	my $md5 = md5_hex(do { local $/; IO::File->new($_)->getline }, 0);
+	my $md5 = file_md5_hex($_);
 	my $path = $_;
 	my $mtype = mimetype($path);
 	my $ftype = (split(/\//, $mtype))[0];
@@ -325,4 +325,4 @@ Import options
 
 =head1 VERSION
 
-0.5
+0.6
