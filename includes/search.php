@@ -5,7 +5,7 @@ function hooya_search($query)
 
 	// First, tokenikze the search string
 	if (!empty($query['query']))
-		$terms = explode(' ', strtolower($query['query']));
+		$terms = explode(',', strtolower($query['query']));
 	unset($query['query']);
 
 	// Extract all properties
@@ -13,6 +13,13 @@ function hooya_search($query)
 		$properties = $query['properties'];
 
 	foreach ($terms as $key => $value) {
+		// No capital letters allowed!
+		$terms[$key] = strtolower($value);
+		// Remove any space at the beginning (spaces after commas)
+		if ($value[0] == ' ') {
+			$value = substr($terms[$key], 1);
+			$terms[$key] = $value;
+		}
 		// Determine the *inclusive* strictness of each term
 		if ($value[0] == '+') {
 			$value = substr($terms[$key], 1);
@@ -42,7 +49,7 @@ function hooya_search($query)
 		}
 		else if (!db_is_member($value)) {
 			$terms[$key] = hooya_bestguess($value);
-			$query['query'] = join(' ', $terms);
+			$query['query'] = join(',', $terms);
 			$message = "<span>Did you mean <a href='?"
 			. http_build_query($query) . "'>"
 			. $query['query']

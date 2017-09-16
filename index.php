@@ -12,7 +12,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
 	<title>bigmike — hooYa!</title>
-	<script src="js/f.js"></script>
+<!--	<script src="js/f.js"></script>-->
 	<script type="text/javascript">
 	var classes = <?php echo json_encode(array_keys(DB_MEDIA_CLASSES));?>;
 	function changeExtAttrs(media_class) {
@@ -53,7 +53,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	</header>
 	<h1 style="text-align:center;padding-top:30px;padding-bottom:30px;">hooYa!</h1>
 	<form id="search" action="browse.php" method="get" >
-		<input id="searchbox" type="search" name="query" onKeydown="inputFilter(event)" placeholder="search_terms"></input></td>
+		<input id="searchbox" type="search" name="query" onKeydown="inputFilter(event)" placeholder="search,terms"></input></td>
 		<div id="params">
 			<section>
 				<div><input type="submit" value="いこう！"></input></div>
@@ -103,7 +103,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		// See mysql_get_server_info
 		print ("(".$info['Version'].")");
 		?>
-		<br/>or <a href="popular/">just browse</a>
+		</br>tutorial coming soon!
 	</section>
 
 </div>

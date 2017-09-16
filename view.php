@@ -30,6 +30,11 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 		// Filter empty tags
 		if ($tag_space[$i] === ''|| $tag_member[$i] === '')
 			continue;
+		// Standardize the tag input
+		$tag_space[$i] = strtolower($tag_space[$i]);
+		$tag_member[$i] = strtolower($tag_member[$i]);
+		$tag_space[$i] = str_replace('_', ' ', $tag_space[$i]);
+		$tag_member[$i] = str_replace('_', ' ', $tag_member[$i]);
 		// De-alias tags
 		if ($alias = db_get_alias($tag_member[$i]))
 			$tag_member[$i] = $alias;
