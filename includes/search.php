@@ -12,9 +12,6 @@ function hooya_search($query)
 	if (!empty($query['properties']))
 		$properties = $query['properties'];
 
-	$tagspaces = db_get_tagspaces();
-	$members = db_get_allmembers();
-
 	foreach ($terms as $key => $value) {
 		// Determine the *inclusive* strictness of each term
 		if ($value[0] == '+') {
@@ -32,7 +29,7 @@ function hooya_search($query)
 		$index = strpos($value, ':');
 		if ($index) {
 			$space = substr($value, 0, $index);
-			if ($tagspaces[$space]) {
+			if (db_is_space($space)) {
 				$value = substr($value, $index+1);
 				$terms[$key] = $value;
 				$search_spaces[$value] = $space;
@@ -43,7 +40,7 @@ function hooya_search($query)
 		if ($alias = db_get_alias($value)) {
 			$terms[$key] = $alias;
 		}
-		else if (!$members[$value]) {
+		else if (!db_is_member($value)) {
 			$terms[$key] = hooya_bestguess($members, $value);
 			$query['query'] = join(' ', $terms);
 			$message = "<span>Did you mean <a href='?"

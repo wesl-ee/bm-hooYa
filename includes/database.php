@@ -132,33 +132,27 @@ function db_tagspace_sort($tag_space)
 	}
 	return $ret;
 }
-function db_get_tagspaces()
+function db_is_member($member)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
-	$query = "SELECT Space FROM Tags GROUP BY Space";
+	$query = "SELECT 1 FROM Tags WHERE Member='$member'";
 	$res = mysqli_query($dbh, $query);
-	while ($row = mysqli_fetch_assoc($res)) {
-		$ret[$row['Space']] = 1;
-	}
-	return $ret;
+	return mysqli_num_rows($res);
 }
-function db_get_allmembers()
+function db_is_space($namespace)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
-	$query = "SELECT Member FROM Tags GROUP BY Member";
+	$query = "SELECT 1 FROM Tags WHERE Space='$namespace'";
 	$res = mysqli_query($dbh, $query);
-	while ($row = mysqli_fetch_assoc($res)) {
-		$ret[$row['Member']] = 1;
-	}
-	return $ret;
+	return mysqli_num_rows($res);
 }
 function db_getfileinfo($key)
 {
