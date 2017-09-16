@@ -41,7 +41,7 @@ function hooya_search($query)
 			$terms[$key] = $alias;
 		}
 		else if (!db_is_member($value)) {
-			$terms[$key] = hooya_bestguess($members, $value);
+			$terms[$key] = hooya_bestguess($value);
 			$query['query'] = join(' ', $terms);
 			$message = "<span>Did you mean <a href='?"
 			. http_build_query($query) . "'>"
@@ -101,16 +101,21 @@ function hooya_search($query)
 	}
 	return $results;
 }
-function hooya_bestguess($members, $member)
+function hooya_bestguess($member)
 {
 	// Maybe you typed it in first, family name order
 	if (strpos($member, '_')) {
 		list($first, $last) = explode('_', $member);
-		if ($members[($last . '_' . $first)]) {
+		if (db_is_member($last . '_' . $first)) {
 			$bestguess = $last . '_' . $first;
 			return $bestguess;
 		}
 	}
+
+	// EXPENSIVE COMPUTATION ZONE
+	// WARNING * WARNING * WARNING
+	//
+	$members = db_get_all_members();
 	// Maybe you only put in a first name
 	foreach ($members as $m => $a) {
 		if (!strpos($m, '_')) continue;

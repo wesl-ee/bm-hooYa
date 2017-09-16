@@ -132,6 +132,19 @@ function db_tagspace_sort($tag_space)
 	}
 	return $ret;
 }
+function db_get_all_members()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	$query = "SELECT Member FROM Tags GROUP BY Member";
+        $res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[$row['Member']] = 1;
+	}
+	return $ret;
+}
 function db_is_member($member)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
