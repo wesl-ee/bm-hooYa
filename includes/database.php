@@ -21,7 +21,7 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 	'video',
 	'anime' => [
 		'Season' => ['Type' => 'Number', 'Format' => 'S?'],
-		'Episode' => ['Type' => 'Number', 'Format' => 'E?'],
+		'Episode' => ['Format' => 'E?'],
 	],
 	'movie' => [
 		'Year' => ['Type' => 'Number', 'Format' => '(?)'],
@@ -244,6 +244,17 @@ function aa_join($aa, $seperator, $inbetween)
 function db_get_class_properties($class)
 {
 	return (DB_FILE_EXTENDED_PROPERTIES[$class]);
+}
+function db_get_alias($alias)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT `Space` FROM Alias WHERE Alias='$alias'";
+	$res = mysqli_query($dbh, $query);
+	return mysqli_fetch_assoc($res)['Space'];
 }
 function db_info($req)
 {

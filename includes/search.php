@@ -38,8 +38,12 @@ function hooya_search($query)
 				$search_spaces[$value] = $space;
 			}
 		}
+
 		// Special handling if you typed something that isn't a tag
-		if (!$members[$value]) {
+		if ($alias = db_get_alias($value)) {
+			$terms[$key] = $alias;
+		}
+		else if (!$members[$value]) {
 			$terms[$key] = hooya_bestguess($members, $value);
 			$query['query'] = join(' ', $terms);
 			$message = "<span>Did you mean <a href='?"

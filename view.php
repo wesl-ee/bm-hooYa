@@ -27,8 +27,12 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	$tag_space = $_POST['tag_space'];
 	$tag_member = $_POST['tag_member'];
 	for ($i = 0; $i < count($tag_space); $i++) {
+		// Filter empty tags
 		if ($tag_space[$i] === ''|| $tag_member[$i] === '')
 			continue;
+		// De-alias tags
+		if ($alias = db_get_alias($tag_member[$i]))
+			$tag_member[$i] = $alias;
 		$tags[$i]['Space'] = $tag_space[$i];
 		$tags[$i]['Member'] = $tag_member[$i];
 	}

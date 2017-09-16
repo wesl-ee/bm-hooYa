@@ -133,6 +133,16 @@ $sth = $dbh->prepare(
 if (!$sth->execute) {
 	notify_warn DBI::errstr;
 }
+$sth = $dbh->prepare(
+	"CREATE TABLE `Alias` ("
+	. "`Alias` VARCHAR(128) NOT NULL,"
+	. "`Space` VARCHAR(128) DEFAULT NULL,"
+	. "PRIMARY KEY (`Alias`),"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
 # Example media_types, which are very extensible; adding one just involves
 # adding a SQL table like this and putting its properties in
 # includes/database.php
