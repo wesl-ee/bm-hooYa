@@ -20,6 +20,47 @@ if (isset($_POST['class'])) {
 	db_setclass($key, $class);
 }
 
+
+// Grab tag {space => member pairs} (e.g. 'season' => '1')
+if (isset($_POST['properties'])) {
+	$properties = $_POST['properties'];
+	db_setproperties($key, $properties);
+}
+
+
+// Get some information about the file our $key maps to
+$fileinfo = db_getfileinfo($key);
+$class = $fileinfo['Class'];
+$path = $fileinfo['Path'];
+$mimetype = $fileinfo['Mimetype'];
+
+// Filetype is the first half of the mimetype
+$ftype = explode('/', $mimetype)[0];
+?>
+<html>
+<head>
+	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<title>bmffd — view</title>
+	<script src="js/f.js"></script>
+	<script>
+		var maxtags = <?php echo CONFIG_HOOYA_MAX_TAGS?>;
+		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {
+		// alt + n generates new tag inputs
+		case (78):
+			e.preventDefault();
+			addTagField();
+			break;
+		//alt + enter commits changes
+		case (13):
+			e.preventDefault();
+			var tag_frame = document.getElementById('tag_frame');
+			var tag_form = tag_frame.getElementsByTagName('form')[0];
+			tag_form.submit();
+		} }
+		document.addEventListener("keydown", hotKeys);
+	</script>
+</head>
+<?php
 // Grab tag {space => member pairs} (e.g. 'character' => 'madoka')
 if (isset($_POST['tag_space'], $_POST['tag_member'])
 	&& count($_POST['tag_space']) == count($_POST['tag_space'])
@@ -56,50 +97,7 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	// just read in
 	db_set_tags($key, $tags);
 }
-// Grab tag {space => member pairs} (e.g. 'season' => '1')
-if (isset($_POST['properties'])) {
-	$properties = $_POST['properties'];
-	db_setproperties($key, $properties);
-}
-if (count($_POST)) {
-	// Hack to make sure the user can navigate back to the query page
-	// without actually storing the query across page navigations
-	// which would be very ugly
-	print '<script>window.history.back();</script>';
-}
-
-// Get some information about the file our $key maps to
-$fileinfo = db_getfileinfo($key);
-$class = $fileinfo['Class'];
-$path = $fileinfo['Path'];
-$mimetype = $fileinfo['Mimetype'];
-
-// Filetype is the first half of the mimetype
-$ftype = explode('/', $mimetype)[0];
 ?>
-<html>
-<head>
-	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
-	<title>bmffd — view</title>
-	<script src="js/f.js"></script>
-	<script>
-		var maxtags = <?php echo CONFIG_HOOYA_MAX_TAGS?>;
-		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {
-		// alt + n generates new tag inputs
-		case (78):
-			e.preventDefault();
-			addTagField();
-			break;
-		//alt + enter commits changes
-		case (13):
-			e.preventDefault();
-			var tag_frame = document.getElementById('tag_frame');
-			var tag_form = tag_frame.getElementsByTagName('form')[0];
-			tag_form.submit();
-		} }
-		document.addEventListener("keydown", hotKeys);
-	</script>
-</head>
 <body>
 <div id="container">
 <div id="leftframe">
@@ -138,4 +136,12 @@ $ftype = explode('/', $mimetype)[0];
 </div>
 </div>
 </body>
+<?php
+if (count($_POST)) {
+	// Hack to make sure the user can navigate back to the query page
+	// without actually storing the query across page navigations
+	// which would be very ugly
+	print '<script>window.history.back();</script>';
+}
+?>
 </html>

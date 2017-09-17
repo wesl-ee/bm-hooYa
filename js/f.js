@@ -18,14 +18,12 @@ function addTagField()
 	td = document.createElement('td');
 	space.type = 'text';
 	space.name = 'tag_space[]';
-	space.addEventListener('keydown', inputFilter);
 	td.appendChild(space);
 	tr.appendChild(td);
 
 	td = document.createElement('td');
 	member.type='text';
 	member.name='tag_member[]';
-	member.addEventListener('keydown', inputFilter);
 	td.appendChild(member);
 	tr.appendChild(td);
 
