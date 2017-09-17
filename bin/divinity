@@ -239,6 +239,22 @@ sub importfile {
 	. " (`Id`) VALUE (?) ON DUPLICATE KEY UPDATE"
 	. " `Id` = ?");
 	$sth->execute($md5, $md5) or die_error DBI::errstr;
+
+	# Special case: adding resolutions for image mimetypes
+	if ($ftype eq 'image') {
+		my ($width, $height);
+		my $output = `identify $path`;
+		if (!defined $output =~ m/(\d+)x(\d+)/) {
+			die_error "Couldn't use `identify` to get"
+			. " resolution of $path";
+		}
+		$width = $1;
+		$height = $2;
+
+		$sth = $dbh->prepare("UPDATE `$class`"
+		. " SET `Width`=?, `Height`=? WHERE `Id`=?");
+		$sth->execute($width, $height, $md5);
+	}
 	# Add file properties from the filename
 	# like season, episode, etc.
 	if (@properties) { foreach my $property (@properties) {
