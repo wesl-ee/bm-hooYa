@@ -18,7 +18,8 @@ if (is_file(CONFIG_DAILY_DUMP_FILE) && isset($_POST['download'])) {
 ?>
 <html>
 <head>
-	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<?php include CONFIG_COMMON_PATH."includes/head.php";
+	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
 	<title>bigmike — hooYa!</title>
 </head>
 <body>

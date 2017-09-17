@@ -39,7 +39,8 @@ $ftype = explode('/', $mimetype)[0];
 ?>
 <html>
 <head>
-	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<?php include CONFIG_COMMON_PATH."includes/head.php";
+	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
 	<title>bmffd — view</title>
 	<script src="js/f.js"></script>
 	<script>

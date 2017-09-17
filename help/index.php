@@ -9,7 +9,8 @@ include "../includes/bmfft_db.php";
 ?>
 <html>
 <head>
-	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<?php include CONFIG_COMMON_PATH."includes/head.php";
+	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
 	<title>bigmike — hooYa! help</title>
 </head>
 <body>

@@ -9,7 +9,8 @@ include CONFIG_HOOYA_PATH."includes/stats.php";
 ?>
 <HTML>
 <head>
-	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<?php include CONFIG_COMMON_PATH."includes/head.php";
+	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
 	<title>bm - big data</title>
 </head>
 <body>

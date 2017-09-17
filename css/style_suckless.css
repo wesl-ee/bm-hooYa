@@ -1,0 +1,108 @@
+/* Tagging frame */
+aside {
+	position: absolute;
+	bottom: 0;
+	max-height:80%;
+	padding: 10px;
+	width: 95%;
+	max-width: 400px;
+	overflow-y: auto;
+
+	border-radius: 0px 15px 15px 0px;
+	border-left-width: 0px !important;
+}
+/* Tag frame */
+aside {
+	display: block;
+	overflow :auto;
+
+	/* Scrollbar on left */
+	direction: rtl;
+	padding: 10px;
+	padding-left: 5px;
+}
+aside > * {
+	direction: ltr;
+}
+aside > header {
+	text-align: center;
+}
+/* Tag list */
+aside table {
+	table-layout: fixed;
+	width: 100%;
+}
+aside table td {
+	text-align: center;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+/* Expand the table cells to full size so we get a well-sized table */
+aside table td > * {
+	width: 100%;
+}
+aside table input {
+	color: inherit;
+	text-align: center;
+	background-color: transparent;
+	font-size: 1em;
+}
+main.single {
+	display: flex;
+	/* hack for firefox */
+	min-height: 0;
+	filter: drop-shadow(0px 0px 3px rgba(0,0,0,.3))
+	drop-shadow(0px 0px 10px rgba(0,0,0,.3));
+}
+main.single > * {
+	/* Grow small items !important */
+	flex: 1 1 auto;
+}
+/* Hack allows us to keep maintain the content aspect ration */
+main.single > #hack > * {
+	display: block;
+	/* Account for margin when doing full height */
+	max-height: calc(100% - 20px);
+	max-width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 5px;
+
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+main.thumbs img {
+	cursor: pointer;
+	/* Fit four per line plus margin */
+	width: calc(25% - 10px);
+	min-width: 150px;
+	max-width: 500px;
+
+	/* Looks a little close w/o space */
+	margin: 5px;
+}
+/* Search form (includes searchbox & options) */
+#search {
+	width: 70%;
+	margin: auto;
+	padding-bottom: 10px;
+}
+#search > input {
+	padding-left: 2px;
+}
+#search > * {
+	width: 100%;
+}
+#search > #params {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+#search > #params #filters div {
+	text-align: right;
+}
+#search > #params input {
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 100px;
+}

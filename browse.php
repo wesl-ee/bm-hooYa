@@ -27,7 +27,8 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 ?>
 <html>
 <head>
-	<?php include CONFIG_COMMON_PATH."includes/head.php"; ?>
+	<?php include CONFIG_COMMON_PATH."includes/head.php";
+	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
 	<title>bigmike — hooYa! <?php echo $_GET['q']?></title>
 	<script>var currpage = <?php echo $page?></script>
 	<script type="text/javascript" src="js/hotkeys.js"></script>
