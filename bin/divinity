@@ -57,6 +57,7 @@ GetOptions(
 
 	# Import directory options
 	'import' => \my $import,
+	'absorb' => \my $absorb,
 	'directory=s' => \my $directory,
 	'class=s' => \my $class,
 	'property=s' => \my @properties,
@@ -77,7 +78,8 @@ HelpMessage(1) unless (defined $unmap || $import || $delete);
 my ($CONFIG_MYSQL_HOOYA_HOST,
 $CONFIG_MYSQL_HOOYA_USER,
 $CONFIG_MYSQL_HOOYA_PASSWORD,
-$CONFIG_MYSQL_HOOYA_DATABASE);
+$CONFIG_MYSQL_HOOYA_DATABASE,
+$CONFIG_HOOYA_STORAGE_PATH);
 
 # Definitely going to need to make a config file in /etc
 my $incfile =  '/var/http/hub/hooYa/includes/config.php';
@@ -87,6 +89,7 @@ while (<FILE>) {
 	$CONFIG_MYSQL_HOOYA_USER = $1 if (/"CONFIG_MYSQL_HOOYA_USER", ["'](.+)["']/);
 	$CONFIG_MYSQL_HOOYA_PASSWORD = $1 if (/["']CONFIG_MYSQL_HOOYA_PASSWORD["'], ["'](.+)["']/);
 	$CONFIG_MYSQL_HOOYA_DATABASE = $1 if (/["']CONFIG_MYSQL_HOOYA_DATABASE["'], ["'](.+)["']/);
+	$CONFIG_HOOYA_STORAGE_PATH = $1 if (/["']CONFIG_HOOYA_STORAGE_PATH["'], ["'](.+)["']/);
 }
 close(FILE);
 
@@ -200,11 +203,20 @@ elsif (defined $unmap || $delete) {
 sub importfile {
 	return if !-f;
 	# Hash file contents
-	my $md5 = file_md5_hex($_);
 	my $path = $_;
+	my $md5 = file_md5_hex($path);
 	my $mtype = mimetype($path);
 	my $ftype = (split(/\//, $mtype))[0];
 	my $size = -s $path;
+
+	# Should we absorb this into hooYa cold storage?
+	if (defined $absorb) {
+		my $ext;
+		if ($path =~ m/.(\w+)$/) { $ext = ".$1"; }
+		else { $ext = '' }
+		$path = "$CONFIG_HOOYA_STORAGE_PATH$md5$ext";
+		system("mv '$_' '$path'");
+	}
 
 	if (!defined $class) {
 		# Default classes

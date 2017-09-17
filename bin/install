@@ -149,8 +149,8 @@ if (!$sth->execute) {
 $sth = $dbh->prepare(
 	"CREATE TABLE `single_image` ("
 	. "`Id` varchar(128) NOT NULL,"
-	. "`Width` int(11) NOT NULL,"
-	. "`Height` int(11) NOT NULL,"
+	. "`Width` int(11) NOT NULL DEFAULT -1,"
+	. "`Height` int(11) NOT NULL DEFAULT -1,"
 	. "`Ratio` float(6,3) unsigned GENERATED ALWAYS AS (`Width` / `Height`) STORED,"
 	. "PRIMARY KEY (`Id`)"
 	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
