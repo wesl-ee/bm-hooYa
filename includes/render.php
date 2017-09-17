@@ -13,16 +13,14 @@ function render_file($key, $ftype)
 		. '</main>';
 		break;
 	case 'video':
-		/* Number of thumbnails to show */
-		$n = 10;
-		print '<main class="thumbs">';
-		foreach (range($n, 100, round(100/$n)) as $percent) {
-			print '<a href=download.php?key='.rawurlencode($key).'>'
-			. '<img src="download.php?key='.rawurlencode($key).''
-			. '&preview&percent=' . round($percent) . '"'
-			. '</img></a>';
-		}
-		print '</main>';
+		print '<main class="single">'
+		. '<div id="hack">'
+		. '<img src="download.php?key='.rawurlencode($key).'&preview"'
+		. 'onClick="window.open(\'download.php?key='.rawurlencode($key).'\')">'
+		. '</img>'
+		. '</a>'
+		. '</div>'
+		. '</main>';
 		break;
 	}
 }
@@ -104,7 +102,7 @@ function render_thumbnails($results)
 	foreach ($results as $result) {
 		$key = $result['key'];
 		print "<a"
-		. " href='view.php?key=".rawurlencode($key)."'>"
+		. " href='view.php?key=".rawurlencode($key) . "'>"
 		. "<img"
 		. " onMouseOver='showThumbInfo(\"$key\")'"
 		. " onMouseOut='hideThumbInfo(\"$key\")'"
@@ -166,7 +164,6 @@ function render_title($key)
 	foreach (db_get_tags($key) as $pair) {
 		print $pair['Member'] . ' ';
 	}
-
 	// Output important properties by formatting them according to the
 	// formatting specified in includes/database.php
 	$class = db_getfileinfo($key)['Class'];

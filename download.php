@@ -72,11 +72,9 @@ if (isset($_GET['partyhat'])) {
 	// Coming soon -- watch imagemagick render party hats onto thumbnails!
 }
 if ($ftype == 'video' && isset($_GET['preview'])) {
-	$percent = (isset($_GET['percent']) ? $_GET['percent']: '0');
 	$file = CONFIG_TEMPORARY_PATH . $key . '_preview_' . round($percent) . '.png';
-	if (!file_exists($file))
-		exec('ffmpegthumbnailer -i ' . escapeshellarg($path)
-		. ' -s 350 -o ' . $file . ' -t ' . $percent);
+	exec('ffmpegthumbnailer -i ' . escapeshellarg($path)
+	. ' -s 0 -o ' . $file . ' -t 50%');
 	bmfft_xsendfile($file);
 	return;
 }
