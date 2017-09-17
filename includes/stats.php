@@ -59,6 +59,20 @@ function stats_tag_class_freq($tag)
 	}
 	return $ret;
 }
+function stats_allaliases()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT Alias, Space FROM Alias";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[$row['Alias']] = $row['Space'];
+	}
+	return $ret;
+}
 function db_info($req)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,

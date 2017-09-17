@@ -24,19 +24,22 @@ include CONFIG_HOOYA_PATH."includes/stats.php";
 
 <div id="rightframe">
 	<header>
-		<h1>Metrics</h1>
+		<h1>hooYa metrics</h1>
 	</header>
 	<header>
+		<a href="../">back</a>
 		<a href="?overview">overview</a>
 		<a href="?tags">tags</a>
-		<a href="?activity">activity</a>
+		<a href="?aliases">aliases</a>
 		<a href="?classes">classes</a>
 	</header>
 	<main><?php if (isset($_GET['tags'])) {
 		// Information about a specific tag
 		if ($tag = $_GET['tags']) {
 			$dates = stats_tag_activity($tag);
-			print "<h3>$tag</h3>";
+			print "<h3><a href='" . CONFIG_HOOYA_WEBPATH
+			. "browse.php?query=". rawurlencode($tag)
+			. "'>$tag</a></h3>";
 			print count($dates) . " files";
 			print "<table><tr>";
 			print "<th>Month</th><th>Tags Added</th>";
@@ -46,8 +49,8 @@ include CONFIG_HOOYA_PATH."includes/stats.php";
 				$dist[$month]++;
 			}
 			foreach($dist as $month => $freq) {
-				print "<tr><td>".monthname($month)."</td>"
-				. "<td>".$freq."</td></tr>";
+				$monthname = monthname($month);
+				print "<tr><td>$monthname</td><td>$freq</td></tr>";
 			}
 			print '<th>Class</th><th>Frequency</th></tr>';
 			foreach (stats_tag_class_freq($tag) as $class => $freq) {
@@ -58,8 +61,7 @@ include CONFIG_HOOYA_PATH."includes/stats.php";
 		// An overview of all tags
 		else {
 			print '<table><tr>'
-			. '<th>Tag</th>'
-			. '<th>Frequency</th></tr>';
+			. '<th>Tag</th><th>Frequency</th></tr>';
 			$dist = stats_tag_freq();
 			foreach($dist as $tag => $freq) {
 				print "<tr>"
@@ -69,16 +71,26 @@ include CONFIG_HOOYA_PATH."includes/stats.php";
 			}
 			print '</table>';
 		}
-	}else if (isset($_GET['overview'])) {
-		print "<section style='text-align:center'>";
+	// Equivalent statements, shorthand
+	} else if (isset($_GET['aliases'])) {
+		print '<table><tr>'
+		. '<th>Alias</th><th>Equivalent to Typing</th></tr>';
+		$aliases = stats_allaliases();
+		foreach ($aliases as $alias => $mapping) {
+			print "<tr><td>$alias</td><td>$mapping</td></tr>";
+		}
+	// General information
+	} else if (isset($_GET['overview'])) {
+		print "<table>";
 		$info = db_info(['Files' => 1, 'Version' => 1, 'Size' => 1]);
-		print number_format($info['Files'])
-		. " files ("
-		. human_filesize($info['Size'])
-		. ")<br/>";
+		print "<tr><td>Files</td>"
+		. "<td>" . number_format($info['Files']) . "</td></tr>";
+		print "<tr><td>Indexed Size</td>"
+		.  "<td>" . human_filesize($info['Size']) . "</td></tr>";
 		// See mysql_get_server_info
-		print ("(".$info['Version'].")");
-		print "</section>";
+		print "<tr><td>DB Version</td>"
+		. "<td>" . $info['Version']."</td></tr>";
+		print "</table>";
 	} else {
 		print "Feature coming soon!";
 	}?></main>
