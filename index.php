@@ -92,18 +92,8 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		</div>
 	</form>
 	<section style="text-align:center;">
-		<?php print("now serving ");
-		$info = db_info(['Files' => 1, 'Version' => 1, 'Size' => 1]);
-
-		print number_format($info['Files'])
-		. " files ("
-		. human_filesize($info['Size'])
-		. ")<br/>";
-
-		// See mysql_get_server_info
-		print ("(".$info['Version'].")");
-		?>
-		</br>tutorial coming soon!
+		hooYa <a href="stats/index.php?overview">metrics</a></br>
+		tutorial coming soon!
 	</section>
 
 </div>

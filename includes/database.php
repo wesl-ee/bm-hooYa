@@ -90,10 +90,6 @@ function db_set_tags($key, $tags)
 	$query = substr($query, 0, -3);
 	$query .= "))";
 	mysqli_query($dbh, $query);
-	// Finally, clean up `Tags`, in the case that all references to the
-	// tag have been deleted
-	$query = "DELETE FROM Tags WHERE Id NOT IN (SELECT TagId FROM TagMap)";
-	mysqli_query($dbh, $query);
 	mysqli_close($dbh);
 }
 function db_getrandom($n)
