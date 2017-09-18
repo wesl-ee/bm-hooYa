@@ -36,7 +36,8 @@ function stats_tag_activity($tag)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
 	$query = "SELECT Added FROM TagMap, Tags"
-	. " WHERE TagId=Id AND CONCAT(Space,':',Member)='$tag'";
+	. " WHERE TagId=Id AND CONCAT(Space,':',Member)='$tag'"
+	. " AND Added >= DATE_SUB(NOW(), INTERVAL 1 YEAR)";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$ret[] = $row['Added'];
