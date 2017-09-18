@@ -106,3 +106,17 @@ main.thumbs img {
 	padding-right: 2px;
 	width: 100px;
 }
+#bargraph {
+	position:relative;
+	width:70%;
+	margin: auto;
+	margin-bottom: 5px
+}
+#bargraph ul {
+	padding-inline-start: 0px
+}
+#bargraph li {
+	list-style:none;
+	text-align:right;
+	border-bottom: 1px solid;
+}
