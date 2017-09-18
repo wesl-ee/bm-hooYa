@@ -112,11 +112,11 @@ main.thumbs img {
 	margin: auto;
 	margin-bottom: 5px
 }
-#bargraph ul {
-	padding-inline-start: 0px
+#bargraph dd {
+	margin-inline-start: 0px;
 }
-#bargraph li {
+#bargraph dd {
 	list-style:none;
-	text-align:right;
-	border-bottom: 1px solid;
+	text-align: right;
+	border-bottom: 3px solid;
 }

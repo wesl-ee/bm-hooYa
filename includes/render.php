@@ -177,4 +177,18 @@ function render_title($key)
 	print '</a>';
 	print '</td></tr>';
 }
+function render_bargraph($data)
+{
+	foreach($data as $label => $value) {
+		if ($value > $max) $max = $value;
+	}
+	print '<div id="bargraph"><dl>';
+	foreach($data as $label => $value) {
+		$ratio = $value/$max;
+		$width = $ratio*100 . "%";
+		print "<dt>$label</dt>";
+		print "<dd style='width:$width;'>$value</dd>";
+	}
+	print '</dl></div>';
+}
 ?>

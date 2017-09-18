@@ -6,6 +6,7 @@ include CONFIG_HOOYA_PATH."includes/config.php";
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
 include CONFIG_HOOYA_PATH."includes/stats.php";
+include CONFIG_HOOYA_PATH."includes/render.php";
 ?>
 <HTML>
 <head>
@@ -37,42 +38,33 @@ include CONFIG_HOOYA_PATH."includes/stats.php";
 	<main><?php if (isset($_GET['tags'])) {
 		// Information about a specific tag
 		if ($tag = $_GET['tags']) {
-			$dates = stats_tag_activity($tag);
+			$months = stats_tag_activity($tag);
+
+			$currmonth = (int)date('n');
+			$curryear = (int)date('y');
+			$m = $currmonth;
+			$y = $curryear;
+			do {
+				$monthname = monthname($m);
+				$freq = $months[$m];
+				if (!--$m) { $y--; $m = 12; };
+				if (!$freq) continue;
+				$activity["$monthname '$y"] = $freq;
+				$magnitude += $freq;
+			} while($y != $curryear-1 || $m != $currmonth);
 			print "<h3><a href='" . CONFIG_HOOYA_WEBPATH
 			. "browse.php?query=". rawurlencode($tag)
 			. "'>$tag</a></h3>";
-			print count($dates) . " files";
-			print "<table><tr>";
-			print "<th>Month</th><th>Tags Added</th>";
-			foreach($dates as $date) {
-				// Extract the month from a YYYY-MM-DD format
-				$month = (int)explode('-', $date)[1];
-				$dist[$month]++;
-			}
-			$i = (int)date('n')+1;
-			do {
-				$monthname = monthname($i);
-				if (isset($dist[$i])) $freq = $dist[$i];
-				else {$i = $i%12+1; continue; }
-				print "<tr><td>$monthname</td><td>$freq</td></tr>";
-				$i = $i%12+1;
-			} while ($i != (int)date('n')+1);
+			print $magnitude . " files";
+
+			render_bargraph($activity);
+			print '<table>';
 			print '<th>Class</th><th>Frequency</th></tr>';
 			foreach (stats_tag_class_freq($tag) as $class => $freq) {
 				print "<tr><td>$class</td><td>$freq</td></tr>";
 			}
 			print '</table>';
-			print '<div id=bargraph><ul>';
-			$i = (int)date('n')+1;
-			do {
-				$monthname = monthname($i);
-				if (isset($dist[$i])) $freq = $dist[$i];
-				else $freq = 0;
-				print "<li>$freq:$monthname</li>";
-				$i = $i%12+1;
-			} while ($i != (int)date('n')+1);
-			print '</ul></div>';
-			print '<script>window.onload=function () { makeGraph("bargraph", "labels") }</script>';
+
 		}
 		// An overview of all tags
 		else {

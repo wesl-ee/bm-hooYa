@@ -37,10 +37,12 @@ function stats_tag_activity($tag)
 	mysqli_set_charset($dbh, 'utf8');
 	$query = "SELECT Added FROM TagMap, Tags"
 	. " WHERE TagId=Id AND CONCAT(Space,':',Member)='$tag'"
-	. " AND Added >= DATE_SUB(NOW(), INTERVAL 1 YEAR)";
+	. " AND Added >= DATE_SUB(NOW(), INTERVAL 1 YEAR) ORDER BY Added ASC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		$ret[] = $row['Added'];
+		// Extract the month from a YYYY-MM-DD format
+		$month = (int)explode('-', $row['Added'])[1];
+		$ret[$month]++;
 	}
 	return $ret;
 }

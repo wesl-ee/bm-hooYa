@@ -32,26 +32,3 @@ function addTagField()
 
 	space.focus();
 }
-function makeGraph(container, labels)
-{
-	container = document.getElementById(container);
-	labels = document.getElementById(labels)
-	var dnl = container.getElementsByTagName("li");
-	var i, max=0;
-	for(i = 0; i < dnl.length; i++) {
-		var item = dnl.item(i);
-		var value = item.innerHTML;
-		var content = value.split(":");
-		value = parseInt(content[0]);
-		if (value > max) max = value;
-	}
-	for(i = 0; i < dnl.length; i++) {
-		var item = dnl.item(i);
-		var value = item.innerHTML;
-		var content = value.split(":");
-		value = parseInt(content[0]);
-		item.style.width = (value/max)*100+"%";
-		item.innerHTML = content[1].substring(0,3);
-		item.style.visibility="visible";
-	}
-}
