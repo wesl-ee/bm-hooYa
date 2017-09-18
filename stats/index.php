@@ -73,17 +73,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		}
 		// An overview of all tags
 		else {
-			print '<table><tr>'
-			. '<th>Tag</th><th>Frequency</th></tr>';
-			$dist = stats_tag_freq();
-			foreach($dist as $tag => $freq) {
-				print "<tr>"
-				. "<td>$tag</td>"
-				. "<td><a href='?tags=".urlencode($tag)
-				."'>$freq</a></td>"
-				. "</tr>";
-			}
-			print '</table>';
+			render_bargraph(stats_tag_freq(), 'index.php?tags={?}');
 		}
 	// Equivalent statements, shorthand
 	} else if (isset($_GET['aliases'])) {
