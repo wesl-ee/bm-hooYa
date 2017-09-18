@@ -76,6 +76,25 @@ function stats_allaliases()
 	}
 	return $ret;
 }
+function stats_getassoc($tag)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT CONCAT(Space, ':', Member) AS Tag, COUNT(*) AS Freq"
+	. " FROM Tags, TagMap WHERE TagId=Tags.Id AND FileId IN"
+	. " (SELECT FileId FROM TagMap, Tags WHERE TagId=Tags.Id"
+	. " AND CONCAT(Space,':',Member)='$tag')"
+	. " AND CONCAT(Space,':',Member)!='$tag' GROUP By Tag"
+	. " ORDER BY Freq DESC";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[$row['Tag']] = $row['Freq'];
+	}
+	return $ret;
+}
 function db_info($req)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,

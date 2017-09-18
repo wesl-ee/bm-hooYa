@@ -52,11 +52,14 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 				$activity["$monthname '$y"] = $freq;
 				$magnitude += $freq;
 			} while($y != $curryear-1 || $m != $currmonth);
+			print "<div style='float:right;text-align:right'>";
 			print "<h3><a href='" . CONFIG_HOOYA_WEBPATH
 			. "browse.php?query=". rawurlencode($tag)
 			. "'>$tag</a></h3>";
 			print $magnitude . " files";
+			print "</div>";
 
+			print "<h3>Activity</h3>";
 			render_bargraph($activity);
 			print '<table>';
 			print '<th>Class</th><th>Frequency</th></tr>';
@@ -64,6 +67,8 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 				print "<tr><td>$class</td><td>$freq</td></tr>";
 			}
 			print '</table>';
+			print "<hr><h3>Associations</h3>";
+			render_bargraph(stats_getassoc($tag), 'index.php?tags={?}');
 
 		}
 		// An overview of all tags
@@ -74,7 +79,8 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 			foreach($dist as $tag => $freq) {
 				print "<tr>"
 				. "<td>$tag</td>"
-				. "<td><a href='?tags=$tag'>$freq</a></td>"
+				. "<td><a href='?tags=".urlencode($tag)
+				."'>$freq</a></td>"
 				. "</tr>";
 			}
 			print '</table>';

@@ -93,7 +93,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		</div>
 	</form>
 	<section style="text-align:center;">
-		hooYa <a href="stats/index.php?overview">metrics</a></br>
+		hooYa <a href="stats/index.php?tags">metrics</a></br>
 		tutorial coming soon!
 	</section>
 
