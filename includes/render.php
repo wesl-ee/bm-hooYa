@@ -66,7 +66,11 @@ function render_tags($key)
 		print '<td><input name="tag_member[]"'
 		. ' value="'.$tag['Member'].'"'
 		. ' onKeyDown="inputFilter(event)"'
-		. '></td></tr>';
+		. '></td>';
+		if (isset($tag['Author'])) {
+			print '<td>'.get_username($tag['Author']).'</td>';
+		}
+		print '</tr>';
 	}
 	print '</table>';
 }

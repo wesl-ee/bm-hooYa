@@ -37,14 +37,18 @@ function db_get_tags($key)
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Pull from `Tags` using our $key
-	$query = "SELECT Tags.Space, Tags.Member FROM"
+	$query = "SELECT Tags.Space, Tags.Member, Author FROM"
 		. " Files, TagMap, Tags WHERE Files.Id = '$key'"
 		. " AND TagMap.FileId = Files.Id"
 		. " AND Tags.Id = TagMap.TagId";
 	$res = mysqli_query($dbh, $query);
 	// We allow more than one of the same tag space
 	while ($row = mysqli_fetch_assoc($res)) {
-		$ret[] = ['Space' => $row['Space'], 'Member' => $row['Member']];
+		$ret[] = [
+			'Space' => $row['Space'],
+			'Member' => $row['Member'],
+			'Author' => $row['Author']
+		];
 	}
 	mysqli_close($dbh);
 	return $ret;
