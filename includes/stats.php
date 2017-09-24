@@ -88,12 +88,45 @@ function stats_getassoc($tag)
 	. " (SELECT FileId FROM TagMap, Tags WHERE TagId=Tags.Id"
 	. " AND CONCAT(Space,':',Member)='$tag')"
 	. " AND CONCAT(Space,':',Member)!='$tag' GROUP By Tag"
-	. " ORDER BY Freq DESC";
+	. " ORDER BY Freq DESC LIMIT 5";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$ret[$row['Tag']] = $row['Freq'];
 	}
 	return $ret;
+}
+function stats_untagged_count()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	// The number of untagged files in every class
+	$query = "SELECT COUNT(*) AS Freq, Class FROM Files WHERE NOT Id in ("
+	. "SELECT FileId AS Id FROM TagMap) GROUP BY Class";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res))
+		$untagged[$row['Class']] = $row['Freq'];
+	arsort($untagged);
+	mysqli_close($dbh);
+	return $untagged;
+}
+function stats_total_count()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	// The number of indexed files in every class
+	$query = "SELECT COUNT(*) AS Freq, Class FROM Files GROUP BY Class";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res))
+		$total[$row['Class']] = $row['Freq'];
+	arsort($total);
+	mysqli_close($dbh);
+	return $total;
 }
 function db_info($req)
 {

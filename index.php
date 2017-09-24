@@ -13,7 +13,6 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	<?php include CONFIG_COMMON_PATH."includes/head.php";
 	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
 	<title>bigmike — hooYa!</title>
-<!--	<script src="js/f.js"></script>-->
 	<script type="text/javascript">
 	var classes = <?php echo json_encode(array_keys(DB_MEDIA_CLASSES));?>;
 	function changeExtAttrs(media_class) {

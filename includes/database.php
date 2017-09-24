@@ -37,10 +37,10 @@ function db_get_tags($key)
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Pull from `Tags` using our $key
-	$query = "SELECT Tags.Space, Tags.Member FROM " .
-		"Files, TagMap, Tags WHERE Files.Id = '$key' " .
-		"AND TagMap.FileId = Files.Id " .
-		"AND Tags.Id = TagMap.TagId";
+	$query = "SELECT Tags.Space, Tags.Member FROM"
+		. " Files, TagMap, Tags WHERE Files.Id = '$key'"
+		. " AND TagMap.FileId = Files.Id"
+		. " AND Tags.Id = TagMap.TagId";
 	$res = mysqli_query($dbh, $query);
 	// We allow more than one of the same tag space
 	while ($row = mysqli_fetch_assoc($res)) {
@@ -111,6 +111,7 @@ function db_getrandom($n)
 	mysqli_close($dbh);
 	return $ret;
 }
+
 function db_tagspace_sort($tag_space)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -258,32 +259,6 @@ function db_get_alias($alias)
 	$query = "SELECT `Space` FROM Alias WHERE Alias='$alias'";
 	$res = mysqli_query($dbh, $query);
 	return mysqli_fetch_assoc($res)['Space'];
-}
-function db_info($req)
-{
-	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
-		CONFIG_MYSQL_HOOYA_USER,
-		CONFIG_MYSQL_HOOYA_PASSWORD,
-		CONFIG_MYSQL_HOOYA_DATABASE);
-	mysqli_set_charset($dbh, 'utf8');
-	if ($req['Files']) {
-		$query = "SELECT COUNT(*) FROM Files";
-		$res = mysqli_query($dbh, $query);
-		$files = mysqli_fetch_assoc($res)['COUNT(*)'];
-		$ret['Files'] = $files;
-	}
-	if ($req['Version']) {
-		$version = mysqli_get_server_info($dbh);
-		$ret['Version'] = $version;
-	}
-	if ($req['Size']) {
-		$query = "SELECT SUM(Size) FROM Files";
-		$res = mysqli_query($dbh, $query);
-		$size = mysqli_fetch_assoc($res)['SUM(Size)'];
-		$ret['Size'] = $size;
-	}
-	mysqli_close($dbh);
-	return $ret;
 }
 function db_update_highscore($userid, $diff)
 {

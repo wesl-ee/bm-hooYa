@@ -2,11 +2,13 @@
 <?php
 include "../../common/includes/core.php";
 include CONFIG_HOOYA_PATH."includes/config.php";
+
 // If you're not properly authenticated then kick lie user back to login.php
 if (CONFIG_REQUIRE_AUTHENTICATION)
 	include CONFIG_COMMON_PATH."includes/auth.php";
 include CONFIG_HOOYA_PATH."includes/stats.php";
 include CONFIG_HOOYA_PATH."includes/render.php";
+include CONFIG_HOOYA_PATH."includes/database.php";
 ?>
 <HTML>
 <head>
@@ -73,6 +75,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		}
 		// An overview of all tags
 		else {
+			print '<h3>Tags</h3>';
 			render_bargraph(stats_tag_freq(), 'index.php?tags={?}');
 		}
 	// Equivalent statements, shorthand
@@ -85,6 +88,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		}
 	// General information
 	} else if (isset($_GET['overview'])) {
+		print '<h3>Overview</h3>';
 		print "<table>";
 		$info = db_info(['Files' => 1, 'Version' => 1, 'Size' => 1]);
 		print "<tr><td>Files</td>"
@@ -94,6 +98,21 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		// See mysql_get_server_info
 		print "<tr><td>DB Version</td>"
 		. "<td>" . $info['Version']."</td></tr>";
+		print "</table>";
+
+		$untagged = stats_untagged_count();
+		$total = stats_total_count();
+		print "<h3>Untagged files</h3><table>";
+		print "<table><tr><th>Class</th><th>Total</th><th>Untagged</th><th>Success</th></tr>";
+		foreach(DB_MEDIA_CLASSES as $class => $value) {
+			$t = $total[$class]; if (!$t) $t = 0;
+			$u = $untagged[$class]; if (!$u) $u = 0;
+			$t ? $pcent = $u / $t * 100 : $pcent = 0;
+			$pcent = 100 - round($pcent);
+			print "<tr><td>$class</td>";
+			print "<td>$t</td><td>$u</td><td>$pcent%</td>";
+			print "</tr>";
+		}
 		print "</table>";
 	} else {
 		print "Feature coming soon!";
