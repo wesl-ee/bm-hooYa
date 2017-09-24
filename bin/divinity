@@ -155,6 +155,7 @@ if (defined $import) {
 			$size+= -s;
 			push @files, $File::Find::name;
 		}, $directory);
+		if (!$total) { notify_warn "No files to import"; exit 0; }
 		if ($total_excluded) { notify_warn "Excluded $total_excluded files"; }
 
 		# Import the list

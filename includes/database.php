@@ -68,14 +68,13 @@ function db_set_tags($key, $tags)
 		mysqli_query($dbh, $query);
 
 		// Next, map each file->tag pair to a row in TagMap
-		$query = "INSERT INTO TagMap (`FileId`, `TagId`) SELECT "
-			. "Files.Id AS FileId, Tags.Id AS TagId FROM Files, Tags "
-			. "WHERE Files.Id = '$key' AND Tags.Space = "
-			. "'$space' AND Tags.Member = '$member'";
+		$query = "INSERT INTO TagMap (`FileId`, `Author`, `TagId`) SELECT"
+			. " Files.Id AS FileId, ". $_SESSION['userid'] . " AS Author"
+			. ", Tags.Id AS TagId FROM Files, Tags"
+			. " WHERE Files.Id = '$key' AND Tags.Space ="
+			. " '$space' AND Tags.Member = '$member'";
 		mysqli_query($dbh, $query);
 	}
-
-
 
 	// Delete any mappings which were not explicitly passed to
 	// us in $tags; this indicates the user has removed an association
