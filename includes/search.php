@@ -67,7 +67,7 @@ function hooya_search($query)
 	$query = "SELECT Files.Id, Class, COUNT(*) AS Relevance FROM Files";
 	if (!empty($terms))
 		$query .= ", TagMap, Tags";
-	if (isset($properties, $mediaclass)) {
+	if (isset($mediaclass)) {
 		$query .= ", " . $mediaclass;
 		$query .= " WHERE $mediaclass.Id = Files.Id";
 		foreach ($properties as $property => $value) {
@@ -101,7 +101,12 @@ function hooya_search($query)
 		$query .= ")";
 	}
 
-	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC, Files.Id DESC";
+	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC";
+	foreach (DB_FILE_EXTENDED_PROPERTIES[$mediaclass] as $ext => $value) {
+		if ($value['Sort'])
+			$query .= ", `$ext`+0 ASC";
+	}
+	$query .= ", Files.Indexed DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$results[] = ['key' => $row['Id'], 'class' => $row['Class']];

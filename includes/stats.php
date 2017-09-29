@@ -69,7 +69,7 @@ function stats_allaliases()
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
-	$query = "SELECT Alias, Space FROM Alias";
+	$query = "SELECT Alias, Space FROM Alias ORDER BY Space ASC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$ret[$row['Alias']] = $row['Space'];

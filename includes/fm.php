@@ -7,7 +7,7 @@ function fm_listing($class) {
 	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$class = mysqli_real_escape_string($dbh, $class);
-	$group = DB_MEDIA_CLASSES[$class]['MajorGroup'];
+	$group = DB_MEDIA_CLASSES[$class]['FMGroup'];
 	$exts = DB_FILE_EXTENDED_PROPERTIES[$class];
 
 	$query = "SELECT `Member`,";
