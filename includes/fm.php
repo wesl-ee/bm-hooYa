@@ -7,20 +7,30 @@ function fm_listing($class) {
 	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$class = mysqli_real_escape_string($dbh, $class);
-	$group = DB_MEDIA_CLASSES[$class]['Group'];
-	$sort = DB_MEDIA_CLASSES[$class]['Sort'];
-	$ext = DB_FILE_EXTENDED_PROPERTIES[$class];
-	$format = DB_FILE_EXTENDED_PROPERTIES[$class][$sort]['Format'];
+	$group = DB_MEDIA_CLASSES[$class]['MajorGroup'];
+	$exts = DB_FILE_EXTENDED_PROPERTIES[$class];
 
-	$query = "SELECT `Member`, `$sort`, `Files`.Id FROM"
+	$query = "SELECT `Member`,";
+	foreach ($exts as $ext => $value) {
+		if ($value['Sort'])
+			$query .= " `$ext`,";
+	}
+	$query .= " `Files`.Id FROM"
 	. " `Files`, `TagMap`, `Tags`, `$class` WHERE"
 	. " Files.Id=FileId AND TagId=Tags.Id AND Files.Class='$class'"
 	. " AND `$class`.Id=Files.Id AND Space='$group'"
-	. " ORDER BY `Member` ASC, $sort+0 ASC";
+	. " ORDER BY `Member` ASC";
+	foreach ($exts as $ext => $value) {
+		if ($value['Sort'])
+			$query .= ", `$ext`+0 ASC";
+	}
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		if ($format) {
-			$text =  str_replace('?', $row[$sort], $format);
+		unset($text);
+		foreach($exts as $ext => $value) {
+			$format = $value['Format'];
+			if ($format)
+				$text .=  str_replace('?', $row[$ext], $format);
 		}
 		$ret[$row['Member']][] = [
 			'Text' => $text,

@@ -6,13 +6,11 @@ define('DB_MEDIA_CLASSES', [
 	],
 	'anime' => [
 		'Default' => 'list',
-		'Group' => 'series',
-		'Sort' => 'Episode',
+		'MajorGroup' => 'series',
 	],
 	'movie' => [
 		'Default' => 'list',
-		'Group' => 'series',
-		'Sort' => 'Year',
+		'MajorGroup' => 'series',
 	]
 ]);
 define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
