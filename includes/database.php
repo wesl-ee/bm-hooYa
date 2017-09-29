@@ -6,9 +6,13 @@ define('DB_MEDIA_CLASSES', [
 	],
 	'anime' => [
 		'Default' => 'list',
+		'Group' => 'series',
+		'Sort' => 'Episode',
 	],
 	'movie' => [
-		'Default' => 'list'
+		'Default' => 'list',
+		'Group' => 'series',
+		'Sort' => 'Year',
 	]
 ]);
 define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
@@ -20,8 +24,15 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 	],
 	'video',
 	'anime' => [
-		'Season' => ['Type' => 'Number', 'Format' => 'S?'],
-		'Episode' => ['Format' => 'E?'],
+		'Season' => [
+			'Type' => 'Number',
+			'Format' => 'Season ? ',
+			'Sort' => 1,
+		],
+		'Episode' => [
+			'Format' => 'Episode ?',
+			'Sort' => 1,
+		],
 	],
 	'movie' => [
 		'Year' => ['Type' => 'Number', 'Format' => '(?)'],
@@ -72,8 +83,9 @@ function db_set_tags($key, $tags)
 		mysqli_query($dbh, $query);
 
 		// Next, map each file->tag pair to a row in TagMap
+		$_SESSION['userid'] ? $author = $_SESSION['userid'] : $author = 'NULL';
 		$query = "INSERT INTO TagMap (`FileId`, `Author`, `TagId`) SELECT"
-			. " Files.Id AS FileId, ". $_SESSION['userid'] . " AS Author"
+			. " Files.Id AS FileId, $author AS Author"
 			. ", Tags.Id AS TagId FROM Files, Tags"
 			. " WHERE Files.Id = '$key' AND Tags.Space ="
 			. " '$space' AND Tags.Member = '$member'";
