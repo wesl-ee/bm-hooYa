@@ -71,16 +71,39 @@ main.single > #hack > * {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-main.thumbs img {
+/*main.thumbs img {
 	cursor: pointer;
-	/* Fit four per line plus margin */
+	/* Fit four per line plus margin 
 	width: calc(25% - 10px);
 	min-width: 150px;
 	max-width: 500px;
 
-	/* Looks a little close w/o space */
+	/* Looks a little close w/o space
 	margin: 5px;
+}*/
+#searchresult {
+	display: flex;
+	flex-flow: row nowrap;
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid black;
 }
+#searchresult > #preview {
+	width: 30%;
+	max-width: 250px;
+}
+#searchresult > #preview a {
+	width: 100%;
+}
+#searchresult > #preview a > img {
+	width: inherit;
+}
+#searchresult > #details {
+	margin: auto;
+	margin-top: 0;
+	overflow: scroll;
+}
+
 /* Search form (includes searchbox & options) */
 #search {
 	width: 70%;

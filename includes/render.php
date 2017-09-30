@@ -60,11 +60,11 @@ function render_tags($key)
 	foreach ($tags as $tag) {
 		print '<tr>'
 		. '<td><input name="tag_space[]"'
-		. ' value="'.$tag['Space'].'"'
+		. ' value="'.ucwords($tag['Space']).'"'
 		. ' onKeyDown="inputFilter(event)"'
 		. '></td>';
 		print '<td><input name="tag_member[]"'
-		. ' value="'.$tag['Member'].'"'
+		. ' value="'.ucwords($tag['Member']).'"'
 		. ' onKeyDown="inputFilter(event)"'
 		. '></td>';
 		if (isset($tag['Author'])) {
@@ -88,7 +88,7 @@ function render_prettyquery($query)
 	if (isset($query['query']))
 		echo $query['query'];
 	else
-		echo 'all ';
+		echo 'All ';
 	if (isset($query['media_class']))
 		echo ' ' . $query['media_class'];
 	if (isset($query['properties'])) {
@@ -105,14 +105,40 @@ function render_thumbnails($results)
 {
 	foreach ($results as $result) {
 		$key = $result['key'];
-		print "<a"
+		$tags = db_get_tags($key);
+		$fileproperties = db_getproperties($key);
+		print "<div id=searchresult>"
+		. "<div id=preview><a"
 		. " href='view.php?key=".rawurlencode($key) . "'>"
 		. "<img"
-		. " onMouseOver='showThumbInfo(\"$key\")'"
-		. " onMouseOut='hideThumbInfo(\"$key\")'"
 		. " src='download.php?key=".rawurlencode($key)."&thumb'"
 		. " >"
-		. "&nbsp</a></img>";
+		. "</a></img>"
+		. "</div>"
+		. "<div id=details>"
+		. "<table>";
+		foreach (DB_FILE_EXTENDED_PROPERTIES[$result['class']] as $property => $value) {
+			print "<tr><td>$property</td>";
+			print "<td>".$fileproperties[$property]."</td></tr>";
+		}
+		foreach ($tags as $tag) {
+			$space = $tag['Space'];
+			$mem = $tag['Member'];
+			$added = $tag['Added'];
+			$author = $tag['Author'];
+			if ($space)
+			print "<tr><th>$space</th>"
+			. "<th>$mem</th></tr>";
+			if ($author) {
+			$author = get_username($author);
+			print "<tr><td>Added By</td>"
+			. "<td>$author</td></tr>";
+			}
+			if ($added)
+			print "<tr><td>Timestamp</td>"
+			. "<td>$added</td></tr>";
+		}
+		print "</table></div></div>";
 	}
 }
 function render_titles($results)
@@ -123,9 +149,9 @@ function render_titles($results)
 		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
 		. " onMouseOver='showThumbInfo(\"$key\")'"
 		. " onMouseOut='hideThumbInfo(\"$key\")'"
-		. " >"
-		. render_title($key)
-		. "</span>";
+		. " >";
+		render_title($key);
+		print "</span>";
 	}
 }
 function render_pagenav($currpage, $totalpages, $q)
@@ -166,7 +192,7 @@ function render_title($key)
 
 	// Print the important part of tags
 	foreach (db_get_tags($key) as $pair) {
-		print $pair['Member'] . ' ';
+		print ucwords($pair['Member']) . ' ';
 	}
 	// Output important properties by formatting them according to the
 	// formatting specified in includes/database.php

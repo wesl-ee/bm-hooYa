@@ -20,7 +20,8 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 		'Width' => ['Type' => 'Number', 'Immutable' => 1],
 		'Height' => ['Type' => 'Number', 'Immutable' => 1],
 	],
-	'video',
+	'video' => [
+	],
 	'anime' => [
 		'Season' => [
 			'Type' => 'Number',
@@ -46,7 +47,7 @@ function db_get_tags($key)
 	// Escape all potential user input
 	$key = mysqli_real_escape_string($dbh, $key);
 	// Pull from `Tags` using our $key
-	$query = "SELECT Tags.Space, Tags.Member, Author FROM"
+	$query = "SELECT Tags.Space, Tags.Member, Author, Added FROM"
 		. " Files, TagMap, Tags WHERE Files.Id = '$key'"
 		. " AND TagMap.FileId = Files.Id"
 		. " AND Tags.Id = TagMap.TagId";
@@ -56,7 +57,8 @@ function db_get_tags($key)
 		$ret[] = [
 			'Space' => $row['Space'],
 			'Member' => $row['Member'],
-			'Author' => $row['Author']
+			'Author' => $row['Author'],
+			'Added' => $row['Added']
 		];
 	}
 	mysqli_close($dbh);

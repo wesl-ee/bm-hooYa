@@ -41,7 +41,7 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 		<?php print_login();?>
 	</nav>
 	<?php
-	if (!$results['message']) foreach ($results as $result)
+/*	if (!$results['message']) foreach ($results as $result)
 	{
 		print "<aside id='" . $result['key'] . "'"
 		. " style='display:none'>";
@@ -49,7 +49,7 @@ $results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
 		render_properties($result['key'], $result['class']);
 		render_tags($result['key']);
 		print "</aside>";
-	}
+	}*/
 	?>
 </div>
 <div id="rightframe">
