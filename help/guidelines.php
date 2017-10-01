@@ -15,7 +15,7 @@ include CONFIG_HOOYA_PATH."../includes/bmfft_db.php";
 </head>
 <body>
 <div id="container">
-<div id="rightframe" style="width:100%;">
+<div id="rightframe">
 	<span><a href="#" onClick="window.history.back()">back</a></span>
 	<header>
 		<h1>guidelines</h1>

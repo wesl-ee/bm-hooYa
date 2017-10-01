@@ -35,7 +35,7 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 		<a href="?overview">overview</a>
 		<a href="?tags">tags</a>
 		<a href="?aliases">aliases</a>
-		<a href="?classes">classes</a>
+		<a href="?recent">recent</a>
 	</header>
 	<main><?php if (isset($_GET['tags'])) {
 		// Information about a specific tag
@@ -84,7 +84,9 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 		. '<th>Alias</th><th>Equivalent to Typing</th></tr>';
 		$aliases = stats_allaliases();
 		foreach ($aliases as $alias => $mapping) {
-			print "<tr><td>$alias</td><td>$mapping</td></tr>";
+			print "<tr><td><a href='"
+			. CONFIG_HOOYA_WEBPATH . "browse.php?query=$alias'>"
+			. "$alias</a></td><td>$mapping</td></tr>";
 		}
 	// General information
 	} else if (isset($_GET['overview'])) {
@@ -114,27 +116,10 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 			print "</tr>";
 		}
 		print "</table>";
-	} else {
-		print "Feature coming soon!";
+	} else if (isset($_GET['recent'])) {
+		die;
 	}?></main>
 </div>
 </div>
-<?php
-	function monthname($m) {
-		return [
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'][$m-1];
-	}
-?>
 </body>
 </HTML>

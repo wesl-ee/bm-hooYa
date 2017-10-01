@@ -108,7 +108,6 @@ function render_thumbnails($results)
 	foreach ($results as $key => $result) $keys[] = $key;
 	$tags = db_get_tags($keys);
 	foreach ($results as $key => $result) {
-//		$key = $result['Key'];
 		$class = $result['Class'];
 		$indexed = parse_timestamp($result['Indexed']);
 		$fileproperties = db_getproperties($key);
@@ -150,8 +149,7 @@ function render_thumbnails($results)
 }
 function render_titles($results)
 {
-	foreach ($results as $result) {
-		$key = $result['Key'];
+	foreach ($results as $key => $result) {
 		print "<span"
 		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
 		. " onMouseOver='showThumbInfo(\"$key\")'"
@@ -161,18 +159,22 @@ function render_titles($results)
 		print "</span>";
 	}
 }
-function render_pagenav($currpage, $totalpages, $q)
+function render_pagenav($currpage, $totalpages, $q = NULL)
 {
 	print '<form method="GET">';
-	if ($currpage > 1)
-		print "<a href='?".http_build_query($q)."&page=".($currpage-1)."'><</a> ";
+	if ($currpage > 1) {
+		if ($q) print "<a href='?".http_build_query($q)."&page=".($currpage-1)."'><</a> ";
+		else print "<a href='?page=".($currpage-1)."'><</a> ";
+	}
 	print '<input style="text-align:center;width:50px;"'
 	. ' name="page" type="text" Value=' . $currpage . '>';
 
-	render_hidden_inputs($q);
+	if ($q) render_hidden_inputs($q);
 
-	if ($currpage < $totalpages)
-		print " <a href='?".http_build_query($q)."&page=".($currpage+1)."'>></a>";
+	if ($currpage < $totalpages) {
+		if ($q) print " <a href='?" .http_build_query($q)."&page=".($currpage+1)."'>></a>";
+		else print " <a href='?page=".($currpage+1)."'>></a>";
+	}
 	print '</form>';
 }
 function render_hidden_inputs($array, $path = NULL)
@@ -234,5 +236,62 @@ function render_bargraph($data, $linkify = NULL)
 		print "<dd style='width:$width;'>$value</dd>";
 	}
 	print '</dl></div>';
+}
+function render_search()
+{
+	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
+	. "<input id='searchbox' type='search'"
+	. "name='query' placeholder='search,terms'>"
+	. "<div id='params'>"
+	. "<section>"
+	. "<div><input type='submit' value='いこう！'></input></div>"
+	. "</section>"
+	. "<section id='filters'>"
+	. "<div><select id='media_class'"
+	. " name='media_class' onChange='changeExtAttrs(this.value)'>";
+	render_classmenu();
+	print "</select></div>";
+	foreach (DB_MEDIA_CLASSES as $c => $more) {
+		$properties = DB_FILE_EXTENDED_PROPERTIES[$c];
+		print "<div id='$c' style='display:none;'>";
+		foreach ($properties as $p => $value) {
+			print "<div><input";
+			if ($value['Type']) {
+				print " type='" . $value['Type'] . "'";
+			}
+			print " name='properties[$p]'"
+			. " placeholder=$p"
+			. " disabled></div>";
+		}
+		if ($more['Default'])
+			print '<input type="hidden"'
+			. ' name=' . $more['Default']
+			. ' value=y'
+			. '>';
+		if ($properties['Width'] && $properties['Height'])
+			print '<select name="properties[Ratio]">'
+			. '<option value>Exact Dimensions</option>'
+			. '<option value=ratio>Respect W:H Ratio</option>'
+			. '</select>';
+		print '</div>';
+	}
+	print "</section></div>"
+	. "</form>";
+}
+function render_simple_search()
+{
+	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
+	. "<input id='searchbox' type='search'"
+	. "name='query' placeholder='search,terms'>"
+	. "<div><input type='submit' value='いこう！'></input></div>"
+	. "</form>";
+}
+function render_min_search($q = NULL)
+{
+	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
+	. "<input id='searchbox' type='search' value='$q'"
+	. " name='query' placeholder='search,terms'>";
+/*	if ($q) render_hidden_inputs($q);*/
+	print "</form>";
 }
 ?>

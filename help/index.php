@@ -15,7 +15,7 @@ include "../includes/bmfft_db.php";
 </head>
 <body>
 <div id="container">
-<div id="right_frame" style="width:100%;">
+<div id="right_frame">
 	<div id="title"><h1>searching</h1></div>
 	<div id="header" style="width:100%;">
 		<div style="width:33%;float:left;"><a href="#" onClick="window.history.back()">back</a></div>

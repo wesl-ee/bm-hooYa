@@ -39,17 +39,10 @@ unset($results['Count']);
 	<nav>
 		<?php print_login();?>
 	</nav>
-	<?php
-/*	if (!$results['message']) foreach ($results as $result)
-	{
-		print "<aside id='" . $result['key'] . "'"
-		. " style='display:none'>";
-		print "<header>" . $result['class'] . "</header>";
-		render_properties($result['key'], $result['class']);
-		render_tags($result['key']);
-		print "</aside>";
-	}*/
-	?>
+	<aside>
+		<h1 style="text-align:center;">hooYa!</h1>
+		<?php render_min_search($q['query'])?>
+	</aside>
 </div>
 <div id="rightframe">
 	<header>

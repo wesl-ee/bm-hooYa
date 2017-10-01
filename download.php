@@ -35,8 +35,6 @@ if (isset($_GET['thumb'])) {
 		if (!file_exists($file))
 			exec('ffmpegthumbnailer -i '.escapeshellarg($path)
 			. ' -q 10 -s 500  -o '.$file);
-			exec('convert '.$file
-			. ' img/play.png -gravity center -composite '.$file);
 		bmfft_xsendfile($file);
 		return;
 	}
@@ -67,9 +65,6 @@ if (isset($_GET['thumb'])) {
 		bmfft_xsendfile($file);
 		return;
 	}
-}
-if (isset($_GET['partyhat'])) {
-	// Coming soon -- watch imagemagick render party hats onto thumbnails!
 }
 if ($ftype == 'video' && isset($_GET['preview'])) {
 	$file = CONFIG_TEMPORARY_PATH . $key . '_preview_' . round($percent) . '.png';

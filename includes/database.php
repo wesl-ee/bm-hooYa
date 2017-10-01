@@ -131,7 +131,7 @@ function db_getrandom($n)
 	mysqli_close($dbh);
 	return $ret;
 }
-function db_getrecent($n)
+function db_getrecent($page)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
@@ -139,7 +139,11 @@ function db_getrecent($n)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
 	$query = "SELECT Id, Class, Indexed FROM Files, TagMap WHERE FileId=Id"
-	. " GROUP BY Id ORDER BY Added DESC LIMIT $n";
+	. " GROUP BY Id ORDER BY Added DESC";
+	$res = mysqli_query($dbh, $query);
+	$ret['Count'] = mysqli_num_rows($res);
+	$query .= " LIMIT " . CONFIG_THUMBS_PER_PAGE
+	. " OFFSET " . (CONFIG_THUMBS_PER_PAGE * ($page - 1));
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res))
 		$ret[$row['Id']] = [

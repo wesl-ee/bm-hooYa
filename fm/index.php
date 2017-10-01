@@ -25,7 +25,8 @@ include CONFIG_HOOYA_PATH."includes/fm.php";
 </div>
 <div id="rightframe">
 	<header>
-		<h1 style="margin:auto;">hooYa!FM</h1>
+		<div><a href=<?php print CONFIG_HOOYA_WEBPATH?>>back</a></div>
+		<h1>hooYa!FM</h1>
 	</header>
 	<main><?php if (isset($_GET['class'])) {
 		$list = fm_listing($_GET['class']);
@@ -43,7 +44,7 @@ include CONFIG_HOOYA_PATH."includes/fm.php";
 	} else {
 		print "<table>";
 		foreach (DB_MEDIA_CLASSES as $class => $a) {
-			if (!$a['MajorGroup']) continue;
+			if (!$a['FMGroup']) continue;
 			print "<tr><td>"
 			. "<a href='?class=$class'>$class</a>"
 			. "</tr>";
