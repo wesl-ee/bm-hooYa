@@ -110,6 +110,7 @@ function render_thumbnails($results)
 	foreach ($results as $result) {
 		$key = $result['Key'];
 		$class = $result['Class'];
+		$indexed = parse_timestamp($result['Indexed']);
 		$fileproperties = db_getproperties($key);
 		print "<div id=searchresult>"
 		. "<div id=preview><a"
@@ -120,7 +121,8 @@ function render_thumbnails($results)
 		. "</a></img>"
 		. "</div>"
 		. "<div id=details>"
-		. "<table><tr><th colspan=2>".$class."</th>";
+		. "<table><tr><th colspan=2>$class</th></tr>"
+		. "<tr><td colspan=2>Indexed at $indexed</td></tr>";
 		foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
 			print "<tr><td>$property</td>";
 			print "<td>".$fileproperties[$property]."</td></tr>";
@@ -129,7 +131,7 @@ function render_thumbnails($results)
 		foreach ($taglist as $tag) {
 			$space = ucwords($tag['Space']);
 			$mem = ucwords($tag['Member']);
-			$added = $tag['Added'];
+			$added = parse_timestamp($tag['Added']);
 			$author = $tag['Author'];
 			if ($space)
 			print "<tr><th>$space</th>"
@@ -140,7 +142,7 @@ function render_thumbnails($results)
 			. "<td>$author</td></tr>";
 			}
 			if ($added)
-			print "<tr><td>Timestamp</td>"
+			print "<tr><td>Date</td>"
 			. "<td>$added</td></tr>";
 		}
 		print "</table></div></div>";
@@ -149,7 +151,7 @@ function render_thumbnails($results)
 function render_titles($results)
 {
 	foreach ($results as $result) {
-		$key = $result['key'];
+		$key = $result['Key'];
 		print "<span"
 		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
 		. " onMouseOver='showThumbInfo(\"$key\")'"
@@ -196,7 +198,7 @@ function render_title($key)
 	print "<a href=view.php?key=$key>";
 
 	// Print the important part of tags
-	foreach (db_get_tags([$key]) as $pair) {
+	foreach (db_get_tags([$key])[$key] as $pair) {
 		print ucwords($pair['Member']) . ' ';
 	}
 	// Output important properties by formatting them according to the

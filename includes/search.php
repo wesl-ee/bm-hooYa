@@ -1,5 +1,5 @@
 <?php
-function hooya_search($query)
+function hooya_search($query, $page = 1)
 {
 	if (!empty($query['media_class'])) $mediaclass = $query['media_class'];
 
@@ -64,7 +64,7 @@ function hooya_search($query)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	// TODO Approximate tags which are not exact by levenshtien distance
 
-	$query = "SELECT Files.Id, Class, COUNT(*) AS Relevance FROM Files";
+	$query = "SELECT Files.Id, Class, COUNT(*) AS Relevance, Indexed FROM Files";
 	if (!empty($terms))
 		$query .= ", TagMap, Tags";
 	if (isset($mediaclass)) {
@@ -109,34 +109,30 @@ function hooya_search($query)
 	$query .= ", Files.Indexed DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		$results[] = ['Key' => $row['Id'], 'Class' => $row['Class']];
+		$results[] = [
+			'Key' => $row['Id'],
+			'Class' => $row['Class'],
+			'Indexed' => $row['Indexed'],
+	];
 	}
 	return $results;
 }
 function hooya_bestguess($member)
 {
 	// Maybe you typed it in first, family name order
-	if (strpos($member, '_')) {
-		list($first, $last) = explode('_', $member);
-		if (db_is_member($last . '_' . $first)) {
-			$bestguess = $last . '_' . $first;
+	if (strpos($member, ' ')) {
+		list($first, $last) = explode(' ', $member);
+		if (db_is_member($last . ' ' . $first)) {
+			$bestguess = $last . ' ' . $first;
 			return $bestguess;
 		}
 	}
+	if ($fullname = is_given_name($member)) return $fullname;
 
 	// EXPENSIVE COMPUTATION ZONE
 	// WARNING * WARNING * WARNING
 	//
 	$members = db_get_all_members();
-	// Maybe you only put in a first name
-	foreach ($members as $m => $a) {
-		if (!strpos($m, '_')) continue;
-		$first = array_pop(explode('_', $m));
-		if ($first === $member) {
-			$bestguess = $m;
-			return $bestguess;
-		}
-	}
 	// Maybe you just can't spell
 	foreach ($members as $m => $a) {
 		$d = levenshtein($m, $member);
@@ -146,5 +142,19 @@ function hooya_bestguess($member)
 		}
 	}
 	return $bestguess;
+}
+// Japanese name-order is "family_name given_name"
+function is_given_name($name)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$name = mysqli_real_escape_string($dbh, $name);
+	$query = "SELECT Member FROM `Tags` WHERE Member LIKE '% $name'";
+	$res = mysqli_query($dbh, $query);
+	$row = mysqli_fetch_assoc($res);
+	return $row['Member'];
 }
 ?>
