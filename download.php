@@ -11,12 +11,6 @@ if (!isset($_GET['key']))
 	die;
 $key = rawurldecode($_GET['key']);
 
-// Throw a 404 img if that key is not in the database
-/*if (!($fileinfo = db_getfileinfo($key)) {
-	$file = CONFIG_HOOYA_PATH . '/spoilers/404.jpg';
-	bmfft_xsendfile($file);
-	return;
-}*/
 $fileinfo = db_getfileinfo($key);
 // Grab some basic details for the file
 $class = $fileinfo['Class'];
@@ -24,7 +18,13 @@ $path = $fileinfo['Path'];
 $mimetype = $fileinfo['Mimetype'];
 $ftype = explode('/', $mimetype)[0];
 
-// Assume that we are sending the raw file until we can deisprove that
+if (!file_exists($path)) {
+	$file = CONFIG_HOOYA_PATH . 'spoilers/404.jpg';
+	bmfft_xsendfile($file);
+	return;
+}
+
+// Assume that we are sending the raw file until we can disprove that
 $file = $path;
 
 // Handle thumbnail requests
