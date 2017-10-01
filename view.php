@@ -83,7 +83,7 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 		$tags[$i]['Space'] = $tag_space[$i];
 		$tags[$i]['Member'] = $tag_member[$i];
 	}
-	$new_tags =  count($tags) - count(db_get_tags($key));
+	$new_tags =  count($tags) - count(db_get_tags([$key]));
 	if ($new_tags && isset($_SESSION['userid'])) {
 		if ($new_tags > 0)
 			syslog(LOG_INFO|LOG_DAEMON, "User " . $_SESSION['username']

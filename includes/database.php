@@ -37,24 +37,29 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 		'Year' => ['Type' => 'Number', 'Format' => '(?)'],
 	],
 ]);
-function db_get_tags($key)
+function db_get_tags($keys)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
-	// Escape all potential user input
-	$key = mysqli_real_escape_string($dbh, $key);
-	// Pull from `Tags` using our $key
-	$query = "SELECT Tags.Space, Tags.Member, Author, Added FROM"
-		. " Files, TagMap, Tags WHERE Files.Id = '$key'"
-		. " AND TagMap.FileId = Files.Id"
-		. " AND Tags.Id = TagMap.TagId";
+	$query = "SELECT FileId, Tags.Space, Tags.Member, Author, Added FROM"
+	. " Files, TagMap, Tags WHERE TagMap.FileId = Files.Id"
+	. " AND Tags.Id = TagMap.TagId AND (";
+	for ($i = 0; $i < count($keys); $i++) {
+		$key = $keys[$i];
+		// Escape all potential user input
+		$key = mysqli_real_escape_string($dbh, $key);
+		// Pull from `Tags` using our $key
+		$query.= " Files.Id = '$key' ";
+		if ($i+1 < count($keys)) $query .= " OR ";
+	}
+	$query .= ")";
 	$res = mysqli_query($dbh, $query);
 	// We allow more than one of the same tag space
 	while ($row = mysqli_fetch_assoc($res)) {
-		$ret[] = [
+		$ret[$row['FileId']][] = [
 			'Space' => $row['Space'],
 			'Member' => $row['Member'],
 			'Author' => $row['Author'],
@@ -120,8 +125,8 @@ function db_getrandom($n)
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res))
 		$ret[] = [
-			'key' => $row['Id'],
-			'class' => $row['Class'],
+			'Key' => $row['Id'],
+			'Class' => $row['Class'],
 		];
 	mysqli_close($dbh);
 	return $ret;

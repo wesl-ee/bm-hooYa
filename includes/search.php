@@ -109,7 +109,7 @@ function hooya_search($query)
 	$query .= ", Files.Indexed DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		$results[] = ['key' => $row['Id'], 'class' => $row['Class']];
+		$results[] = ['Key' => $row['Id'], 'Class' => $row['Class']];
 	}
 	return $results;
 }

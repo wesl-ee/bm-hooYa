@@ -24,7 +24,7 @@ function render_file($key, $ftype)
 		break;
 	}
 }
-function render_properties($key, $class)
+function render_properties($key, $class, $editmode = True)
 {
 	if (!isset(DB_FILE_EXTENDED_PROPERTIES[$class])) {
 		syslog(LOG_INFO|LOG_DAEMON, "$class not defined in"
@@ -40,7 +40,7 @@ function render_properties($key, $class)
 		. '</td>';
 
 		print '<td>';
-		if ($value['Immutable']) {
+		if ($value['Immutable'] || !$editmode) {
 			print $fileproperties[$property];
 		}
 		else {
@@ -53,24 +53,26 @@ function render_properties($key, $class)
 	}
 	print '</table>';
 }
-function render_tags($key)
+function render_tags($key, $editmode = True)
 {
-	$tags = db_get_tags($key);
+	$tags = db_get_tags([$key])[$key];
 	print '<table id="tags">';
 	foreach ($tags as $tag) {
 		print '<tr>'
-		. '<td><input name="tag_space[]"'
-		. ' value="'.ucwords($tag['Space']).'"'
-		. ' onKeyDown="inputFilter(event)"'
-		. '></td>';
-		print '<td><input name="tag_member[]"'
-		. ' value="'.ucwords($tag['Member']).'"'
-		. ' onKeyDown="inputFilter(event)"'
-		. '></td>';
-		if (isset($tag['Author'])) {
-			print '<td>'.get_username($tag['Author']).'</td>';
-		}
-		print '</tr>';
+		. '<th>';
+		if ($editmode)
+			print '<input name="tag_space[]"'
+			. ' value="'.ucwords($tag['Space']).'">';
+		else
+			print ucwords($tag['Space']);
+		print '</th>';
+		print '<td>';
+		if ($editmode)
+			print '<input name="tag_member[]"'
+			. ' value="'.ucwords($tag['Member']).'">';
+		else
+			print ucwords($tag['Member']);
+		print '</td></tr>';
 	}
 	print '</table>';
 }
@@ -103,9 +105,11 @@ function render_prettyquery($query)
 }
 function render_thumbnails($results)
 {
+	foreach ($results as $result) $keys[] = $result['Key'];
+	$tags = db_get_tags($keys);
 	foreach ($results as $result) {
-		$key = $result['key'];
-		$tags = db_get_tags($key);
+		$key = $result['Key'];
+		$class = $result['Class'];
 		$fileproperties = db_getproperties($key);
 		print "<div id=searchresult>"
 		. "<div id=preview><a"
@@ -116,19 +120,20 @@ function render_thumbnails($results)
 		. "</a></img>"
 		. "</div>"
 		. "<div id=details>"
-		. "<table>";
-		foreach (DB_FILE_EXTENDED_PROPERTIES[$result['class']] as $property => $value) {
+		. "<table><tr><th colspan=2>".$class."</th>";
+		foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
 			print "<tr><td>$property</td>";
 			print "<td>".$fileproperties[$property]."</td></tr>";
 		}
-		foreach ($tags as $tag) {
-			$space = $tag['Space'];
-			$mem = $tag['Member'];
+		$taglist = $tags[$key];
+		foreach ($taglist as $tag) {
+			$space = ucwords($tag['Space']);
+			$mem = ucwords($tag['Member']);
 			$added = $tag['Added'];
 			$author = $tag['Author'];
 			if ($space)
 			print "<tr><th>$space</th>"
-			. "<th>$mem</th></tr>";
+			. "<td>$mem</td></tr>";
 			if ($author) {
 			$author = get_username($author);
 			print "<tr><td>Added By</td>"
@@ -191,7 +196,7 @@ function render_title($key)
 	print "<a href=view.php?key=$key>";
 
 	// Print the important part of tags
-	foreach (db_get_tags($key) as $pair) {
+	foreach (db_get_tags([$key]) as $pair) {
 		print ucwords($pair['Member']) . ' ';
 	}
 	// Output important properties by formatting them according to the
