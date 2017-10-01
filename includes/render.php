@@ -120,31 +120,30 @@ function render_thumbnails($results)
 		. "</a></img>"
 		. "</div>"
 		. "<div id=details>"
-		. "<table><tr><th colspan=2>$class</th></tr>"
-		. "<tr><td colspan=2>Indexed at $indexed</td></tr>";
+		. "<h4>$class</h4>"
+		. "<span>Indexed at $indexed</span>";
+
+		print "<dl>";
 		foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
-			print "<tr><td>$property</td>";
-			print "<td>".$fileproperties[$property]."</td></tr>";
+			print "<div id=tag><dt>$property</dt>";
+			print "<dd>".$fileproperties[$property]."</dd></div>";
 		}
 		$taglist = $tags[$key];
 		foreach ($taglist as $tag) {
+			print "<div id=tag>";
 			$space = ucwords($tag['Space']);
 			$mem = ucwords($tag['Member']);
 			$added = parse_timestamp($tag['Added']);
 			$author = $tag['Author'];
 			if ($space)
-			print "<tr><th>$space</th>"
-			. "<td>$mem</td></tr>";
-			if ($author) {
-			$author = get_username($author);
-			print "<tr><td>Added By</td>"
-			. "<td>$author</td></tr>";
-			}
+			print "<dt>$space</dt>"
+			. "<dd>$mem</dd>";
 			if ($added)
-			print "<tr><td>Date</td>"
-			. "<td>$added</td></tr>";
+			print "<dt>Date</dt>"
+			. "<dd>$added</dd>";
+			print "</div>";
 		}
-		print "</table></div></div>";
+		print "</dl></div></div>";
 	}
 }
 function render_titles($results)
@@ -152,8 +151,8 @@ function render_titles($results)
 	foreach ($results as $key => $result) {
 		print "<span"
 		. " onClick='window.location.href=\"view.php?key="
-		. rawurlencode($key) .
-		"\"'>";
+		. rawurlencode($key)
+		. "\"'>";
 		render_title($key);
 		print "</span>";
 	}
@@ -290,7 +289,6 @@ function render_min_search($q = NULL)
 	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
 	. "<input id='searchbox' type='search' value='$q'"
 	. " name='query' placeholder='search,terms'>";
-/*	if ($q) render_hidden_inputs($q);*/
 	print "</form>";
 }
 ?>

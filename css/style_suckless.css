@@ -73,22 +73,12 @@ main.single > #hack > * {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-/*main.thumbs img {
-	cursor: pointer;
-	/* Fit four per line plus margin 
-	width: calc(25% - 10px);
-	min-width: 150px;
-	max-width: 500px;
-
-	/* Looks a little close w/o space
-	margin: 5px;
-}*/
 #searchresult {
 	display: flex;
 	flex-flow: row nowrap;
 	margin: 10px;
 	padding: 10px;
-	border: 1px solid black;
+	border: 1px solid;
 }
 #searchresult > #preview {
 	width: 30%;
@@ -104,6 +94,12 @@ main.single > #hack > * {
 	margin: auto;
 	margin-top: 0;
 	overflow: scroll;
+	padding-left: 10px;
+}
+#searchresult #tag {
+	padding: 5px;
+	border-bottom: 1px solid;
+	border-right: 1px solid;
 }
 
 /* Search form (includes searchbox & options) */

@@ -45,8 +45,10 @@ unset($results['Count']);
 </div>
 <div id="rightframe">
 	<header>
-		<a href=".">back to search</a>
-		<div><?php render_prettyquery($q); ?></div>
+		<a href="power.php">Power Search</a>
+		<a href="stats/?overview">Metrics</a>
+		<a href="nightly/">Dump</a>
+		<a href="random.php">Random</a>
 		<?php
 		$newGET = $_GET;
 		if (!isset($_GET['list'])) {
