@@ -1,5 +1,5 @@
 <?php
-function hooya_search($query, $page = 1)
+function hooya_search($query, $page)
 {
 	if (!empty($query['media_class'])) $mediaclass = $query['media_class'];
 
@@ -108,9 +108,12 @@ function hooya_search($query, $page = 1)
 	}
 	$query .= ", Files.Indexed DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
+	$results['Count'] = mysqli_num_rows($res);
+	$query .= " LIMIT " . CONFIG_THUMBS_PER_PAGE
+	. " OFFSET " . (CONFIG_THUMBS_PER_PAGE * ($page - 1));
+	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
-		$results[] = [
-			'Key' => $row['Id'],
+		$results[$row['Id']] = [
 			'Class' => $row['Class'],
 			'Indexed' => $row['Indexed'],
 	];

@@ -124,8 +124,7 @@ function db_getrandom($n)
 	. " LIMIT $n";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res))
-		$ret[] = [
-			'Key' => $row['Id'],
+		$ret[$row['Id']] = [
 			'Class' => $row['Class'],
 			'Indexed' => $row['Indexed'],
 		];
@@ -143,8 +142,7 @@ function db_getrecent($n)
 	. " GROUP BY Id ORDER BY Added DESC LIMIT $n";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res))
-		$ret[] = [
-			'Key' => $row['Id'],
+		$ret[$row['Id']] = [
 			'Class' => $row['Class'],
 			'Indexed' => $row['Indexed'],
 		];

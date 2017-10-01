@@ -17,13 +17,12 @@ if (isset($_GET['page']))
 	$page = $_GET['page'];
 
 // Get all results
-$results = hooya_search($q);
-$totalpages = floor(count($results)/CONFIG_THUMBS_PER_PAGE) + 1;
+$results = hooya_search($q, $page);
+$totalpages = floor($results['Count']/CONFIG_THUMBS_PER_PAGE) + 1;
+// Unset the extra parameters we were given (so they are not listed
+// as results
+unset($results['Count']);
 
-// Take the current page's slice of the array to be the results
-// And mark them up nicely
-$results = array_slice($results, ($page-1) * CONFIG_THUMBS_PER_PAGE,
-	CONFIG_THUMBS_PER_PAGE);
 ?>
 <html>
 <head>

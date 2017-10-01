@@ -105,10 +105,10 @@ function render_prettyquery($query)
 }
 function render_thumbnails($results)
 {
-	foreach ($results as $result) $keys[] = $result['Key'];
+	foreach ($results as $key => $result) $keys[] = $key;
 	$tags = db_get_tags($keys);
-	foreach ($results as $result) {
-		$key = $result['Key'];
+	foreach ($results as $key => $result) {
+//		$key = $result['Key'];
 		$class = $result['Class'];
 		$indexed = parse_timestamp($result['Indexed']);
 		$fileproperties = db_getproperties($key);
