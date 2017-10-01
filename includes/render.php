@@ -151,10 +151,9 @@ function render_titles($results)
 {
 	foreach ($results as $key => $result) {
 		print "<span"
-		. " onClick='window.location.href=\"view.php?key=".rawurlencode($key)."\"'"
-		. " onMouseOver='showThumbInfo(\"$key\")'"
-		. " onMouseOut='hideThumbInfo(\"$key\")'"
-		. " >";
+		. " onClick='window.location.href=\"view.php?key="
+		. rawurlencode($key) .
+		"\"'>";
 		render_title($key);
 		print "</span>";
 	}

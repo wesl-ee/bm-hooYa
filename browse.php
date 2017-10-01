@@ -31,7 +31,6 @@ unset($results['Count']);
 	<title>bigmike — hooYa! <?php echo $_GET['q']?></title>
 	<script>var currpage = <?php echo $page?></script>
 	<script type="text/javascript" src="js/hotkeys.js"></script>
-	<script type="text/javascript" src="js/browse.js"></script>
 </head>
 <body>
 <div id="container">

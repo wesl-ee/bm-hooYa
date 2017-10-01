@@ -44,6 +44,7 @@ unset($results['Count']);
 	</main>
 	<footer>
 		<?php render_pagenav($page, $totalpages)?>
+		<div><?php print ($totalpages . " pages")?></div>
 	</footer>
 </div>
 </body>
