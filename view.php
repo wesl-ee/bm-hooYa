@@ -3,8 +3,6 @@
 include "includes/config.php";
 
 include CONFIG_COMMON_PATH."includes/core.php";
-if (CONFIG_REQUIRE_AUTHENTICATION)
-	include CONFIG_COMMON_PATH."includes/auth.php";
 include CONFIG_HOOYA_PATH."includes/database.php";
 include CONFIG_HOOYA_PATH."includes/video.php";
 include CONFIG_HOOYA_PATH."includes/render.php";
@@ -15,14 +13,14 @@ if (!isset($_GET['key']))
 $key = rawurldecode($_GET['key']);
 
 // Discriminate by media Class (video, single_image etc. . .)
-if (isset($_POST['class'])) {
+if (isset($_POST['class']) && logged_in()) {
 	$class = $_POST['class'];
 	db_setclass($key, $class);
 }
 
 
 // Grab tag {space => member pairs} (e.g. 'season' => '1')
-if (isset($_POST['properties'])) {
+if (isset($_POST['properties']) && logged_in()) {
 	$properties = $_POST['properties'];
 	db_setproperties($key, $properties);
 }
@@ -65,7 +63,8 @@ $ftype = explode('/', $mimetype)[0];
 // Grab tag {space => member pairs} (e.g. 'character' => 'madoka')
 if (isset($_POST['tag_space'], $_POST['tag_member'])
 	&& count($_POST['tag_space']) == count($_POST['tag_space'])
-	&& count($_POST['tag_space']) <= CONFIG_HOOYA_MAX_TAGS) {
+	&& count($_POST['tag_space']) <= CONFIG_HOOYA_MAX_TAGS
+	&& logged_in()) {
 	$tag_space = $_POST['tag_space'];
 	$tag_member = $_POST['tag_member'];
 	for ($i = 0; $i < count($tag_space); $i++) {
@@ -120,11 +119,17 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 			<?php render_properties($key, $class); ?>
 		<hr/>
 		<h3>Tags</h3>
-			<?php render_tags($key);?>
-			<div style="text-align:center;">
-				<a onClick="addTagField()">add a tag</a>
-			</div><hr/>
-	<input type="submit" value="commit changes" style="margin:auto;display:block;">
+			<?php render_tags($key);
+			if (logged_in())
+			print "<div style='text-align:center;'>"
+			. "<a onClick='addTagField()'>add a tag</a>"
+			. "</div><hr/>"
+			. "<input type='submit' value='commit changes'"
+			. " style='margin:auto;display:block;'>";
+			else
+			print "<hr/><div style='text-align:center;'>"
+			. "Log in to add tags!";
+			?>
 	</form>
 	</aside>
 </div>

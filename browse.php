@@ -4,8 +4,6 @@ include "includes/config.php";
 
 include CONFIG_COMMON_PATH."includes/core.php";
 include "includes/search.php";
-if (CONFIG_REQUIRE_AUTHENTICATION)
-	include CONFIG_COMMON_PATH."includes/auth.php";
 include CONFIG_HOOYA_PATH."includes/database.php";
 include CONFIG_HOOYA_PATH."includes/render.php";
 

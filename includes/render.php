@@ -40,7 +40,7 @@ function render_properties($key, $class, $editmode = True)
 		. '</td>';
 
 		print '<td>';
-		if ($value['Immutable'] || !$editmode) {
+		if ((logged_in() && $value['Immutable']) || !$editmode) {
 			print $fileproperties[$property];
 		}
 		else {
@@ -53,21 +53,21 @@ function render_properties($key, $class, $editmode = True)
 	}
 	print '</table>';
 }
-function render_tags($key, $editmode = True)
+function render_tags($key)
 {
 	$tags = db_get_tags([$key])[$key];
 	print '<table id="tags">';
 	foreach ($tags as $tag) {
 		print '<tr>'
-		. '<th>';
-		if ($editmode)
+		. '<td>';
+		if (logged_in())
 			print '<input name="tag_space[]"'
 			. ' value="'.ucwords($tag['Space']).'">';
 		else
 			print ucwords($tag['Space']);
-		print '</th>';
+		print '</td>';
 		print '<td>';
-		if ($editmode)
+		if (logged_in())
 			print '<input name="tag_member[]"'
 			. ' value="'.ucwords($tag['Member']).'">';
 		else
@@ -121,7 +121,7 @@ function render_thumbnails($results)
 		. "</div>"
 		. "<div id=details>"
 		. "<h4>$class</h4>"
-		. "<span>Indexed at $indexed</span>";
+		. "<span>Indexed on $indexed</span>";
 
 		print "<dl>";
 		foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
