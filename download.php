@@ -21,6 +21,7 @@ if (!file_exists($path)) {
 	bmfft_xsendfile($file);
 	return;
 }
+if (DB_MEDIA_CLASSES[$class]['Restricted']) die;
 
 // Assume that we are sending the raw file until we can disprove that
 $file = $path;

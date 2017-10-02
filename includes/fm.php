@@ -18,8 +18,10 @@ function fm_listing($class) {
 	$query .= " `Files`.Id FROM"
 	. " `Files`, `TagMap`, `Tags`, `$class` WHERE"
 	. " Files.Id=FileId AND TagId=Tags.Id AND Files.Class='$class'"
-	. " AND `$class`.Id=Files.Id AND Space='$group'"
-	. " ORDER BY `Member` ASC";
+	. " AND `$class`.Id=Files.Id AND Space='$group'";
+	if (!logged_in())
+		if (DB_MEDIA_CLASSES[$class]['Restricted']) $query .= " AND `Class`!='$class'";
+	$query .= " ORDER BY `Member` ASC";
 	foreach ($exts as $ext => $value) {
 		if ($value['Sort'])
 			$query .= ", `$ext`+0 ASC";

@@ -42,7 +42,7 @@ include CONFIG_HOOYA_PATH."includes/fm.php";
 	} else {
 		print "<table>";
 		foreach (DB_MEDIA_CLASSES as $class => $a) {
-			if (!$a['FMGroup']) continue;
+			if (!$a['FMGroup'] || ($a['Restricted'] && !logged_in())) continue;
 			print "<tr><td>"
 			. "<a href='?class=$class'>$class</a>"
 			. "</tr>";

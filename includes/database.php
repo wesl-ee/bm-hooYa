@@ -5,12 +5,12 @@ define('DB_MEDIA_CLASSES', [
 	'video' => [
 	],
 	'anime' => [
-		'Default' => 'list',
 		'FMGroup' => 'series',
+		'Restricted' => 1,
 	],
 	'movie' => [
-		'Default' => 'list',
 		'FMGroup' => 'series',
+		'Restricted' => 1,
 	]
 ]);
 define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
@@ -120,7 +120,11 @@ function db_getrandom($n)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
 	$query = "SELECT Id, Class, Indexed FROM Files WHERE NOT Id in ("
-	. "SELECT FileId AS Id FROM TagMap) ORDER BY RAND()"
+	. "SELECT FileId AS Id FROM TagMap) ";
+	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
+		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
+	}
+	$query .= " ORDER BY RAND()"
 	. " LIMIT $n";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res))
@@ -138,8 +142,12 @@ function db_getrecent($page)
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
-	$query = "SELECT Id, Class, Indexed FROM Files, TagMap WHERE FileId=Id"
-	. " GROUP BY Id ORDER BY Added DESC";
+	$query = "SELECT Id, Class, Indexed FROM Files, TagMap WHERE FileId=Id";
+	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
+		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
+	}
+	$query .= " GROUP BY Id ORDER BY Added DESC";
+
 	$res = mysqli_query($dbh, $query);
 	$ret['Count'] = mysqli_num_rows($res);
 	$query .= " LIMIT " . CONFIG_THUMBS_PER_PAGE

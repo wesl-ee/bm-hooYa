@@ -79,6 +79,7 @@ function render_tags($key)
 function render_classmenu($class = NULL)
 {
 	foreach(DB_MEDIA_CLASSES as $c => $value) {
+		if ($value['Restricted'] && !logged_in() ) continue;
 		print "<option value='$c'";
 		if ($c == $class) print " selected";
 		print ">$c</option>";
@@ -250,6 +251,7 @@ function render_search()
 	render_classmenu();
 	print "</select></div>";
 	foreach (DB_MEDIA_CLASSES as $c => $more) {
+		if ($more['Restricted'] && !logged_in() ) continue;
 		$properties = DB_FILE_EXTENDED_PROPERTIES[$c];
 		print "<div id='$c' style='display:none;'>";
 		foreach ($properties as $p => $value) {

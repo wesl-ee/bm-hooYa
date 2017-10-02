@@ -100,9 +100,12 @@ function hooya_search($query, $page)
 		}
 		$query .= ")";
 	}
+	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
+		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
+	}
 
 	$query .= " GROUP BY Files.Id ORDER BY Relevance DESC";
-	foreach (DB_FILE_EXTENDED_PROPERTIES[$mediaclass] as $ext => $value) {
+	if ($mediaclass) foreach (DB_FILE_EXTENDED_PROPERTIES[$mediaclass] as $ext => $value) {
 		if ($value['Sort'])
 			$query .= ", `$ext`+0 ASC";
 	}

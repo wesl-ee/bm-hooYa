@@ -32,7 +32,13 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 </div>
 </body>
 <script type="text/javascript">
-	var classes = <?php echo json_encode(array_keys(DB_MEDIA_CLASSES));?>;
+	var classes = <?php
+	foreach (DB_MEDIA_CLASSES as $class => $property) {
+		if ($property['Restricted'] && !logged_in()) continue;
+		$classes[] = $class;
+	}
+	echo json_encode($classes);
+	?>;
 </script>
 <script src="js/search.js"></script>
 </html>
