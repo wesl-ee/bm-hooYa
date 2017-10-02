@@ -128,7 +128,9 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 			. " style='margin:auto;display:block;'>";
 			else
 			print "<hr/><div style='text-align:center;'>"
-			. "Log in to add tags!";
+			. "<a href='"
+			. CONFIG_COMMON_WEBPATH . "login.php?ref="
+			. $_SERVER['REQUEST_URI'] . "'>Log in</a> to add tags!";
 			?>
 	</form>
 	</aside>

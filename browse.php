@@ -37,42 +37,29 @@ unset($results['Count']);
 		<?php print_login();?>
 	</nav>
 	<aside>
+		<header>
+			<a href="power.php">Power Search</a>
+			<a href="stats/?overview">Metrics</a>
+			<a href="nightly/">Dump</a>
+			<a href="random.php">Random</a>
+		</header>
 		<h1 style="text-align:center;">hooYa!</h1>
 		<?php render_min_search($q['query'])?>
 	</aside>
 </div>
 <div id="rightframe">
-	<header>
-		<a href="power.php">Power Search</a>
-		<a href="stats/?overview">Metrics</a>
-		<a href="nightly/">Dump</a>
-		<a href="random.php">Random</a>
-		<?php
-		$newGET = $_GET;
-		if (!isset($_GET['list'])) {
-			print "<a href='?" . http_build_query($newGET) . "&list'>"
-			. "list view</a>";
-		}
-		else {
-			unset($newGET['list']);
-			print "<a href='?" . http_build_query($newGET) . "'>"
-			. "thumbnail view</a>";
-		}
-		?>
-	</header>
+
 
 	<?php
 	if ($results['message']) print $results['message'];
 	else if (isset($_GET['list'])) {
-		print '<main>'
-		. '<table>';
-		render_titles($results);
-		print '</table>'
-		. '</main>';
+		print '<main class="thumbs">';
+		render_thumbs($results);
+		print '</main>';
 	}
 	else {
-		print '<main class="thumbs">';
-		render_thumbnails($results);
+		print '<main class="list">';
+		render_list($results);
 		print '</main>';
 	}
 	?>
@@ -80,6 +67,16 @@ unset($results['Count']);
 	<footer>
 	<?php
 		render_pagenav($page, $totalpages, $q);
+	$newGET = $_GET;
+	if (!isset($_GET['list'])) {
+		print "<a href='?" . http_build_query($newGET) . "&list'>"
+		. "list view</a>";
+	}
+	else {
+		unset($newGET['list']);
+		print "<a href='?" . http_build_query($newGET) . "'>"
+		. "thumbnail view</a>";
+	}
 	?>
 	<div><?php print ($totalpages . " pages")?></div>
 	</footer>

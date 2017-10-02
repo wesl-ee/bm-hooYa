@@ -20,18 +20,20 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	</nav>
 </div>
 <div id="rightframe">
-	<h2>random untagged fifteen</h2>
+	<h2>random untagged sixteen9</h2>
 	<header>
-		<a href=".">back to search</a>
-		<a href="#" onClick="location.reload()">more!</a>
+		<a href=".">back to main</a>
+
 	</header>
 	<main class="thumbs">
 	<?php
-	$results = db_getrandom(15);
-	render_thumbnails($results);
+	$results = db_getrandom(16);
+	render_thumbs($results);
 	?>
 	</main>
-	<footer/>
+	<footer>
+		<a href="#" onClick="location.reload()">more!</a>
+	</footer>
 </div>
 </body>
 </html>

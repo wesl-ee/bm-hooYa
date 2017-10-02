@@ -40,7 +40,7 @@ function render_properties($key, $class, $editmode = True)
 		. '</td>';
 
 		print '<td>';
-		if ((logged_in() && $value['Immutable']) || !$editmode) {
+		if (!logged_in() || $value['Immutable'] || !$editmode) {
 			print $fileproperties[$property];
 		}
 		else {
@@ -104,7 +104,7 @@ function render_prettyquery($query)
 		echo ')';
 	}
 }
-function render_thumbnails($results)
+function render_list($results)
 {
 	foreach ($results as $key => $result) $keys[] = $key;
 	$tags = db_get_tags($keys);
@@ -145,6 +145,23 @@ function render_thumbnails($results)
 			print "</div>";
 		}
 		print "</dl></div></div>";
+	}
+}
+function render_thumbs($results)
+{
+	foreach ($results as $key => $result) $keys[] = $key;
+	$tags = db_get_tags($keys);
+	foreach ($results as $key => $result) {
+		$class = $result['Class'];
+		$indexed = parse_timestamp($result['Indexed']);
+		$fileproperties = db_getproperties($key);
+		print "<a"
+		. " href='view.php?key=".rawurlencode($key) . "'>"
+		. "<img"
+		. " src='download.php?key=".rawurlencode($key)."&thumb'"
+		. " >"
+		. "</a></img>"
+		. "";
 	}
 }
 function render_titles($results)
