@@ -7,6 +7,7 @@ include CONFIG_HOOYA_PATH.'includes/database.php';
 
 if (!isset($_GET['key']))
 	die;
+
 $key = rawurldecode($_GET['key']);
 
 $fileinfo = db_getfileinfo($key);
@@ -21,7 +22,10 @@ if (!file_exists($path)) {
 	bmfft_xsendfile($file);
 	return;
 }
-if (DB_MEDIA_CLASSES[$class]['Restricted']) die;
+if (!logged_in()) {
+	if (DB_MEDIA_CLASSES[$class]['Restricted'] &&
+	!check_user_identity($_SERVER['REMOTE_ADDR'])) die;
+}
 
 // Assume that we are sending the raw file until we can disprove that
 $file = $path;

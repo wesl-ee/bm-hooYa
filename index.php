@@ -29,14 +29,14 @@ unset($results['Count']);
 		<?php print_login(); ?>
 	</nav>
 	<aside>
+		<h1 style="text-align:center;">hooYa!</h1>
+		<?php render_min_search()?>
 		<header>
 			<a href="power.php">Power Search</a>
 			<a href="stats/?overview">Metrics</a>
 			<a href="nightly/">Dump</a>
 			<a href="random.php">Random</a>
 		</header>
-		<h1 style="text-align:center;">hooYa!</h1>
-		<?php render_min_search()?>
 
 	</aside>
 </div>
@@ -57,12 +57,12 @@ unset($results['Count']);
 		<?php $newGET = $_GET;
 		if (!isset($_GET['thumbs'])) {
 			print "<a href='?" . http_build_query($newGET) . "&thumbs'>"
-			. "list view</a>";
+			. "thumbnail view</a>";
 		}
 		else {
 			unset($newGET['thumbs']);
 			print "<a href='?" . http_build_query($newGET) . "'>"
-			. "thumbnail view</a>";
+			. "full view</a>";
 		}
 		?>
 

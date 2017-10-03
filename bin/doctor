@@ -4,7 +4,7 @@ use Getopt::Long 'HelpMessage';
 use DBI;
 use File::Find;
 use File::MimeInfo 'mimetype';
-use Digest::MD5 'md5_hex';
+use Digest::MD5::File 'file_md5_hex';
 use Text::Table;
 
 GetOptions(
@@ -93,7 +93,7 @@ if (defined $scan) {
 	my ($row, $md5);
 	find(sub {
 		return if !-f;
-		my $md5 = md5_hex(do { local $/; IO::File->new($File::Find::name)->getline });
+		my $md5 = file_md5_hex($File::Find::name);
 		my $path = $_;
 		print "$path, $md5";die;
 		$sth->execute($md5) or die_error DBI::errstr;

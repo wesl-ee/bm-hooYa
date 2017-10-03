@@ -18,6 +18,10 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	<nav>
 		<?php print_login(); ?>
 	</nav>
+	<aside>
+		<h1 style="text-align:center;">hooYa!</h1>
+		<?php render_min_search()?>
+	</aside>
 </div>
 <div id="rightframe">
 	<h2>random untagged sixteen9</h2>

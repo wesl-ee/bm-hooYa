@@ -105,7 +105,7 @@ main.list img {
 	margin: auto;
 	width: 90%;
 	margin-top: 0;
-	overflow: scroll;
+	overflow: auto;
 	padding-left: 10px;
 }
 #searchresult #tag {
