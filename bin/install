@@ -114,6 +114,7 @@ $sth = $dbh->prepare(
 	. "`Size` BIGINT(20) unsigned DEFAULT NULL,"
 	. "`Class` VARCHAR(128) DEFAULT NULL,"
 	. "`Indexed` datetime DEFAULT current_timestamp(),"
+	. "`By` INT(11) DEFAULT NULL,"
 	. "`Mimetype` VARCHAR(128) DEFAULT NULL,"
 	. "PRIMARY KEY (`Id`)"
 	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"

@@ -30,14 +30,7 @@ unset($results['Count']);
 	</nav>
 	<aside>
 		<h1 style="text-align:center;">hooYa!</h1>
-		<?php render_min_search()?>
-		<header>
-			<a href=".">Main</a>
-			<a href="power.php">Search</a>
-			<a href="stats/?overview">Metrics</a>
-			<a href="nightly/">Dump</a>
-			<a href="random.php">Random</a>
-		</header>
+		<?php render_min_search(); render_hooya_headers(); ?>
 	</aside>
 </div>
 <div id="rightframe">

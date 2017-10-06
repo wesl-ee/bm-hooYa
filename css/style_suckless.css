@@ -154,3 +154,23 @@ main.list img {
 	text-align: right;
 	border-bottom: 3px solid;
 }
+.fupload {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.fupload + label {
+	color: black;
+	background-color: #F7F7F7;
+	display: inline-block;
+	padding-left: 1px;
+	padding-right: 1px;
+	border: 1px solid black;
+}
+
+.fupload + label:hover {
+	cursor: pointer;
+}

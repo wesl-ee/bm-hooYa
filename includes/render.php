@@ -310,4 +310,15 @@ function render_min_search($q = NULL)
 	. " name='query' placeholder='search,terms'>";
 	print "</form>";
 }
+function render_hooya_headers()
+{
+	$h = CONFIG_HOOYA_WEBPATH;
+	print "<footer style='margin:auto;'>"
+	. "<a href='$h'>Main</a>"
+	. "<a href='$h/power.php'>Search</a>"
+	. "<a href='$h/stats/?overview'>Metrics</a>"
+	. "<a href='$h/nightly/'>Dump</a>"
+	. "<a href='$h/random.php'>Random</a>"
+	. "</footer>";
+}
 ?>
