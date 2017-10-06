@@ -8,6 +8,10 @@ define('DB_MEDIA_CLASSES', [
 		'FMGroup' => 'series',
 		'Restricted' => 1,
 	],
+	'television' => [
+		'FMGroup' => 'series',
+		'Restricted' => 1,
+	],
 	'movie' => [
 		'FMGroup' => 'series',
 		'Restricted' => 1,
@@ -21,8 +25,21 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 		'Height' => ['Type' => 'Number', 'Immutable' => 1],
 	],
 	'video' => [
+		'Width' => ['Type' => 'Number', 'Immutable' => 1],
+		'Height' => ['Type' => 'Number', 'Immutable' => 1],
 	],
 	'anime' => [
+		'Season' => [
+			'Type' => 'Number',
+			'Format' => 'Season ? ',
+			'Sort' => 1,
+		],
+		'Episode' => [
+			'Format' => 'Episode ?',
+			'Sort' => 1,
+		],
+	],
+	'television' => [
 		'Season' => [
 			'Type' => 'Number',
 			'Format' => 'Season ? ',

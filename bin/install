@@ -64,9 +64,11 @@ my $sqluser = <STDIN>;
 chomp $sqluser;
 
 # SQL password
+system('/usr/bin/stty', '-echo');
 print "MySQL password: ";
 my $sqlpass = <STDIN>;
 chomp $sqlpass;
+system('/usr/bin/stty', 'echo');
 
 # Jack in
 my $dbs = "DBI:mysql:host=$sqlhost";
@@ -139,7 +141,7 @@ $sth = $dbh->prepare(
 	"CREATE TABLE `Alias` ("
 	. "`Alias` VARCHAR(128) NOT NULL,"
 	. "`Space` VARCHAR(128) DEFAULT NULL,"
-	. "PRIMARY KEY (`Alias`),"
+	. "PRIMARY KEY (`Alias`)"
 	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
 );
 if (!$sth->execute) {
@@ -153,11 +155,56 @@ $sth = $dbh->prepare(
 	. "`Id` varchar(128) NOT NULL,"
 	. "`Width` int(11) NOT NULL DEFAULT -1,"
 	. "`Height` int(11) NOT NULL DEFAULT -1,"
-	. "`Ratio` float(6,3) unsigned GENERATED ALWAYS AS (`Width` / `Height`) STORED,"
+	. "`Ratio` float(6,3) unsigned GENERATED ALWAYS AS (`Width` / `Height`) PERSISTENT,"
 	. "PRIMARY KEY (`Id`)"
 	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
 );
 if (!$sth->execute) {
 	notify_warn DBI::errstr;
 }
+$sth = $dbh->prepare(
+	"CREATE TABLE `video` ("
+	. "`Id` varchar(128) NOT NULL,"
+	. "`Width` int(11) NOT NULL DEFAULT -1,"
+	. "`Height` int(11) NOT NULL DEFAULT -1,"
+	. "`Ratio` float(6,3) unsigned GENERATED ALWAYS AS (`Width` / `Height`) PERSISTENT,"
+	. "PRIMARY KEY (`Id`)"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+$sth = $dbh->prepare(
+	"CREATE TABLE `anime` ("
+	. "`Id` varchar(128) NOT NULL,"
+	. "`Season` int(11) DEFAULT NULL,"
+	. "`Episode` varchar(16) DEFAULT NULL,"
+	. "PRIMARY KEY (`Id`)"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+$sth = $dbh->prepare(
+	"CREATE TABLE `television` ("
+	. "`Id` varchar(128) NOT NULL,"
+	. "`Season` int(11) DEFAULT NULL,"
+	. "`Episode` varchar(16) DEFAULT NULL,"
+	. "PRIMARY KEY (`Id`)"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+$sth = $dbh->prepare(
+	"CREATE TABLE `movie` ("
+	. "`Id` varchar(128) NOT NULL,"
+	. "`Year` int(11) DEFAULT NULL,"
+	. "PRIMARY KEY (`Id`)"
+	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+);
+if (!$sth->execute) {
+	notify_warn DBI::errstr;
+}
+
 notify_success "Created the SQL structure";
