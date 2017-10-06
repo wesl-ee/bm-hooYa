@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use strict;
+use File::Basename;
 use DBI;
 
 use constant HOOYA_VERSION => '0.5';
@@ -53,31 +54,40 @@ print TEXT_BOLD
 	. " components first!\n"
 . TEXT_RESET;
 
-# SQL hostname
-print "\nMySQL host: ";
-my $sqlhost = <STDIN>;
-chomp $sqlhost;
+# Read SQL settings from the config file
+my ($CONFIG_MYSQL_HOOYA_HOST,
+$CONFIG_MYSQL_HOOYA_USER,
+$CONFIG_MYSQL_HOOYA_PASSWORD,
+$CONFIG_MYSQL_HOOYA_DATABASE,
+$CONFIG_HOOYA_STORAGE_PATH);
 
-# SQL username
-print "MySQL user: ";
-my $sqluser = <STDIN>;
-chomp $sqluser;
-
-# SQL password
-system('/usr/bin/stty', '-echo');
-print "MySQL password: ";
-my $sqlpass = <STDIN>;
-chomp $sqlpass;
-system('/usr/bin/stty', 'echo');
+# Grab the PHP config file for accessing SQL
+my $incfile =  dirname($0) . "/../includes/config.php";
+open(FILE, $incfile);
+while (<FILE>) {
+	$CONFIG_MYSQL_HOOYA_HOST = $1 if (/["']CONFIG_MYSQL_HOOYA_HOST["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_USER = $1 if (/"CONFIG_MYSQL_HOOYA_USER", ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_PASSWORD = $1 if (/["']CONFIG_MYSQL_HOOYA_PASSWORD["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_DATABASE = $1 if (/["']CONFIG_MYSQL_HOOYA_DATABASE["'], ["'](.+)["']/);
+	$CONFIG_HOOYA_STORAGE_PATH = $1 if (/["']CONFIG_HOOYA_STORAGE_PATH["'], ["'](.+)["']/);
+}
+close(FILE);
 
 # Jack in
-my $dbs = "DBI:mysql:host=$sqlhost";
-my $dbh = DBI->connect($dbs, $sqluser, $sqlpass,
-{'PrintError' => 0});
-my $sth;
+# SQL
+my $dsn = "DBI:mysql:database=" . $CONFIG_MYSQL_HOOYA_DATABASE
+. ";host=" . $CONFIG_MYSQL_HOOYA_HOST;
+
+my $dbh = DBI->connect(
+	$dsn,
+	$CONFIG_MYSQL_HOOYA_USER,
+	$CONFIG_MYSQL_HOOYA_PASSWORD,
+	{'PrintError' => 0}
+);
 if (!defined $dbh) {
 	die_error DBI::errstr;
 }
+my $sth;
 
 # Database creation
 $sth = $dbh->prepare(
