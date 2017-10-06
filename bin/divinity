@@ -3,6 +3,7 @@ use strict;
 use Getopt::Long 'HelpMessage';
 use DBI;
 use File::Find;
+use File::Basename;
 use File::MimeInfo 'mimetype';
 use Digest::MD5::File 'file_md5_hex';
 
@@ -81,8 +82,8 @@ $CONFIG_MYSQL_HOOYA_PASSWORD,
 $CONFIG_MYSQL_HOOYA_DATABASE,
 $CONFIG_HOOYA_STORAGE_PATH);
 
-# Definitely going to need to make a config file in /etc
-my $incfile =  '/var/http/hub/hooYa/includes/config.php';
+# Grab the PHP config file for accessing SQL
+my $incfile =  dirname($0) . "/../includes/config.php";
 open(FILE, $incfile);
 while (<FILE>) {
 	$CONFIG_MYSQL_HOOYA_HOST = $1 if (/["']CONFIG_MYSQL_HOOYA_HOST["'], ["'](.+)["']/);

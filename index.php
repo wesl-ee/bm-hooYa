@@ -32,22 +32,28 @@ unset($results['Count']);
 		<h1 style="text-align:center;">hooYa!</h1>
 		<?php render_min_search()?>
 		<header>
-			<a href="power.php">Power Search</a>
+			<a href=".">Main</a>
+			<a href="power.php">Search</a>
 			<a href="stats/?overview">Metrics</a>
 			<a href="nightly/">Dump</a>
 			<a href="random.php">Random</a>
 		</header>
-
 	</aside>
 </div>
 <div id="rightframe">
-	<?php if (isset($_GET['thumbs'])) {
-		print '<main class="thumbs">';
+	<?php if (!count($results)) {
+		print '<header>'
+		. 'No recent activity to show!'
+		. '</header><main class=single><div id=hack>'
+		. '<img src="' . CONFIG_HOOYA_WEBPATH . 'img/none.jpg">'
+		. '</div></main>';
+	} else if (isset($_GET['thumbs'])) {
+		print '<main class=thumbs>';
 		render_thumbs($results);
 		print '</main>';
 	}
 	else {
-		print '<main class="list">';
+		print '<main class=list>';
 		render_list($results);
 		print '</main>';
 	}?>

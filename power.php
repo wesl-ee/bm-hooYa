@@ -24,10 +24,13 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 <div id="rightframe">
 	<h1 style="text-align:center;padding-top:30px;padding-bottom:30px;">hooYa!</h1>
 	<?php render_search() ?>
-	<section style="text-align:center;">
-		<a href=".">recent activity</a></br>
-	</section>
-
+	<footer style="justify-content:center;">
+		<a href=".">Main</a>
+		<a href="power.php">Search</a>
+		<a href="stats/?overview">Metrics</a>
+		<a href="nightly/">Dump</a>
+		<a href="random.php">Random</a>
+	</footer>
 </div>
 </div>
 </body>

@@ -18,7 +18,7 @@ $mimetype = $fileinfo['Mimetype'];
 $ftype = explode('/', $mimetype)[0];
 
 if (!file_exists($path)) {
-	$file = CONFIG_HOOYA_PATH . 'spoilers/404.jpg';
+	$file = CONFIG_HOOYA_PATH . 'img/404.jpg';
 	bmfft_xsendfile($file);
 	return;
 }
