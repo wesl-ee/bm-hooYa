@@ -24,4 +24,67 @@ define("CONFIG_HOOYA_MAX_TAGS", 7);
 
 // Where you want to keep hooYa files
 define("CONFIG_HOOYA_STORAGE_PATH", "/var/media/")
+
+// hooYa upload limit
+define("CONFIG_HOOYA_DAILY_UPLOAD_LIMIT", 15);
+
+define('DB_MEDIA_CLASSES', [
+	'single_image' => [
+		'ULPath' => CONFIG_HOOYA_STORAGE_PATH,
+	],
+	'video' => [
+	],
+	'anime' => [
+		'FMGroup' => 'series',
+		'Restricted' => 1,
+		'ULPath' => CONFIG_HOOYA_STORAGE_PATH,
+	],
+	'television' => [
+		'FMGroup' => 'series',
+		'Restricted' => 1,
+		'ULPath' => CONFIG_HOOYA_STORAGE_PATH,
+	],
+	'movie' => [
+		'FMGroup' => 'series',
+		'Restricted' => 1,
+		'ULPath' => CONFIG_HOOYA_STORAGE_PATH,
+	]
+]);
+define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
+define('DB_FILE_EXTENDED_PROPERTIES',
+[
+	'single_image' => [
+		'Width' => ['Type' => 'Number', 'Immutable' => 1],
+		'Height' => ['Type' => 'Number', 'Immutable' => 1],
+	],
+	'video' => [
+		'Width' => ['Type' => 'Number', 'Immutable' => 1],
+		'Height' => ['Type' => 'Number', 'Immutable' => 1],
+	],
+	'anime' => [
+		'Season' => [
+			'Type' => 'Number',
+			'Format' => 'Season ? ',
+			'Sort' => 1,
+		],
+		'Episode' => [
+			'Format' => 'Episode ?',
+			'Sort' => 1,
+		],
+	],
+	'television' => [
+		'Season' => [
+			'Type' => 'Number',
+			'Format' => 'Season ? ',
+			'Sort' => 1,
+		],
+		'Episode' => [
+			'Format' => 'Episode ?',
+			'Sort' => 1,
+		],
+	],
+	'movie' => [
+		'Year' => ['Type' => 'Number', 'Format' => '(?)'],
+	],
+]);
 ?>
