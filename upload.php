@@ -101,12 +101,14 @@ document.getElementById("fupload").onchange = function() {
 	document.getElementById('hack').style.display = 'initial';
 	document.getElementById('flabel').innerHTML = 'Choose a different file';
 
-	var reader = new FileReader();
-	reader.onload = function(){
-		var output = document.getElementById('output');
-		output.src = reader.result;
-	};
-	reader.readAsDataURL(file.files[0]);
+	if (file.files[0].name.match(/.(jpg|jpeg|png|gif)$/i)) {
+		var reader = new FileReader();
+		reader.onload = function(){
+			var output = document.getElementById('output');
+			output.src = reader.result;
+		};
+		reader.readAsDataURL(file.files[0]);
+	}
 };
 document.getElementById("class").onchange = function() {
 	document.getElementById('fsubmit').style.visibility = 'initial';

@@ -27,6 +27,7 @@ define("CONFIG_HOOYA_STORAGE_PATH", "/var/media/")
 
 // hooYa upload limit
 define("CONFIG_HOOYA_DAILY_UPLOAD_LIMIT", 15);
+define("CONFIG_HOOYA_MAX_UPLOAD", 1024*1024*500);
 
 define('DB_MEDIA_CLASSES', [
 	'single_image' => [
