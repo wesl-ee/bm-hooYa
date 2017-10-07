@@ -1,0 +1,77 @@
+=head1 hooYa!
+
+hooYa! is a community-driven file tagger with support for lots of media
+types. Users contribute tag associations, which describe each file. Users
+can also contribute a number of files each day
+
+You can check out the Scrin mothership of hooYa! at
+L<https://bm.howler.space/hooYa>
+
+=head2 Dependencies
+
+=over
+
+=item A Webserver capable of serving PHP (apache, nginx, lighttpd, etc.)
+
+=item PHP (at least PHP5)
+
+=item MySQL (MariaDB)
+
+=item Appropriate MySQL Module for PHP5
+
+=item bm-common
+
+=item Imagemagick
+
+=item ffmpegthumbnailer
+
+=item DBI
+
+=item DBD::mysql
+
+=item Digest::MD5::File
+
+=back
+
+=head2 Installation
+
+Follow the set up instructions for bm-common; this project provides the
+common stylsheets and authentication for the website
+
+Once you've installed bm-common correctly, install hooYa! by
+running C<git clone https://howler.space/git/bigmike-hooYa.git>
+
+Then, C<cp includes/config.template.php includes/config.php> and edit the
+configuration file to your taste
+
+Lastly, run C<bin/install> to create the hooYa! SQL structure
+
+=head2 Features
+
+=head4 file tagging
+
+Associative namespaces like series -> yuyushiki
+Tags are handled by MySQL
+
+=head4 per-deployment configuration
+
+per-deployment settings are defined in includes/config.php
+
+=head4 thumbnailing
+
+Dynamic generation of thumbnails; cached
+
+=head4 tag aliases
+
+Instead of typing puella magi madoka magica every time, I can
+just type pmmm. How easy!
+
+=head4 extensible media classes
+
+Some example classes are included, but it is trivial to index
+other media (PDFs, presentations etc.)
+
+=head2 Contact
+
+Bother me on IRC in #bigtown on C<howler.space:6667> or by mail at
+L<webmaster@howler.space>

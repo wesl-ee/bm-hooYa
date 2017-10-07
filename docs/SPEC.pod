@@ -22,12 +22,21 @@ Filesize in bytes
 
 =item Class
 
-Type of media. Supported values are I<anime>, I<single_image>, and I<video> but
-adding a new class only involves writing the code to render it.
+Type of media. Supported values are I<anime>, I<single_image>, I<video>,
+and I<television> but adding a new class only involves writing the code to
+render it
 
 =item Mimetype
 
 Content type determined by your OS's magic.mime file
+
+=item Indexed
+
+The DATETIME the file was originally imported to hooYa!
+
+=item By
+
+User ID for the user who imported this file; not NULL for uploaded files
 
 =back
 
@@ -44,19 +53,23 @@ most one (1) entry in L<`Files`|"`Files` Table">
 
 =item Added
 
-Date that the tag was added. Not used for anything but cute to have
+Date that the tag was added
 
 =item TagId
 
 Selects which Namespace -> Member pair this tag describes. This can describe
 at most one (1) entry in L<`Tags`|"`Tags` Table">.
 
+=item Author
+
+User ID of the user who added this tag to this file
+
 =back
 
 =head2 `Tags` Table
 
 One row for each Namespace -> Member pair. These are pairs like
-I<series> -> I<puella_magi_madoka_magica>
+I<series> -> I<puella magi madoka magica>
 
 =over
 
@@ -72,7 +85,11 @@ as you want!
 
 =item Member
 
-Describes a member in a namespace, such as I<puella_magi_madoka_magica> or
-I<kaname_madoka>
+Describes a member in a namespace, such as I<puella magi madoka magica> or
+I<kaname madoka>
 
 =back
+
+Additionally, there is a table for each media class; this table stores the
+properties of each file in a media type; for example, `anime` has the
+I<season> and I<episode> columns
