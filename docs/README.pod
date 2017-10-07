@@ -11,13 +11,20 @@ L<https://bm.howler.space/hub/hooYa>
 
 =over 12
 
-=item A Webserver
+=item An HTTP Server
 
-Make sure that your webserver can serve .php files first!
+hooYa! has been tested with lighttp and Apache, but any web server
+with PHP and xsendfile support will work
 
 =item PHP
 
-At least >PHP5
+Make sure your webserver can interpret and serve PHP files
+
+=item mod_xsendfile
+
+mod_xsendfile enables the sending of large files easily. You can grab an
+apache module L<here|https://tn123.org/mod_xsendfile/>, but several
+implementations of this module exist for numerous other web servers
 
 =item MySQL (MariaDB)
 
@@ -39,17 +46,32 @@ Generating image thumbnails
 
 Generating video thumbnails
 
+=item Perl
+
+You likely already have Perl5 installed, but in case you do not it is easily
+available for many operating systems
+
+=over 12
+
 =item DBI
 
-Perl module for installation and administration of the database
+Perl5 database interface module. It is used for any perl scripts
+that run on the site, like the installation tools or the 'daily dump' for
+hooYa.
+This can be installed from CPAN by running C<cpan -i DBI> as root, or
+per-user if you lack those permissions or want a simply local install
 
 =item DBD::mysql
 
-Specific Perl module for interacting with SQL
+Perl5 module for interfacing with MySQL tables through DBI.
+Easily installed from CPAN by running C<cpan -i DBD::mysql> as root, or
+per-user if you lack those permissions or want a simply local install
 
 =item Digest::MD5::File
 
-Perl module for calculating MD5 hashes of a file
+Perl5 module for calculating MD5 hashes of a file
+
+=back
 
 =back
 
@@ -70,25 +92,25 @@ Lastly, run C<bin/install> to create the hooYa! SQL structure
 
 =over 12
 
-=item file tagging
+=item File Tagging
 
-Associative namespaces like series -> yuyushiki
+Associative namespaces like series > yuyushiki
 Tags are handled by MySQL
 
-=item per-deployment configuration
+=item Per-deployment Configuration
 
-per-deployment settings are defined in includes/config.php
+Per-deployment settings are defined in includes/config.php
 
-=item thumbnailing
+=item Thumbnailing
 
 Dynamic generation of thumbnails; cached
 
-=item tag aliases
+=item Tag Aliases
 
 Instead of typing puella magi madoka magica every time, I can
 just type pmmm. How easy!
 
-=item extensible media classes
+=item Extensible Media Classes
 
 Some example classes are included, but it is trivial to index
 other media (PDFs, presentations etc.)
