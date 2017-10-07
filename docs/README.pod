@@ -81,7 +81,7 @@ Follow the set up instructions for bm-common; this project provides the
 common stylsheets and authentication for the website
 
 Once you've installed bm-common correctly, install hooYa! by
-running C<git clone https://howler.space/git/bigmike-hooYa.git>
+running C<git clone https://bm.howler.space/git/bigmike-hooYa.git>
 
 Then, C<cp includes/config.template.php includes/config.php> and edit the
 configuration file to your taste

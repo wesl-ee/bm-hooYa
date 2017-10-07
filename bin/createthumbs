@@ -1,0 +1,106 @@
+#!/usr/bin/perl
+use strict;
+use Getopt::Long 'HelpMessage';
+use DBI;
+use File::Find;
+use File::MimeInfo 'mimetype';
+
+# Cute formatting; ANSI escape codes
+use constant HOOYA_VERSION => '0.6';
+use constant {
+	FG_BLACK => '[0;30m',
+	FG_RED => '[0;31m',
+	FG_GREEN => '[0;32m',
+	FG_YELLOW => '[0;33m',
+	FG_BLUE => '[0;34m',
+	FG_MAGENTA => '[0;35m',
+	FG_CYAN => '[0;36m',
+	FG_WHITE => '[0;37m',
+	FG_DEFAULT => '[0;39m',
+
+	BG_BLACK => '[0;40m',
+	BG_RED => '[0;41m',
+	BG_GREEN => '[0;42m',
+	BG_YELLOW => '[0;43m',
+	BG_BLUE => '[0;44m',
+	BG_MAGENTA => '[0;45m',
+	BG_CYAN => '[0;46m',
+	BG_WHITE => '[0;47m',
+	BG_DEFAULT => '[0;49m',
+
+	TEXT_RESET => '[0;0m',
+	TEXT_BOLD => '[0;1m',
+	TEXT_STANDOUT => '[0;3m',
+	TEXT_BLINK => '[0;5m',
+	TEXT_REVERSE => '[0;7m',
+};
+sub die_error { die FG_RED . @_[0] . FG_DEFAULT . "\n"; }
+sub notify_success { print FG_GREEN . @_[0] . FG_DEFAULT . "\n"; }
+sub notify_warn { print FG_YELLOW . @_[0] . FG_DEFAULT . "\n"; }
+sub status_update {
+	my ($current, $total) = @_;
+	my $percent = ($current/$total)*100;
+
+	printf("\33[2K\r");
+	printf("%.f%% done (%d / %d)", $percent, $current, $total);
+	print "\n" if ($current == $total);
+}
+
+# Disable buffering
+$| = 1;
+
+# Read SQL settings from the config file
+my ($CONFIG_MYSQL_HOOYA_HOST,
+$CONFIG_MYSQL_HOOYA_USER,
+$CONFIG_MYSQL_HOOYA_PASSWORD,
+$CONFIG_MYSQL_HOOYA_DATABASE);
+
+# Definitely going to need to make a config file in /etc
+my $incfile =  dirname($0) . "/../includes/config.php";
+open(FILE, $incfile);
+while (<FILE>) {
+	$CONFIG_MYSQL_HOOYA_HOST = $1 if (/["']CONFIG_MYSQL_HOOYA_HOST["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_USER = $1 if (/"CONFIG_MYSQL_HOOYA_USER", ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_PASSWORD = $1 if (/["']CONFIG_MYSQL_HOOYA_PASSWORD["'], ["'](.+)["']/);
+	$CONFIG_MYSQL_HOOYA_DATABASE = $1 if (/["']CONFIG_MYSQL_HOOYA_DATABASE["'], ["'](.+)["']/);
+}
+close(FILE);
+
+# SQL
+my $dsn = "DBI:mysql:database=" . $CONFIG_MYSQL_HOOYA_DATABASE
+. ";host=" . $CONFIG_MYSQL_HOOYA_HOST;
+
+my $dbh = DBI->connect(
+	$dsn,
+	$CONFIG_MYSQL_HOOYA_USER,
+	$CONFIG_MYSQL_HOOYA_PASSWORD,
+	{'PrintError' => 0}
+);
+if (!defined $dbh) {
+	die_error DBI::errstr;
+}
+
+my $sth;
+my ($total, $n);
+
+$sth = $dbh->prepare("SELECT COUNT(*) AS Total FROM `Files`");
+$sth->execute();
+$total = ($sth->fetchrow_hashref())->{'Total'};
+$sth = $dbh->prepare("SELECT `Id`, `Path`, `Mimetype` FROM `Files`");
+$sth->execute();
+
+while (my $ref = $sth->fetchrow_hashref()) {
+	++$n;
+	if (!-f $ref->{'Path'}) { notify_warn($ref->{'Path'} . " 404"); next; }
+	my $thumb;
+	if ($ref->{'Mimetype'} eq 'image/png') {
+		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.png';
+	}
+	if ($ref->{'Mimetype'} eq 'image/jpeg') {
+		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.jpg';
+	}
+	# Don't replace existing files (for speed ofc)
+	if (-f $thumb) { next; }
+	system("convert '" . $ref->{'Path'} . "' -thumbnail 250x250 $thumb");
+	status_update($n, $total);
+}
