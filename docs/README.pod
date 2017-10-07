@@ -74,4 +74,4 @@ other media (PDFs, presentations etc.)
 =head2 Contact
 
 Bother me on IRC in #bigtown on C<howler.space:6667> or by mail at
-L<webmaster@howler.space>
+<yumi@howler.space>

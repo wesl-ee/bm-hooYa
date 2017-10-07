@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-include "../../common/includes/core.php";
+include "../common/includes/core.php";
 include CONFIG_HOOYA_PATH."includes/config.php";
 
 // If you're not properly authenticated then kick lie user back to login.php
@@ -23,7 +23,10 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 	<nav>
 		<?php print_login(); ?>
         </nav>
-	<img id="mascot" src=<?php echo $_SESSION['mascot']?>>
+	<aside>
+		<h1 style="text-align:center;">hooYa!</h1>
+		<?php render_min_search($q['query']); render_hooya_headers(); ?>
+	</aside>
 </div>
 
 <div id="rightframe">
@@ -35,7 +38,7 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 		<a href="?overview">overview</a>
 		<a href="?tags">tags</a>
 		<a href="?aliases">aliases</a>
-		<a href="?recent">recent</a>
+		<a href="?uploads">uploads</a>
 	</header>
 	<main><?php if (isset($_GET['tags'])) {
 		// Information about a specific tag
@@ -116,8 +119,29 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 			print "</tr>";
 		}
 		print "</table>";
-	} else if (isset($_GET['recent'])) {
-		die;
+	} else if (isset($_GET['uploads'])) {
+		$months = stats_upload_activity();
+		$currmonth = (int)date('n');
+		$curryear = (int)date('y');
+		$m = $currmonth;
+		$y = $curryear;
+		do {
+			$monthname = monthname($m);
+			$freq = $months[$m];
+			if (!--$m) { $y--; $m = 12; };
+			if (!$freq) continue;
+			$activity["$monthname '$y"] = $freq;
+			$magnitude += $freq;
+		} while($y != $curryear-1 || $m != $currmonth);
+		print "<div style='float:right;text-align:right'>";
+		print "<h3><a href='" . CONFIG_HOOYA_WEBPATH
+		. "browse.php?query=". rawurlencode($tag)
+		. "'>$tag</a></h3>";
+		print $magnitude . " files";
+		print "</div>";
+
+		print "<h3>Uploaded Files</h3>";
+		render_bargraph($activity);
 	}?></main>
 </div>
 </div>

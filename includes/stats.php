@@ -128,6 +128,24 @@ function stats_total_count()
 	mysqli_close($dbh);
 	return $total;
 }
+function stats_upload_activity()
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT Indexed FROM Files"
+	. " WHERE Indexed >= DATE_SUB(NOW(), INTERVAL 1 YEAR)"
+	. " ORDER BY Indexed ASC";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		// Extract the month from a YYYY-MM-DD format
+		$month = (int)explode('-', $row['Indexed'])[1];
+		$ret[$month]++;
+	}
+	return $ret;
+}
 function db_info($req)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,

@@ -316,8 +316,8 @@ function render_hooya_headers()
 	print "<footer style='margin:auto;'>"
 	. "<a href='$h'>Main</a>"
 	. "<a href='$h/power.php'>Search</a>"
-	. "<a href='$h/stats/?overview'>Metrics</a>"
-	. "<a href='$h/nightly/'>Dump</a>"
+	. "<a href='$h/stats.php?overview'>Metrics</a>"
+	. "<a href='$h/upload.php'>U/L</a>"
 	. "<a href='$h/random.php'>Random</a>"
 	. "</footer>";
 }
