@@ -5,31 +5,51 @@ types. Users contribute tag associations, which describe each file. Users
 can also contribute a number of files each day
 
 You can check out the Scrin mothership of hooYa! at
-L<https://bm.howler.space/hooYa>
+L<https://bm.howler.space/hub/hooYa>
 
 =head2 Dependencies
 
-=over
+=over 12
 
-=item A Webserver capable of serving PHP (apache, nginx, lighttpd, etc.)
+=item A Webserver
 
-=item PHP (at least PHP5)
+Make sure that your webserver can serve .php files first!
+
+=item PHP
+
+At least >PHP5
 
 =item MySQL (MariaDB)
 
+Storing tags and metadata about indexed files
+
 =item Appropriate MySQL Module for PHP5
 
-=item bm-common
+For apache, this is C<php5-mysql>
+
+=item B<bm-common>
+
+Common stylesheets and authentication
 
 =item Imagemagick
 
+Generating image thumbnails
+
 =item ffmpegthumbnailer
+
+Generating video thumbnails
 
 =item DBI
 
+Perl module for installation and administration of the database
+
 =item DBD::mysql
 
+Specific Perl module for interacting with SQL
+
 =item Digest::MD5::File
+
+Perl module for calculating MD5 hashes of a file
 
 =back
 
@@ -48,28 +68,36 @@ Lastly, run C<bin/install> to create the hooYa! SQL structure
 
 =head2 Features
 
-=head4 file tagging
+=over 12
+
+=item file tagging
 
 Associative namespaces like series -> yuyushiki
 Tags are handled by MySQL
 
-=head4 per-deployment configuration
+=item per-deployment configuration
 
 per-deployment settings are defined in includes/config.php
 
-=head4 thumbnailing
+=item thumbnailing
 
 Dynamic generation of thumbnails; cached
 
-=head4 tag aliases
+=item tag aliases
 
 Instead of typing puella magi madoka magica every time, I can
 just type pmmm. How easy!
 
-=head4 extensible media classes
+=item extensible media classes
 
 Some example classes are included, but it is trivial to index
 other media (PDFs, presentations etc.)
+
+=back
+
+=head2 License
+
+Modified BSD License (see C<docs/LICENSE>)
 
 =head2 Contact
 
