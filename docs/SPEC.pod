@@ -1,6 +1,6 @@
 =head1 How files are tagged
 
-=head2 `Files` table
+=head2 C<Files> table
 
 One row for each file indexed by hooYa
 
@@ -40,7 +40,7 @@ User ID for the user who imported this file; not NULL for uploaded files
 
 =back
 
-=head2 `TagMap` Table
+=head2 C<TagMap> Table
 
 One row for each file's tag
 
@@ -66,7 +66,7 @@ User ID of the user who added this tag to this file
 
 =back
 
-=head2 `Tags` Table
+=head2 C<Tags> Table
 
 One row for each Namespace -> Member pair. These are pairs like
 I<series> -> I<puella magi madoka magica>
@@ -91,5 +91,5 @@ I<kaname madoka>
 =back
 
 Additionally, there is a table for each media class; this table stores the
-properties of each file in a media type; for example, `anime` has the
+properties of each file in a media type; for example, C<anime> has the
 I<season> and I<episode> columns

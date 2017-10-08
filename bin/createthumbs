@@ -2,6 +2,7 @@
 use strict;
 use Getopt::Long 'HelpMessage';
 use DBI;
+use File::Basename;
 use File::Find;
 use File::MimeInfo 'mimetype';
 
@@ -95,12 +96,32 @@ while (my $ref = $sth->fetchrow_hashref()) {
 	my $thumb;
 	if ($ref->{'Mimetype'} eq 'image/png') {
 		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.png';
+		if (-f $thumb) { next; }
+		system("convert '" . $ref->{'Path'} . "' -thumbnail 250x250 $thumb");
 	}
 	if ($ref->{'Mimetype'} eq 'image/jpeg') {
 		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.jpg';
+		if (-f $thumb) { next; }
+		system("convert '" . $ref->{'Path'} . "' -thumbnail 250x250 $thumb");
 	}
-	# Don't replace existing files (for speed ofc)
-	if (-f $thumb) { next; }
-	system("convert '" . $ref->{'Path'} . "' -thumbnail 250x250 $thumb");
+	if ($ref->{'Mimetype'} =~ '^video') {
+		if (-f $thumb) { next; }
+
+		# Create the thumbnail
+		my $in = $ref->{'Path'};
+		($in) =~ s/'/'"'"'/g;
+		my $duration = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 '$in'`;
+		chomp $duration;
+		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.jpg';
+		system("ffmpeg -y -loglevel panic -hide_banner -ss "
+		. ($duration/2) . " -i '$in' -an -vframes 1"
+		. " -vf scale=\"250:-1\" $thumb");
+
+		# Create the video preview
+		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '_preview.png';
+		system("ffmpeg -y -loglevel panic -hide_banner -ss "
+		. ($duration/2) . " -i '$in' -an -vframes 1"
+		. " $thumb");
+	}
 	status_update($n, $total);
 }
