@@ -29,11 +29,13 @@ define("CONFIG_HOOYA_STORAGE_PATH", "/var/media/")
 define("CONFIG_HOOYA_DAILY_UPLOAD_LIMIT", 15);
 define("CONFIG_HOOYA_MAX_UPLOAD", 1024*1024*500);
 
+// Class definitions
 define('DB_MEDIA_CLASSES', [
 	'single_image' => [
 		'ULPath' => CONFIG_HOOYA_STORAGE_PATH,
 	],
 	'video' => [
+		'ULPath' => CONFIG_HOOYA_STORAGE_PATH,
 	],
 	'anime' => [
 		'FMGroup' => 'series',
@@ -51,7 +53,8 @@ define('DB_MEDIA_CLASSES', [
 		'ULPath' => CONFIG_HOOYA_STORAGE_PATH,
 	]
 ]);
-define('DB_FILE_PROPERTIES', ['Size', 'Path', 'Mimetype']);
+// Property definitions on each class; each property is a
+// columns in the class' SQL table
 define('DB_FILE_EXTENDED_PROPERTIES',
 [
 	'single_image' => [

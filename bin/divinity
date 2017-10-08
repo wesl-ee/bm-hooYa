@@ -8,7 +8,7 @@ use File::MimeInfo 'mimetype';
 use Digest::MD5::File 'file_md5_hex';
 
 # Cute formatting; ANSI escape codes
-use constant HOOYA_VERSION => '0.6';
+use constant HOOYA_VERSION => '0.7';
 use constant {
 	FG_BLACK => '[0;30m',
 	FG_RED => '[0;31m',
@@ -319,40 +319,75 @@ divinity - hooYa management interface
 
 =head1 SYNOPSIS
 
-Exactly one of the following must be specified:
+Exactly B<one> of the following must be specified:
 
-=over
+=over 12
 
 =item --import
 
+Index the files in a given --directory
+
 =item --delete
+
+Delete the file given by --key from the hooYa! and from the file system
 
 =item --unmap
 
+Only delete the file given by --key from the hooYa! database
+
 =back
 
-Delete / unmap options
+=head3 Delete / Unmap options
 
-=over
+=over 12
 
 =item --key
 
+MD5 sum of the file in question
+
 =back
 
-Import options
+=head3 Import options
 
-=over
+=over 12
+
+=item --absorb
+
+Change the filename and move the imported file(s) into hooYa storage (as
+defined by C<includes/config.php>
 
 =item --directory
 
+Import all files in this given directory; will be searched recursively. If
+--directory is a single file, only that file will be imported
+
 =item --class
 
-=item --namespace
+Import files in the given --directory with this media class
+
+=item --property
+
+A string of the form C<property:regex> where C<property> is the media class
+property you wish to fill out and C<regex> is a regex matched against the
+imported file's filename with exactly B<one> capture group, which defines
+the value of C<tag>
+
+=item --exclude
+
+Regex matched against the filename of files in a --directory; files which
+match this regex are not imported
 
 =item --tag
+
+A string of the form C<tag:regex> where C<tag> is the
+tag namespace you wish to fill out and C<regex> is a regex matched against the
+imported file's filename with exactly B<one> capture group, which defines
+the value of C<tag>
 
 =back
 
 =head1 VERSION
 
-0.6
+0.7
+
+=cut
