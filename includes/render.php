@@ -1,23 +1,20 @@
 <?php
 function render_file($key, $ftype)
 {
+	$key = rawurlencode($key);
 	switch($ftype) {
 	case 'image':
 		print '<main class="single">'
 		// Wrap the img in a div to preserve the aspect ratio
-		. '<div id="hack">'
-		. '<img src="download.php?key='.rawurlencode($key).'"'
-		. ' onClick="window.open(this.src)">'
-		. '</img>'
-		. '</div>'
+		. "<a id=hack href='download.php?key=$key'>"
+		. "<img src='download.php?key=$key'>"
+		. '</a>'
 		. '</main>';
 		break;
 	case 'video':
-		print '<main class="single">'
-		. '<div id="hack">'
-		. '<img src="download.php?key='.rawurlencode($key).'&preview"'
-		. 'onClick="window.open(\'download.php?key='.rawurlencode($key).'\')">'
-		. '</img>'
+		print '<main class=single>'
+		. "<a id=hack href='download.php?key=$key'>"
+		. "<img src='download.php?key=$key&preview'>"
 		. '</a>'
 		. '</div>'
 		. '</main>';

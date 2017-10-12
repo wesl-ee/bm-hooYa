@@ -24,7 +24,8 @@ if (!file_exists($path)) {
 }
 if (!logged_in()) {
 	if (DB_MEDIA_CLASSES[$class]['Restricted'] &&
-	!check_user_identity($_SERVER['REMOTE_ADDR'])) die;
+	!check_user_identity($_SERVER['HTTP_X_REAL_IP']))
+		include CONFIG_COMMON_PATH."includes/auth.php";
 }
 
 // Assume that we are sending the raw file until we can disprove that
@@ -70,9 +71,10 @@ if (isset($_GET['thumb'])) {
 	}
 }
 if ($ftype == 'video' && isset($_GET['preview'])) {
-	$file = CONFIG_TEMPORARY_PATH . $key . '_preview_' . round($percent) . '.png';
-	exec('ffmpegthumbnailer -i ' . escapeshellarg($path)
-	. ' -s 0 -o ' . $file . ' -t 50%');
+	$file = CONFIG_TEMPORARY_PATH . $key . '_preview.png';
+	if (!file_exists($file))
+		exec('ffmpegthumbnailer -i ' . escapeshellarg($path)
+		. ' -s 0 -o ' . $file . ' -t 50%');
 	bmfft_xsendfile($file);
 	return;
 }
