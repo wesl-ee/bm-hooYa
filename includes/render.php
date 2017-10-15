@@ -29,14 +29,14 @@ function render_properties($key, $class, $editmode = True)
 		return;
 	}
 	$fileproperties = db_getproperties($key);
+	$fileproperties['property'] = htmlspecialchars(
+		$fileproperties['property'], ENT_QUOTES
+	);
 	print '<table id="properties">';
 	foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
-		print '<tr>';
-		print '<td>'
-		. $property
-		. '</td>';
-
-		print '<td>';
+		print '<tr>'
+		. "<td>$property</td>"
+		. '<td>';
 		if (!logged_in() || $value['Immutable'] || !$editmode) {
 			print $fileproperties[$property];
 		}
@@ -55,20 +55,26 @@ function render_tags($key)
 	$tags = db_get_tags([$key])[$key];
 	print '<table id="tags">';
 	foreach ($tags as $tag) {
-		print '<tr>'
-		. '<td>';
+		$space = ucwords(
+			htmlspecialchars($tag['Space'], ENT_QUOTES)
+		);
+		$mem = ucwords(
+			htmlspecialchars($tag['Member'], ENT_QUOTES)
+		);
+
+		print '<tr><td>';
 		if (logged_in())
-			print '<input name="tag_space[]"'
-			. ' value="'.ucwords($tag['Space']).'">';
+			print "<input name='tag_space[]'"
+			. " value='$space'>";
 		else
-			print ucwords($tag['Space']);
+			print $space;
 		print '</td>';
 		print '<td>';
 		if (logged_in())
-			print '<input name="tag_member[]"'
-			. ' value="'.ucwords($tag['Member']).'">';
+			print "<input name='tag_member[]'"
+			. " value='$mem'>";
 		else
-			print ucwords($tag['Member']);
+			print $mem;
 		print '</td></tr>';
 	}
 	print '</table>';
@@ -128,17 +134,17 @@ function render_list($results)
 		}
 		$taglist = $tags[$key];
 		foreach ($taglist as $tag) {
+			$space = ucwords(
+				htmlspecialchars($tag['Space'], ENT_QUOTES)
+			);
+			$mem = ucwords(
+				htmlspecialchars($tag['Member'], ENT_QUOTES)
+			);
 			print "<div id=tag>";
-			$space = ucwords($tag['Space']);
-			$mem = ucwords($tag['Member']);
 			$added = parse_timestamp($tag['Added']);
-			$author = $tag['Author'];
 			if ($space)
 			print "<dt>$space</dt>"
 			. "<dd>$mem</dd>";
-			if ($added)
-			print "<dt>Date</dt>"
-			. "<dd>$added</dd>";
 			print "</div>";
 		}
 		print "</dl></div></div>";
@@ -304,8 +310,8 @@ function render_min_search($q = NULL)
 {
 	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
 	. "<input id='searchbox' type='search' value='$q'"
-	. " name='query' placeholder='search,terms'>";
-	print "</form>";
+	. " name='query' placeholder='search,terms'>"
+	. "</form>";
 }
 function render_hooya_headers()
 {
