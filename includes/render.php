@@ -111,6 +111,7 @@ function render_list($results)
 {
 	foreach ($results as $key => $result) $keys[] = $key;
 	$tags = db_get_tags($keys);
+	$tags_by_space = db_get_tags_by_space($keys);
 	foreach ($results as $key => $result) {
 		$class = $result['Class'];
 		$indexed = parse_timestamp($result['Indexed']);
@@ -132,19 +133,21 @@ function render_list($results)
 			print "<div id=tag><dt>$property</dt>";
 			print "<dd>".$fileproperties[$property]."</dd></div>";
 		}
-		$taglist = $tags[$key];
-		foreach ($taglist as $tag) {
+		$taglist = $tags_by_space[$key];
+		foreach ($taglist as $space => $tags) {
 			$space = ucwords(
-				htmlspecialchars($tag['Space'], ENT_QUOTES)
-			);
-			$mem = ucwords(
-				htmlspecialchars($tag['Member'], ENT_QUOTES)
+				htmlspecialchars($space, ENT_QUOTES)
 			);
 			print "<div id=tag>";
-			$added = parse_timestamp($tag['Added']);
 			if ($space)
-			print "<dt>$space</dt>"
-			. "<dd>$mem</dd>";
+			print "<dt>$space</dt>";
+
+			foreach ($tags as $tag) {
+				$mem = ucwords(
+					htmlspecialchars($tag['Member'], ENT_QUOTES)
+				);
+				print "<dd>$mem</dd>";
+			}
 			print "</div>";
 		}
 		print "</dl></div></div>";

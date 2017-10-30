@@ -31,12 +31,44 @@ function db_get_tags($keys)
 	mysqli_close($dbh);
 	return $ret;
 }
+function db_get_tags_by_space($keys)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT FileId, Tags.Space, Tags.Member, Author, Added FROM"
+	. " Files, TagMap, Tags WHERE TagMap.FileId = Files.Id"
+	. " AND Tags.Id = TagMap.TagId AND (";
+	for ($i = 0; $i < count($keys); $i++) {
+		$key = $keys[$i];
+		// Escape all potential user input
+		$key = mysqli_real_escape_string($dbh, $key);
+		// Pull from `Tags` using our $key
+		$query.= " Files.Id = '$key' ";
+		if ($i+1 < count($keys)) $query .= " OR ";
+	}
+	$query .= ")";
+	$res = mysqli_query($dbh, $query);
+	// We allow more than one of the same tag space
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[$row['FileId']][$row['Space']][] = [
+			'Member' => $row['Member'],
+			'Author' => $row['Author'],
+			'Added' => $row['Added']
+		];
+	}
+	mysqli_close($dbh);
+	return $ret;
+}
 function db_set_tags($key, $tags)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_autocommit($dbh, false);
 
 	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
@@ -72,6 +104,7 @@ function db_set_tags($key, $tags)
 	$query = substr($query, 0, -3);
 	$query .= "))";
 	mysqli_query($dbh, $query);
+	mysqli_commit($dbh);
 	mysqli_close($dbh);
 }
 function db_getrandom($n)
