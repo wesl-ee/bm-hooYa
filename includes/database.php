@@ -1,4 +1,25 @@
 <?php
+/*
+* Quick tag lookup of a bunch of files
+* IN: An array of MD5 sums to look up
+* OUT: An array keyed by your INput MD5 sums which looks like
+* $MD5 => [
+*	[
+* 	'Space' => $Namespace1,
+* 	'Member' => $Member1,
+* 	'Author' => $Author1,
+*	'Added' => $Date1
+*	],
+*	[
+* 	'Space' => $Namespace2,
+* 	'Member' => $Member2,
+* 	'Author' => $Author2,
+*	'Added' => $Date2
+*	],
+*	... and so on
+* ];
+*
+*/
 function db_get_tags($keys)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -31,6 +52,35 @@ function db_get_tags($keys)
 	mysqli_close($dbh);
 	return $ret;
 }
+/*
+* Quick tag lookup for a bunch of files; output organized by namespace
+* IN: An array of MD5 sums to look up
+* OUT: An array keyed by your INput MD5 sums which looks like
+* [
+* 	$MD5_1 => [ $Namespace1 => [
+*		'Member' => $Member1,
+* 		'Author' => $Author1,
+*		'Added' => $Date1
+*		], $Namespace2 => [
+* 		'Member' => $Member2,
+* 		'Author' => $Author2,
+*		'Added' => $Date2
+*		],
+* 		... and so on
+* 	],
+* 	$MD5_2 => [ $Namespace3 => [
+* 		'Member' => $Member3,
+* 		'Author' => $Author3,
+*		'Added' => $Date3
+*		], $Namespace4 => [
+* 		'Member' => $Member4,
+* 		'Author' => $Author4,
+*		'Added' => $Date4
+*		],
+* 		... and so on
+*	], ... and so on
+* ];
+*/
 function db_get_tags_by_space($keys)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -62,6 +112,16 @@ function db_get_tags_by_space($keys)
 	mysqli_close($dbh);
 	return $ret;
 }
+/*
+* Replace a file's tags w/ $tags
+* IN: A file MD5 $key and an associative array like
+* 	[
+* 		$namespace1 => $tag1,
+* 		$namespace2 => $tag2,
+* 		$namespace3 => $tag3,
+* 		... and so on
+* 	];
+*/
 function db_set_tags($key, $tags)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -107,6 +167,11 @@ function db_set_tags($key, $tags)
 	mysqli_commit($dbh);
 	mysqli_close($dbh);
 }
+/*
+* Get a random slice of untagged files
+* IN: $n number of files to return
+* OUT: An array of MD5 hashes which have no associated tags
+*/
 function db_getrandom($n)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -130,6 +195,22 @@ function db_getrandom($n)
 	mysqli_close($dbh);
 	return $ret;
 }
+/*
+* Get a page of recently tagged files
+* IN: The $page to retrieve
+* OUT: An array indexed by MD5 hashes which looks like
+* [
+* 	$MD5_1 => [
+* 		'Class' => $Class1,
+* 		'Indexed' => $Date1
+* 	],
+* 	$MD5_2 => [
+* 		'Class' => $Class2,
+* 		'Indexed' => $Date2
+* 	],
+* 	... and so on
+* ];
+*/
 function db_getrecent($page)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -156,7 +237,16 @@ function db_getrecent($page)
 	mysqli_close($dbh);
 	return $ret;
 }
-
+/*
+* Get the frequency of occurence of all members within a given namespace
+* IN: The namespace to analyze
+* OUT: An array which looks like
+* [
+* 	$Member1 => $Frequency_of_Member1,
+* 	$Member2 => $Frequency_of_Member2,
+* 	... and so on
+* ];
+*/
 function db_tagspace_sort($tag_space)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -174,6 +264,16 @@ function db_tagspace_sort($tag_space)
 	}
 	return $ret;
 }
+/*
+* Simply returns a list of all members (for search suggestions)
+* OUT: An array like
+* [
+* 	$Member1 => 1,
+* 	$Member2 => 1,
+* 	$Member3 => 1,
+* 	... and so on for every member in the database
+* ]
+*/
 function db_get_all_members()
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -187,6 +287,11 @@ function db_get_all_members()
 	}
 	return $ret;
 }
+/*
+* Checks if $member is a member of the tag database
+* IN: The $member (e.g. 'yuyushiki') to check
+* OUT: True or False
+*/
 function db_is_member($member)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -198,6 +303,11 @@ function db_is_member($member)
 	$res = mysqli_query($dbh, $query);
 	return mysqli_num_rows($res);
 }
+/*
+* Checks if $namespace is a namespace in the tag database
+* IN: The $namespace (e.g. 'series') to check
+* OUT: True or False
+*/
 function db_is_space($namespace)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -209,6 +319,17 @@ function db_is_space($namespace)
 	$res = mysqli_query($dbh, $query);
 	return mysqli_num_rows($res);
 }
+/*
+* Returns information about a certain file
+* IN: The file $key (MD5 Hash)
+* OUT: An array like:
+* [
+* 	'Path' => $filepath,
+* 	'Class' => $mediaclass,
+* 	'Size' => $filesize,
+* 	'Mimetype' => $mimetype
+* ];
+*/
 function db_getfileinfo($key)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -226,6 +347,11 @@ function db_getfileinfo($key)
 	mysqli_close($dbh);
 	return $row;
 }
+/*
+* Sets the media class of $key to $class
+* IN: The file $key to alter and the $class to change to
+* OUT: False on error, True otherwise
+*/
 function db_setclass($key, $class)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -239,6 +365,16 @@ function db_setclass($key, $class)
 	. ' WHERE Id = "' . $key . '"';
 	return mysqli_query($dbh, $query);
 }
+/*
+* Sets the properties of $key
+* IN: The file $key to manipulate and an array $props like
+* [
+* 	$property1 => $value1,
+* 	$property2 => $value2,
+* 	... and so on
+* ];
+* OUT: False on error, True otherwise
+*/
 function db_setproperties($key, $props)
 {
 	$class = db_getfileinfo($key)['Class'];
@@ -261,6 +397,16 @@ function db_setproperties($key, $props)
 	. aa_join($props, ', ', '=');
 	return mysqli_query($dbh, $query);
 }
+/*
+* Get the properties of a file $key
+* IN: File $key (MD5)
+* OUT: An array like
+* [
+* 	$property1 => $value1,
+* 	$property2 => $value2,
+* 	... and so on
+* ];
+*/
 function db_getproperties($key)
 {
 	$class = db_getfileinfo($key)['Class'];
@@ -279,7 +425,10 @@ function db_getproperties($key)
 	mysqli_close($dbh);
 	return $row;
 }
-
+/*
+* I wrote this one time when I was really sleepy and I forgot what it does
+* but it's useful for setting file properties somehow
+*/
 function aa_join($aa, $seperator, $inbetween)
 {
 	unset($i);
@@ -289,11 +438,15 @@ function aa_join($aa, $seperator, $inbetween)
 	}
 	return $final;
 }
-// Might do a SQL query here if we want to allow user-defined properties
 function db_get_class_properties($class)
 {
 	return (DB_FILE_EXTENDED_PROPERTIES[$class]);
 }
+/*
+* Resolves a tag alias
+* IN: The $alias to resolve
+* OUT: W/E $alias is meant to resolve as (from the `Alias` table)
+*/
 function db_get_alias($alias)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
@@ -305,6 +458,11 @@ function db_get_alias($alias)
 	$res = mysqli_query($dbh, $query);
 	return mysqli_fetch_assoc($res)['Space'];
 }
+/*
+* Update the number of tags a user has added / destroyed
+* IN: User ID and the number to add / subtract from the user's score
+* OUT: False on error, True otherwise
+*/
 function db_update_highscore($userid, $diff)
 {
 	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME
