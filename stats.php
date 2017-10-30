@@ -73,13 +73,13 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 			}
 			print '</table>';
 			print "<hr><h3>Associations</h3>";
-			render_bargraph(stats_getassoc($tag), 'index.php?tags={?}');
+			render_bargraph(stats_getassoc($tag), 'stats.php?tags={?}');
 
 		}
 		// An overview of all tags
 		else {
 			print '<h3>Tags</h3>';
-			render_bargraph(stats_tag_freq(), 'index.php?tags={?}');
+			render_bargraph(stats_tag_freq(), 'stats.php?tags={?}');
 		}
 	// Equivalent statements, shorthand
 	} else if (isset($_GET['aliases'])) {
