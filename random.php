@@ -24,9 +24,20 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	</aside>
 </div>
 <div id="rightframe">
-
 	<?php
-	$results = db_getrandom(16);
+	if (!isset($_GET['untagged'])) {
+		print "<h2>random sixteen</h2>"
+		. "<header>"
+		. "<a href=?untagged&list>Show Untagged</a>"
+		. "</header>";
+		$results = db_getrandom(16);
+	} else {
+		print "<h2>random untagged sixteen</h2>"
+		. "<header>"
+		. "<a href=?>Show all</a>"
+		. "</header>";
+		$results = db_getuntaggedrandom(16);
+	}
 	if (!count($results)) {
 		print '<header>'
 		. 'No more pictures to index!'
@@ -35,19 +46,31 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 		. '</div></main>';
 	}
 	else {
-		print '<h2>random untagged sixteen</h2>'
-		. '<header>'
-		. '<a href=".">back to main</a>'
-		. '</header>'
-		. '<main class=thumbs>';
-		render_thumbs($results);
-		print '</main>'
-		. '<footer>'
-		. '<a href="#" onClick="location.reload()">more!</a>'
-		. '</footer>';
+		if (isset($_GET['list'])) {
+			print '<main class="thumbs">';
+			render_thumbs($results);
+			print '</main>';
+		}
+		else {
+			print '<main class="list">';
+			render_list($results);
+			print '</main>';
+		}
+		print '<footer>'
+		. '<a href="#" onClick="location.reload()">more!</a>';
+		$newGET = $_GET;
+		if (!isset($_GET['list'])) {
+			print "<a href='?" . http_build_query($newGET) . "&list'>"
+			. "thumbnail view</a>";
+		}
+		else {
+			unset($newGET['list']);
+			print "<a href='?" . http_build_query($newGET) . "'>"
+			. "full view</a>";
+		}
+		print '</footer>';
 	}
 	?>
-
 </div>
 </body>
 </html>

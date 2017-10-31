@@ -324,7 +324,7 @@ function render_hooya_headers()
 	. "<a href='$h/power.php'>Search</a>"
 	. "<a href='$h/stats.php?overview'>Metrics</a>"
 	. "<a href='$h/upload.php'>U/L</a>"
-	. "<a href='$h/random.php'>Random</a>"
+	. "<a href='$h/random.php?untagged'>Random</a>"
 	. "</footer>";
 }
 ?>

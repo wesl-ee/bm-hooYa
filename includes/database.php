@@ -172,7 +172,7 @@ function db_set_tags($key, $tags)
 * IN: $n number of files to return
 * OUT: An array of MD5 hashes which have no associated tags
 */
-function db_getrandom($n)
+function db_getuntaggedrandom($n)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
@@ -181,6 +181,33 @@ function db_getrandom($n)
 	mysqli_set_charset($dbh, 'utf8');
 	$query = "SELECT Id, Class, Indexed FROM Files WHERE NOT Id in ("
 	. "SELECT FileId AS Id FROM TagMap) ";
+	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
+		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
+	}
+	$query .= " ORDER BY RAND()"
+	. " LIMIT $n";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res))
+		$ret[$row['Id']] = [
+			'Class' => $row['Class'],
+			'Indexed' => $row['Indexed'],
+		];
+	mysqli_close($dbh);
+	return $ret;
+}
+/*
+* Get a random slice of all indexed files
+* IN: $n number of files to return
+* OUT: An array of MD5 hashes
+*/
+function db_getrandom($n)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$query = "SELECT Id, Class, Indexed FROM Files ";
 	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
 		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
 	}
