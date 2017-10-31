@@ -249,7 +249,7 @@ function db_getrecent($page)
 	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
 		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
 	}
-	$query .= " GROUP BY Id ORDER BY Added DESC";
+	$query .= " GROUP BY Id ORDER BY MAX(Added) DESC";
 
 	$res = mysqli_query($dbh, $query);
 	$ret['Count'] = mysqli_num_rows($res);
