@@ -27,14 +27,4 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 </div>
 </div>
 </body>
-<script type="text/javascript">
-	var classes = <?php
-	foreach (DB_MEDIA_CLASSES as $class => $property) {
-		if ($property['Restricted'] && !logged_in()) continue;
-		$classes[] = $class;
-	}
-	echo json_encode($classes);
-	?>;
-</script>
-<script src="js/search.js"></script>
 </html>

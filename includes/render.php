@@ -299,7 +299,16 @@ function render_search()
 		print '</div>';
 	}
 	print "</section></div>"
-	. "</form>";
+	. "</form>"
+	. "<script> var classes = ";
+	foreach (DB_MEDIA_CLASSES as $class => $property) {
+		if ($property['Restricted'] && !logged_in()) continue;
+		$classes[] = $class;
+	}
+	// Update the media class filter for its initial value
+	print json_encode($classes)
+	. "</script>";
+	print "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
 }
 function render_simple_search()
 {
@@ -321,10 +330,10 @@ function render_hooya_headers()
 	$h = CONFIG_HOOYA_WEBPATH;
 	print "<footer style='margin:auto;'>"
 	. "<a href='$h'>Main</a>"
-	. "<a href='$h/power.php'>Search</a>"
-	. "<a href='$h/stats.php?overview'>Metrics</a>"
-	. "<a href='$h/upload.php'>U/L</a>"
-	. "<a href='$h/random.php?untagged'>Random</a>"
+	. "<a href='$h" . "power.php'>Search</a>"
+	. "<a href='$h" . "stats.php?overview'>Metrics</a>"
+	. "<a href='$h" . "upload.php'>U/L</a>"
+	. "<a href='$h" . "random.php?untagged&list'>Random</a>"
 	. "</footer>";
 }
 ?>
