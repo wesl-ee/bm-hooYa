@@ -261,6 +261,8 @@ function render_bargraph($data, $linkify = NULL)
 }
 function render_search()
 {
+	// Include the JS for search bars
+	print "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
 	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
 	. "<input id='searchbox' type='search'"
 	. "name='query' placeholder='search,terms'>"
@@ -306,9 +308,10 @@ function render_search()
 		$classes[] = $class;
 	}
 	// Update the media class filter for its initial value
-	print json_encode($classes)
+	print json_encode($classes) . ";"
+	// On-submit hook to fine-tune searching and drop all empty form fields
+	. "enhance_powersearch();"
 	. "</script>";
-	print "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
 }
 function render_simple_search()
 {
