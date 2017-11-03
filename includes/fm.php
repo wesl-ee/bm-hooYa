@@ -12,7 +12,6 @@ function fm_listing($class) {
 
 	$query = "SELECT `Member`,";
 	foreach ($exts as $ext => $value) {
-		if ($value['Sort'])
 			$query .= " `$ext`,";
 	}
 	$query .= " `Files`.Id FROM"

@@ -6,12 +6,13 @@ include CONFIG_COMMON_PATH."includes/core.php";
 include CONFIG_HOOYA_PATH."includes/database.php";
 include CONFIG_HOOYA_PATH."includes/render.php";
 
+// View the first page of results
+// unless the user specified otherwise
 $page = 1;
 if (isset($_GET['page']))
 	$page = $_GET['page'];
-foreach($_GET as $param => $value) {
-	if ($param != 'page') $q[$param] = $value;
-}
+
+// A list of pictures w/ new tags
 $results = db_getrecent($page);
 $totalpages = floor($results['Count']/CONFIG_THUMBS_PER_PAGE) + 1;
 unset($results['Count']);
@@ -51,7 +52,7 @@ unset($results['Count']);
 		print '</main>';
 	}?>
 	<footer>
-		<?php render_pagenav($page, $totalpages, $q);?>
+		<?php render_pagenav($page, $totalpages);?>
 		<div><?php print ($totalpages . " pages")?></div>
 		<?php $newGET = $_GET;
 		if (!isset($_GET['thumbs'])) {

@@ -50,6 +50,8 @@ function simple_import($file, $class, $id)
 		. " `Width`=$width, `Height`=$height WHERE `Id`='$id'";
 		mysqli_query($dbh, $query);
 	}
+	syslog(LOG_INFO|LOG_DAEMON, "User $id uploaded a file"
+	. " from " . $_SERVER['HTTP_X_REAL_IP']);
 	return True;
 }
 ?>

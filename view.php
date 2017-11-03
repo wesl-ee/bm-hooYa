@@ -32,6 +32,9 @@ $class = $fileinfo['Class'];
 $path = $fileinfo['Path'];
 $mimetype = $fileinfo['Mimetype'];
 
+if (!logged_in() && DB_MEDIA_CLASSES[$class]['Restricted'])
+	include CONFIG_COMMON_PATH."includes/auth.php";
+
 // Filetype is the first half of the mimetype
 $ftype = explode('/', $mimetype)[0];
 ?>

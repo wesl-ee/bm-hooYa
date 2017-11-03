@@ -30,7 +30,8 @@ include CONFIG_HOOYA_PATH."includes/fm.php";
 		$list = fm_listing($_GET['class']);
 		print "<dl>";
 		foreach ($list as $group => $item) {
-			print "<dt>$group</dt>";
+			$group = ucwords($group);
+			print "<dt><h3>$group</h3></dt>";
 			foreach ($item as $key => $value) {
 				print "<dd>"
 				. "<a href=" . CONFIG_HOOYA_WEBPATH . "view.php?key=".rawurlencode($value['Key']).">"
