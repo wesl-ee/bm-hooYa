@@ -320,24 +320,29 @@ function render_search()
 }
 function render_simple_search()
 {
-	print "<form id='searchbox' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
-	. "<input id='query' type='search'"
-	. "name='query' placeholder='search,terms'>"
-	. "<input id='suggest' disabled>"
+	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
+	. "<div id=searchbox>"
+		. "<input id='query' type='search'"
+		. "name='query' placeholder='search,terms'>"
+		. "<input id='suggest' disabled>"
+	. "</div>"
 	. "<div><input type='submit' value='いこう！'></input></div>"
-	. "</form>"
 	// Include the JS for search bars
-	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
+	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>"
+	. "</form>";
 }
 function render_min_search($q = NULL)
 {
-	print "<form id='searchbox' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
-	. "<input id='query' type='search' value='$q'"
-	. " name='query' placeholder='search,terms'>"
-	. "<input id='suggest' disabled value ='$q'>"
-	. "</form>"
+	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
+	. "<div id=searchbox>"
+		. "<input id='query' type='search' value='$q'"
+		. " name='query' placeholder='search,terms'>"
+		. "<input id='suggest' disabled value ='$q'>"
+	. "</div>"
 	// Include the JS for search bars
-	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
+	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>"
+	. "</form>";
+
 }
 function render_hooya_headers()
 {

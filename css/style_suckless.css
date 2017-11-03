@@ -73,14 +73,24 @@ main.single > #hack > * {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+main.thumbs img, main.list img {
+	border: 1px solid;
+	transition: box-shadow 0.2s ease;
+}
+main.thumbs img:hover, main.list img:hover {
+	box-shadow: 1px 1px 2px;
+}
 main.thumbs img {
 	border: 1px solid;
 	width:calc(25% - 2% - 2px);
 	margin: 1%;
 	vertical-align:middle;
 }
-main.list img {
+main.thumbs img {
 	border: 1px solid;
+	width:calc(25% - 2% - 2px);
+	margin: 1%;
+	vertical-align:middle;
 }
 #searchresult {
 	display: flex;
@@ -140,9 +150,29 @@ main.list img {
 	padding-right: 2px;
 	width: 100px;
 }
+#search + footer {
+}
+#searchbox {
+	position: relative;
+	height: 1em;
+	padding: 5px;
+}
+#searchbox #query, #searchbox > #suggest {
+	background: transparent;
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+#searchbox #query {
+	z-index: 11;
+}
+#searchbox #suggest {
+	z-index: 10;
+}
 #bargraph {
-	position:relative;
-	width:70%;
+	position: relative;
+	width: 70%;
 	margin: auto;
 	margin-bottom: 5px
 }

@@ -34,7 +34,6 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 		<h1>hooYa metrics</h1>
 	</header>
 	<header>
-		<a href="../">back</a>
 		<a href="?overview">overview</a>
 		<a href="?tags">tags</a>
 		<a href="?aliases">aliases</a>
