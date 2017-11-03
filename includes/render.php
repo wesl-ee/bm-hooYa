@@ -261,14 +261,15 @@ function render_bargraph($data, $linkify = NULL)
 }
 function render_search()
 {
-	// Include the JS for search bars
-	print "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
 	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
-	. "<input id='searchbox' type='search'"
-	. "name='query' placeholder='search,terms'>"
+	. "<div id='searchbox'>"
+		. "<input id='query' type='search'"
+		. "name='query' placeholder='search,terms'>"
+		. "<input id='suggest' disabled>"
+	. "</div>"
 	. "<div id='params'>"
 	. "<section>"
-	. "<div><input type='submit' value='いこう！'></input></div>"
+	. "<div><input type='submit' value='Go！'></input></div>"
 	. "</section>"
 	. "<section id='filters'>"
 	. "<div><select id='media_class'"
@@ -301,8 +302,12 @@ function render_search()
 		print '</div>';
 	}
 	print "</section></div>"
-	. "</form>"
-	. "<script> var classes = ";
+	. "</form>";
+
+	// Include the JS for search bars
+	print "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
+
+	print "<script> var classes = ";
 	foreach (DB_MEDIA_CLASSES as $class => $property) {
 		if ($property['Restricted'] && !logged_in()) continue;
 		$classes[] = $class;
@@ -315,18 +320,24 @@ function render_search()
 }
 function render_simple_search()
 {
-	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
-	. "<input id='searchbox' type='search'"
+	print "<form id='searchbox' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
+	. "<input id='query' type='search'"
 	. "name='query' placeholder='search,terms'>"
+	. "<input id='suggest' disabled>"
 	. "<div><input type='submit' value='いこう！'></input></div>"
-	. "</form>";
+	. "</form>"
+	// Include the JS for search bars
+	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
 }
 function render_min_search($q = NULL)
 {
-	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
-	. "<input id='searchbox' type='search' value='$q'"
+	print "<form id='searchbox' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
+	. "<input id='query' type='search' value='$q'"
 	. " name='query' placeholder='search,terms'>"
-	. "</form>";
+	. "<input id='suggest' disabled value ='$q'>"
+	. "</form>"
+	// Include the JS for search bars
+	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
 }
 function render_hooya_headers()
 {

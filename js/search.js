@@ -67,3 +67,31 @@ function toggleinputs(div, doenable) {
 		selects[i].disabled = !doenable;
 	};
 }
+function remote_suggest(queryfield, suggestfield)
+{
+	var queryText = queryfield.value;
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() { if (this.readyState == 4 &&
+	this.status == 200) {
+		suggestfield.value = this.responseText;
+	} }
+	var uri = "?q=" + queryText;
+	xhr.open('GET', 'hint.php' + uri);
+	xhr.send();
+}
+document.getElementById('query').addEventListener('input', function(e) {
+	var suggestfield = document.getElementById('suggest');
+	if (this.value == '') {
+		suggestfield.value = '';
+		return;
+	}
+	// If the suggestion is correct so-far, do not get another suggestion
+	if (suggestfield.value.indexOf(this.value) == -1) {
+		remote_suggest(this, suggestfield);
+	}
+});
+// EventListener on input overrides the nice enter-to-submit built in to
+// a lot of browsers, so I redo it here
+document.getElementById('query').addEventListener('keypress', function(e) {
+	if (e.which == 13) document.getElementById('searchbox').submit();
+});
