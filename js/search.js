@@ -81,7 +81,7 @@ function remote_suggest(queryfield, suggestfield)
 }
 document.getElementById('query').addEventListener('input', function(e) {
 	var suggestfield = document.getElementById('suggest');
-	if (this.value.length < 2) {
+	if (this.value.length < 3) {
 		suggestfield.value = '';
 		return;
 	}
@@ -92,6 +92,12 @@ document.getElementById('query').addEventListener('input', function(e) {
 });
 // EventListener on input overrides the nice enter-to-submit built in to
 // a lot of browsers, so I redo it here
-document.getElementById('query').addEventListener('keypress', function(e) {
+document.getElementById('query').addEventListener('keydown', function(e) {
+	// Submit query when enter is pressed
 	if (e.which == 13) document.getElementById('search').submit();
+	// Complete suggestion if right arrow is pressed
+	if (e.which == 39 && document.getElementById('suggest').value != '') {
+		document.getElementById('query').value =
+		document.getElementById('suggest').value;
+	}
 });

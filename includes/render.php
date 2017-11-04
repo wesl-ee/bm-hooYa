@@ -335,7 +335,7 @@ function render_min_search($q = NULL)
 {
 	print "<form id='search' action='" . CONFIG_HOOYA_WEBPATH . "browse.php'>"
 	. "<div id=searchbox>"
-		. "<input id='query' type='search' value='$q'"
+		. "<input id='query' value='$q'"
 		. " name='query' placeholder='search,terms'>"
 		. "<input id='suggest' disabled value ='$q'>"
 	. "</div>"
