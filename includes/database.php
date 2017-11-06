@@ -490,7 +490,7 @@ function db_get_alias($alias)
 * IN: The query to complete
 * OUT: The best guess to autocomplete the query
 */
-function db_gethint($hint, $namespace = NULL)
+function db_gethints($hint, $namespace = NULL)
 {
 	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
 		CONFIG_MYSQL_HOOYA_USER,
@@ -502,7 +502,10 @@ function db_gethint($hint, $namespace = NULL)
 	. " WHERE `TagId`=`Id` AND (MEMBER LIKE '$hint%')"
 	. " GROUP BY Member ORDER BY `Frequency` DESC";
 	$res = mysqli_query($dbh, $query);
-	return mysqli_fetch_assoc($res)['Member'];
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[] = $row['Member'];
+	}
+	return $ret;
 }
 /*
 * Update the number of tags a user has added / destroyed

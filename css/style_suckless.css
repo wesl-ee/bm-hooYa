@@ -45,6 +45,7 @@ aside table th > * {
 }
 aside table input {
 	color: inherit;
+	border-color: inherit;
 	text-align: center;
 	background-color: transparent;
 	font-size: 1em;
@@ -154,19 +155,6 @@ main.thumbs img {
 	position: relative;
 	height: 1em;
 	padding-bottom: 5px;
-}
-#searchbox #query, #searchbox > #suggest {
-	position: absolute;
-	width: 100%;
-	top: 0;
-	left: 0;
-}
-#searchbox #query {
-	background: transparent;
-	z-index: 11;
-}
-#searchbox #suggest {
-	z-index: 10;
 }
 #bargraph {
 	position: relative;
