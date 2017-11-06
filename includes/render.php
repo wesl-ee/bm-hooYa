@@ -146,7 +146,8 @@ function render_list($results)
 				$mem = ucwords(
 					htmlspecialchars($tag['Member'], ENT_QUOTES)
 				);
-				print "<dd>$mem</dd>";
+				print "<dd><a href='browse.php?query="
+				. urlencode($mem) . "'>$mem</a></dd>";
 			}
 			print "</div>";
 		}
@@ -305,7 +306,9 @@ function render_search()
 	. "</form>";
 
 	// Include the JS for search bars
-	print "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
+	print "<script src='" . CONFIG_HOOYA_WEBPATH . "js/remote.js'></script>"
+	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>";
+
 
 	print "<script> var classes = ";
 	foreach (DB_MEDIA_CLASSES as $class => $property) {
@@ -328,6 +331,7 @@ function render_simple_search()
 	. "</div>"
 	. "<div><input type='submit' value='いこう！'></input></div>"
 	// Include the JS for search bars
+	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/remote.js'></script>"
 	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>"
 	. "</form>";
 }
@@ -340,6 +344,7 @@ function render_min_search($q = NULL)
 		. "<datalist id='suggest-list'></datalist>"
 	. "</div>"
 	// Include the JS for search bars
+	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/remote.js'></script>"
 	. "<script src='" . CONFIG_HOOYA_WEBPATH . "js/search.js'></script>"
 	. "</form>";
 

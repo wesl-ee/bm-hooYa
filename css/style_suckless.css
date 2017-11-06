@@ -156,6 +156,10 @@ main.thumbs img {
 	height: 1em;
 	padding-bottom: 5px;
 }
+#searchbox #query {
+	position: absolute;
+	width: 100%;
+}
 #bargraph {
 	position: relative;
 	width: 70%;
