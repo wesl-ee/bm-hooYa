@@ -500,7 +500,7 @@ function db_gethints($hint, $namespace = NULL)
 	$hint = mysqli_real_escape_string($dbh, $hint);
 	$query = "SELECT `Member`, COUNT(*) AS Frequency FROM TagMap, Tags"
 	. " WHERE `TagId`=`Id` AND (MEMBER LIKE '$hint%')"
-	. " GROUP BY Member ORDER BY `Frequency` DESC";
+	. " GROUP BY Member ORDER BY `Frequency` DESC LIMIT 5";
 	$res = mysqli_query($dbh, $query);
 	while ($row = mysqli_fetch_assoc($res)) {
 		$ret[] = $row['Member'];

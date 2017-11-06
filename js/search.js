@@ -78,13 +78,10 @@ function remote_suggest(queryfield, suggestlist)
 		var suggestedtext = [];
 		var suggested = suggestlist.children;
 		for (i = 0; i < suggested.length; i++) {
-			console.log('Checking ' + suggested[i].value);
-			if (suggests.indexOf(suggested[i].value) == -1) {
+			if (suggests.indexOf(suggested[i].value) == -1)
 				suggested[i--].remove();
-			}
-			else {
+			else
 				suggestedtext.push(suggested[i].value);
-			}
 		}
 		suggests.forEach(function(suggest) {
 			// Do not add the same suggestion twice!
@@ -100,16 +97,12 @@ function remote_suggest(queryfield, suggestlist)
 }
 document.getElementById('query').addEventListener('input', function(e) {
 	var suggestlist = document.getElementById('suggest-list');
-	if (this.value.length < 3) {
+	if (this.value.length < 1) {
 		while (suggestlist.lastChild) {
 			suggestlist.removeChild(suggestlist.lastChild);
 		}
 		return;
 	}
-	// If the suggestion is correct so-far, do not get another suggestion
 	var suggested = suggestlist.childNodes;
-	for (child in suggested) { if (suggested.hasOwnProperty(child)) {
-		if (!suggested[child].value.indexOf(this.value)) return;
-	} }
 	remote_suggest(this, suggestlist);
 });
