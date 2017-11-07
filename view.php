@@ -43,7 +43,6 @@ $ftype = explode('/', $mimetype)[0];
 	<?php include CONFIG_COMMON_PATH."includes/head.php";
 	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
 	<title>bmffd — view</title>
-	<script src="js/f.js"></script>
 	<script>
 		var maxtags = <?php echo CONFIG_HOOYA_MAX_TAGS?>;
 		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {
@@ -146,6 +145,8 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	<?php render_file($key, $ftype);?>
 </div>
 </div>
+<script src="js/remote.js"></script>
+<script src="js/tags.js"></script>
 </body>
 <?php
 if (count($_POST)) {

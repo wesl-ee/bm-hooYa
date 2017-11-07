@@ -64,19 +64,21 @@ function render_tags($key)
 
 		print '<tr><td>';
 		if (logged_in())
-			print "<input name='tag_space[]'"
-			. " value='$space'>";
+			print "<input class='space' name='tag_space[]'"
+			. " list=namespace-suggest-list value='$space'>";
 		else
 			print $space;
 		print '</td>';
 		print '<td>';
 		if (logged_in())
-			print "<input name='tag_member[]'"
-			. " value='$mem'>";
+			print "<input class='member' name='tag_member[]'"
+			. " list=member-suggest-list value='$mem'>";
 		else
 			print $mem;
 		print '</td></tr>';
 	}
+	print '<datalist id=namespace-suggest-list></datalist>';
+	print '<datalist id=member-suggest-list></datalist>';
 	print '</table>';
 }
 function render_classmenu($class = NULL)

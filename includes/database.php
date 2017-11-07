@@ -508,6 +508,28 @@ function db_gethints($hint, $namespace = NULL)
 	return $ret;
 }
 /*
+* Attempts to autocomplete the passed namespace
+* IN: The query to complete
+* OUT: The best guess to autocomplete the namespace
+*/
+function db_getnamespacehints($hint)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$hint = mysqli_real_escape_string($dbh, $hint);
+	$query = "SELECT `Space` FROM Tags"
+	. " WHERE (Space LIKE '$hint%')"
+	. " GROUP BY Space DESC LIMIT 5";
+	$res = mysqli_query($dbh, $query);
+	while ($row = mysqli_fetch_assoc($res)) {
+		$ret[] = $row['Space'];
+	}
+	return $ret;
+}
+/*
 * Update the number of tags a user has added / destroyed
 * IN: User ID and the number to add / subtract from the user's score
 * OUT: False on error, True otherwise

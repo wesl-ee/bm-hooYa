@@ -14,7 +14,6 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";
 	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
-	<script src="../js/f.js"></script>
 	<title>bm - big data</title>
 </head>
 <body>
