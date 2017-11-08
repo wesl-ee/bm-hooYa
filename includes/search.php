@@ -109,7 +109,7 @@ function hooya_search($query, $page)
 		if ($value['Sort'])
 			$query .= ", `$ext`+0 ASC";
 	}
-	$query .= ", Files.Indexed DESC, Files.Id DESC";
+	$query .= ", MAX(TagMap.Added) DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
 	$results['Count'] = mysqli_num_rows($res);
 	$query .= " LIMIT " . CONFIG_THUMBS_PER_PAGE
