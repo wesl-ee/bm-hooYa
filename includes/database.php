@@ -245,11 +245,20 @@ function db_getrecent($page)
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
-	$query = "SELECT Id, Class, Indexed FROM Files, TagMap WHERE FileId=Id";
+	// Get all files which have been tagged recently
+	$query = "SELECT Id, Class, MAX(Added) AS last_activity"
+	. " FROM Files, TagMap WHERE FileId=Id";
 	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
 		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
 	}
-	$query .= " GROUP BY Id ORDER BY GREATEST(Indexed, MAX(Added)) DESC";
+	// Union that with the set of recently uploaded files
+	$query .= " GROUP BY Id"
+	. " UNION SELECT Id, Class, Indexed AS last_activity"
+	. " FROM Files WHERE Id NOT In (SELECT FileId FROM TagMap)";
+	if (!logged_in()) foreach (DB_MEDIA_CLASSES as $class => $value) {
+		if ($value['Restricted']) $query .= " AND `Class`!='$class'";
+	}
+	$query .= " ORDER BY last_activity DESC";
 
 	$res = mysqli_query($dbh, $query);
 	$ret['Count'] = mysqli_num_rows($res);
@@ -259,7 +268,7 @@ function db_getrecent($page)
 	while ($row = mysqli_fetch_assoc($res))
 		$ret[$row['Id']] = [
 			'Class' => $row['Class'],
-			'Indexed' => $row['Indexed'],
+			'Last_Activity' => $row['last_activity'],
 		];
 	mysqli_close($dbh);
 	return $ret;
