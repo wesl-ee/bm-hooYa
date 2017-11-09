@@ -64,7 +64,12 @@ function hooya_search($query, $page)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	// TODO Approximate tags which are not exact by levenshtien distance
 
-	$query = "SELECT Files.Id, Class, COUNT(*) AS Relevance, Indexed FROM Files";
+	$query = "SELECT Files.Id, Class, COUNT(*) AS Relevance, Indexed";
+	if (empty($terms))
+		$query .= ", Indexed as last_activity";
+	else
+		$query .= ", MAX(TagMap.Added) as last_activity";
+	$query .= " FROM Files";
 	if (!empty($terms))
 		$query .= ", TagMap, Tags";
 	if (isset($mediaclass)) {
@@ -109,7 +114,7 @@ function hooya_search($query, $page)
 		if ($value['Sort'])
 			$query .= ", `$ext`+0 ASC";
 	}
-	$query .= ", MAX(TagMap.Added) DESC, Files.Id DESC";
+	$query .= ", last_activity DESC, Files.Id DESC";
 	$res = mysqli_query($dbh, $query);
 	$results['Count'] = mysqli_num_rows($res);
 	$query .= " LIMIT " . CONFIG_THUMBS_PER_PAGE
