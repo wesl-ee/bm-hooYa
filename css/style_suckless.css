@@ -160,20 +160,6 @@ main.thumbs img {
 	position: absolute;
 	width: 100%;
 }
-#bargraph {
-	position: relative;
-	width: 70%;
-	margin: auto;
-	margin-bottom: 5px
-}
-#bargraph dd {
-	margin-inline-start: 0px;
-}
-#bargraph dd {
-	list-style:none;
-	text-align: right;
-	border-bottom: 3px solid;
-}
 .fupload {
 	width: 0.1px;
 	height: 0.1px;
