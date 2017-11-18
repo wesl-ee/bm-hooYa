@@ -6,14 +6,17 @@ function render_file($key, $ftype)
 	case 'image':
 		print '<main class="single">'
 		// Wrap the img in a div to preserve the aspect ratio
-		. "<a id=hack href='download.php?key=$key'>"
+		. "<div id=hack>"
+		. "<a href='download.php?key=$key'>"
 		. "<img src='download.php?key=$key'>"
 		. '</a>'
+		. "</div>"
 		. '</main>';
 		break;
 	case 'video':
 		print '<main class=single>'
-		. "<a id=hack href='download.php?key=$key'>"
+		. "<div id=hack>"
+		. "<a href='download.php?key=$key'>"
 		. "<img src='download.php?key=$key&preview'>"
 		. '</a>'
 		. '</div>'

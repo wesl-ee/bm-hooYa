@@ -54,31 +54,34 @@ main.single {
 	display: flex;
 	/* hack for firefox */
 	min-height: 0;
+	text-align: center;
 	filter: drop-shadow(0px 0px 3px rgba(0,0,0,.3))
 	drop-shadow(0px 0px 10px rgba(0,0,0,.3));
 }
 main.single > * {
 	/* Grow small items !important */
 	flex: 1 1 auto;
+	align-items: center;
+}
+main.single #hack {
+	max-height: calc(100% - 20px);
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 /* Hack allows us to keep maintain the content aspect ration */
-main.single > #hack > * {
-	display: block;
+main.single #hack img {
 	/* Account for margin when doing full height */
-	max-height: calc(100% - 20px);
+	max-height: 100%;
 	max-width: 100%;
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 5px;
-
-	margin-top: 10px;
-	margin-bottom: 10px;
 }
 main.thumbs img, main.list img {
 	border: 1px solid;
 	transition: box-shadow 0.2s ease;
 }
-main.thumbs a, main.list a {
+main.thumbs a, main.list #preview a {
 	color: inherit;
 }
 main.thumbs img:hover, main.list img:hover {
