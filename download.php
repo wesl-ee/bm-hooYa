@@ -36,9 +36,17 @@ if (isset($_GET['thumb'])) {
 	// Take a snapshot of the video and use that as a thumbnail
 	if ($ftype == 'video') {
 		$file = CONFIG_TEMPORARY_PATH . $key . '.jpg';
-		if (!file_exists($file))
-			exec('ffmpegthumbnailer -i '.escapeshellarg($path)
-			. ' -q 10 -s 500  -o '.$file);
+		if (!file_exists($file)) {
+			exec("ffprobe -v error -show_entries format=duration"
+			. " -of default=noprint_wrappers=1:nokey=1 '$path'"
+			, $output);
+
+			$duration = $output[0];
+
+			system("ffmpeg -y -loglevel panic -hide_banner -ss "
+			. ($duration/2) . " -i '$in' -an -vframes 1"
+			. " -vf scale=\"250:-1\" $file");
+		}
 		bmfft_xsendfile($file);
 		return;
 	}
@@ -72,9 +80,17 @@ if (isset($_GET['thumb'])) {
 }
 if ($ftype == 'video' && isset($_GET['preview'])) {
 	$file = CONFIG_TEMPORARY_PATH . $key . '_preview.png';
-	if (!file_exists($file))
-		exec('ffmpegthumbnailer -i ' . escapeshellarg($path)
-		. ' -s 0 -o ' . $file . ' -t 50%');
+	if (!file_exists($file)) {
+		exec("ffprobe -v error -show_entries format=duration"
+		. " -of default=noprint_wrappers=1:nokey=1 '$path'"
+		, $output);
+
+		$duration = $output[0];
+
+		system("ffmpeg -y -loglevel panic -hide_banner -ss "
+		. ($duration/2) . " -i '$in' -an -vframes 1"
+		. " $file");
+	}
 	bmfft_xsendfile($file);
 	return;
 }
