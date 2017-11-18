@@ -78,6 +78,9 @@ main.thumbs img, main.list img {
 	border: 1px solid;
 	transition: box-shadow 0.2s ease;
 }
+main.thumbs a, main.list a {
+	color: inherit;
+}
 main.thumbs img:hover, main.list img:hover {
 	box-shadow: 1px 1px 2px;
 }
@@ -159,24 +162,4 @@ main.thumbs img {
 #searchbox #query {
 	position: absolute;
 	width: 100%;
-}
-.fupload {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-}
-.fupload + label {
-	color: black;
-	background-color: #F7F7F7;
-	display: inline-block;
-	padding-left: 1px;
-	padding-right: 1px;
-	border: 1px solid black;
-}
-
-.fupload + label:hover {
-	cursor: pointer;
 }
