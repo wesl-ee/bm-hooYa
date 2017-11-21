@@ -452,6 +452,9 @@ function db_getproperties($key)
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
 	$properties = array_keys(db_get_class_properties($class));
+	foreach ($properties as $k => $v) {
+		$properties[$k] = '`' . $v . '`';
+	}
 
 	$query = "SELECT "
 	. join(',', $properties)
