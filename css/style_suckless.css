@@ -50,6 +50,9 @@ aside table input {
 	background-color: transparent;
 	font-size: 1em;
 }
+aside table input[type=color] {
+	padding: 0px;
+}
 main.single {
 	display: flex;
 	/* hack for firefox */

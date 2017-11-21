@@ -41,7 +41,10 @@ function render_properties($key, $class, $editmode = True)
 		. "<td>$property</td>"
 		. '<td>';
 		if (!logged_in() || $value['Immutable'] || !$editmode) {
-			print $fileproperties[$property];
+			print "<input disabled";
+			if ($value['Type'])
+				print " type='" . $value['Type'] . "'";
+			print " value='" . $fileproperties[$property] . "'>";
 		}
 		else {
 			print "<input name='properties[$property]' id='box'";
@@ -135,6 +138,7 @@ function render_list($results)
 
 		print "<dl>";
 		foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
+			if (is_null($fileproperties[$property])) continue;
 			print "<div id=tag><dt>$property</dt>";
 			print "<dd>".$fileproperties[$property]."</dd></div>";
 		}

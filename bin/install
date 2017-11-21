@@ -167,6 +167,7 @@ $sth = $dbh->prepare(
 	. "`Width` int(11) NOT NULL DEFAULT -1,"
 	. "`Height` int(11) NOT NULL DEFAULT -1,"
 	. "`Ratio` float(6,3) unsigned GENERATED ALWAYS AS (`Width` / `Height`) PERSISTENT,"
+	. "`Dominant Color` CHAR(6) DEFAULT NULL,"
 	. "PRIMARY KEY (`Id`)"
 	. ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
 );

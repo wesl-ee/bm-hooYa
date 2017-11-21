@@ -12,7 +12,9 @@ GetOptions(
 
 	# Import directory options
 	'missing' => \my $missing,
+	'cleandb' => \my $clean,
 	'scan=s' => \my $scan,
+	'fixprop' => \my $fixprop,
 ) or HelpMessage(1);
 
 use constant {
@@ -84,24 +86,93 @@ if (defined $missing) {
 	notify_warn "The following files are not located at their paths:";
 	while (my $row = $sth->fetchrow_hashref) {
 		if (!-f $row->{'Path'}) {
-			print $row->{'Path'} . "\n";
+			print $row->{'Path'} . "\n"
+			. "Delete this from the hooYa (Y/n): ";
+
+			my $r = <STDIN>;
+			chomp $r;
+			if ($r eq 'Y') {
+				my $sth2 = $dbh->prepare("DELETE FROM TagMap WHERE FileId=?");
+				$sth2->execute($row->{'Id'});
+				$sth2 = $dbh->prepare("DELETE FROM Files WHERE Id=?");
+				$sth2->execute($row->{'Id'});
+			}
 		}
 	}
 }
+
 if (defined $scan) {
 	$sth = $dbh->prepare("SELECT `Path` FROM `Files` WHERE `Id`=?");
+	my $sth2 = $dbh->prepare("UPDATE `Files` SET `Path`=? WHERE `Id`=?");
 	my ($row, $md5);
 	find(sub {
 		return if !-f;
 		my $md5 = file_md5_hex($File::Find::name);
 		my $path = $_;
-		print "$path, $md5";die;
 		$sth->execute($md5) or die_error DBI::errstr;
 		$row = $sth->fetchrow_hashref;
-		print "SELECT `Path` FROM `Files` WHERE `Id`=" . $md5;
-
-		if ($row->{'Path'} != $File::Find::name) {
-			print 'a';
+		if (!defined $row || $row->{'Path'} eq $File::Find::name) {
+			return;
 		}
+		print $row->{'Path'} . '\n\t-> ' . $File::Find::name . "\n";
+		$sth2->execute($File::Find::name, $md5) or die_error DBI::errstr;
 	}, $scan);
+}
+if (defined $fixprop) {
+	my $row;
+	$sth = $dbh->prepare("SELECT `Files`.`Id`, `Path` FROM"
+	. "`Files`, `single_image`"
+	. " WHERE Files.`Id`=`single_image`.Id");
+	my $sth2 = $dbh->prepare("UPDATE `single_image`"
+	. " SET `Dominant Color`=?"
+	. " WHERE `Id`=?");
+	$sth->execute() or die_error DBI::errstr;
+	while ($row = $sth->fetchrow_hashref) {
+		my $file = $row->{'Path'};
+		my $out =  `convert $file +dither -colors 1 -define histogram:unique-colors=true -format "%c" histogram:info:`;
+		chomp $out;
+		if (!($out =~ / (#[A-Fa-f0-9]{6}) /)) {
+			print "Could not get a palette for $file\n"; next;
+		}
+		my $dom_color = $1;
+		print $dom_color . " " . $file . "\n";
+		$sth2->execute($dom_color, $row->{'Id'}) or die_error DBI::errstr;
+	}
+}
+if (defined $clean) {
+	# Cleaning out any tags which are not associated w/ any files
+	my $i;
+	my @qprepare;
+	my $query;
+	$sth = $dbh->prepare("SELECT Member FROM Tags WHERE Member"
+	. " NOT IN (SELECT Member FROM TagMap, Tags WHERE TagId=Tags.Id)");
+	$sth->execute or die DBI::errstr;
+	my $query = 'DELETE FROM `Tags` WHERE';
+	while (my $row = $sth->fetchrow_hashref) {
+		$query .= " OR" if ($i++);
+		$query .= " `Member`=?";
+		push @qprepare, $row->{'Member'};
+	}
+	if ($i) {
+		my $sth = $dbh->prepare($query);
+		$sth->execute(@qprepare) or die_error DBI::errstr;
+	}
+
+	# Cleaning out any unused namespaces
+	undef $i;
+	undef @qprepare;
+	undef $query;
+	$sth = $dbh->prepare("SELECT Space FROM Tags WHERE Space"
+	. " NOT IN (SELECT Space FROM TagMap, Tags WHERE TagId=Tags.Id)");
+	$sth->execute or die DBI::errstr;
+	my $query = 'DELETE FROM `Tags` WHERE';
+	while (my $row = $sth->fetchrow_hashref) {
+		$query .= " OR" if ($i++);
+		$query .= " `Space`=?";
+		push @qprepare, $row->{'Space'};
+	}
+	if ($i) {
+		my $sth = $dbh->prepare($query);
+		$sth->execute(@qprepare) or die_error DBI::errstr;
+	}
 }
