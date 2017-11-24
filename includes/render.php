@@ -40,7 +40,10 @@ function render_properties($key, $class, $editmode = True)
 		print '<tr>'
 		. "<td>$property</td>"
 		. '<td>';
-		if (!logged_in() || $value['Immutable'] || !$editmode) {
+		if ($value['Renderer']) {
+			call_user_func($value['Renderer'], $fileproperties[$property]);
+		}
+		else if (!logged_in() || $value['Immutable'] || !$editmode) {
 			print $fileproperties[$property];
 		}
 		else {
@@ -49,7 +52,7 @@ function render_properties($key, $class, $editmode = True)
 				print " type='" . $value['Type'] . "'";
 			print " value='" . $fileproperties[$property] . "'>";
 		}
-                print '</td></tr>';
+		print '</td></tr>';
 	}
 	print '</table>';
 }
@@ -136,8 +139,14 @@ function render_list($results)
 		print "<dl>";
 		foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value) {
 			if (is_null($fileproperties[$property])) continue;
-			print "<div id=tag><dt>$property</dt>";
-			print "<dd>".$fileproperties[$property]."</dd></div>";
+			// Allow a function to do the rendering for us
+			if ($value['Renderer']) {
+				call_user_func($value['Renderer'], $fileproperties[$property]);
+			// Legacy fall-back
+			} else {
+				print "<div id=tag><dt>$property</dt>"
+				. "<dd>".$fileproperties[$property]."</dd></div>";
+			}
 		}
 		$taglist = $tags_by_space[$key];
 		foreach ($taglist as $space => $tags) {
@@ -378,5 +387,18 @@ function render_hooya_headers()
 	. "<a href='$h" . "upload.php'>U/L</a>"
 	. "<a href='$h" . "random.php?untagged&list'>Random</a>"
 	. "</footer>";
+}
+
+/* Rendering properties from raw SQL data */
+function render_colors($colors_sql)
+{
+	$colors = json_decode($colors_sql);
+	print '<div id="colorbar">';
+	foreach ($colors as $color) {
+		$ratio = 1/count($colors);
+		$width = $ratio*100 . "%";
+		print "<div style='float:right;width:$width;background-color:$color'>&nbsp</div>";
+	}
+	print '</div>';
 }
 ?>

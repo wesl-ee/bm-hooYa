@@ -60,6 +60,10 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 	'single_image' => [
 		'Width' => ['Type' => 'Number', 'Immutable' => 1],
 		'Height' => ['Type' => 'Number', 'Immutable' => 1],
+		'Colors' => [
+			'Immutable' => 1,
+			'Renderer' => 'render_colors'
+		],
 	],
 	'video' => [
 		'Width' => ['Type' => 'Number', 'Immutable' => 1],

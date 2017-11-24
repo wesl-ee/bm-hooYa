@@ -24,7 +24,7 @@ include CONFIG_HOOYA_PATH."includes/database.php";
         </nav>
 	<aside>
 		<h1 style="text-align:center;">hooYa!</h1>
-		<?php render_min_search($q['query']); render_hooya_headers(); ?>
+		<?php render_min_search($_GET['tags']); render_hooya_headers(); ?>
 	</aside>
 </div>
 
