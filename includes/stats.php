@@ -118,13 +118,19 @@ function stats_getcolors($tag)
 		$colors = json_decode($colors);
 		// Deconstruct the hex-coded color, ignoring the #
 		foreach ($colors as $color) {
-			// Restrict the colorspace to 64 colors for
+			// Restrict the colorspace to 128 colors for
 			// a more simple analysis
 			$colorspace = 128;
 			$colorestrict = (256 / pow($colorspace, 1/3));
+			// Filter out whites, grays and blacks
+			$boringfilter = 70 * 70;
 			$red = hexdec(substr($color, 1, 2));
 			$green = hexdec(substr($color, 3, 2));
 			$blue = hexdec(substr($color, 5, 2));
+
+			// Calculate the distance to a gray tone
+			if (abs(pow($red, 2) - pow($green, 2)) < $boringfilter
+			&& abs(pow($red, 2) - pow($blue, 2)) < $boringfilter) continue;
 
 			$red = dechex(round($red / $colorestrict) * $colorestrict);
 			$green = dechex(round($green / $colorestrict) * $colorestrict);
