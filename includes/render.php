@@ -41,10 +41,7 @@ function render_properties($key, $class, $editmode = True)
 		. "<td>$property</td>"
 		. '<td>';
 		if (!logged_in() || $value['Immutable'] || !$editmode) {
-			print "<input disabled";
-			if ($value['Type'])
-				print " type='" . $value['Type'] . "'";
-			print " value='" . $fileproperties[$property] . "'>";
+			print $fileproperties[$property];
 		}
 		else {
 			print "<input name='properties[$property]' id='box'";
@@ -268,6 +265,19 @@ function render_bargraph($data, $linkify = NULL)
 		print "<dd style='width:$width;'>$value</dd>";
 	}
 	print '</dl></div>';
+}
+function render_colorbar($data)
+{
+	foreach ($data as $color => $value) {
+		$total += $value;
+	}
+	print '<div id="colorbar">';
+	foreach ($data as $color => $value) {
+		$ratio = $value/$total;
+		$width = $ratio*100 . "%";
+		print "<div style='float:right;width:$width;background-color:$color'>&nbsp</div>";
+	}
+	print '</div>';
 }
 function render_search()
 {

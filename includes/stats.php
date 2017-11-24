@@ -83,6 +83,7 @@ function stats_getassoc($tag)
 		CONFIG_MYSQL_HOOYA_PASSWORD,
 		CONFIG_MYSQL_HOOYA_DATABASE);
 	mysqli_set_charset($dbh, 'utf8');
+	$tag = mysqli_real_escape_string($dbh, $tag);
 	$query = "SELECT CONCAT(Space, ':', Member) AS Tag, COUNT(*) AS Freq"
 	. " FROM Tags, TagMap WHERE TagId=Tags.Id AND FileId IN"
 	. " (SELECT FileId FROM TagMap, Tags WHERE TagId=Tags.Id"
@@ -94,6 +95,50 @@ function stats_getassoc($tag)
 		$ret[$row['Tag']] = $row['Freq'];
 	}
 	return $ret;
+}
+function stats_getcolors($tag)
+{
+	$dbh = mysqli_connect(CONFIG_MYSQL_HOOYA_HOST,
+		CONFIG_MYSQL_HOOYA_USER,
+		CONFIG_MYSQL_HOOYA_PASSWORD,
+		CONFIG_MYSQL_HOOYA_DATABASE);
+	mysqli_set_charset($dbh, 'utf8');
+	$tag = mysqli_real_escape_string($dbh, $tag);
+	$query = "SELECT Colors FROM Tags, TagMap";
+	foreach (DB_FILE_EXTENDED_PROPERTIES as $class => $a) {
+		if ($a['Colors']) $query .= ", $class";
+	}
+	$query .= " WHERE TagId=Tags.Id";
+	foreach (DB_FILE_EXTENDED_PROPERTIES as $class => $a) {
+		if ($a['Colors']) $query .= " AND `$class`.id=FileId";
+	}
+	$query .= " AND CONCAT(Space,':',Member)='$tag'";
+	$res = mysqli_query($dbh, $query);
+	while($colors = mysqli_fetch_assoc($res)['Colors']) {
+		$colors = json_decode($colors);
+		// Deconstruct the hex-coded color, ignoring the #
+		foreach ($colors as $color) {
+			// Restrict the colorspace to 64 colors for
+			// a more simple analysis
+			$colorspace = 128;
+			$colorestrict = (256 / pow($colorspace, 1/3));
+			$red = hexdec(substr($color, 1, 2));
+			$green = hexdec(substr($color, 3, 2));
+			$blue = hexdec(substr($color, 5, 2));
+
+			$red = dechex(round($red / $colorestrict) * $colorestrict);
+			$green = dechex(round($green / $colorestrict) * $colorestrict);
+			$blue = dechex(round($blue / $colorestrict) * $colorestrict);
+			$modcolor = '#'
+			. str_pad($red, 2, '0', STR_PAD_LEFT)
+			. str_pad($green, 2, '0', STR_PAD_LEFT)
+			. str_pad($blue, 2, '0', STR_PAD_LEFT);
+
+			$palette[$modcolor]++;
+		}
+	}
+	arsort($palette);
+	return array_slice($palette, 0, 10, true);
 }
 function stats_untagged_count()
 {

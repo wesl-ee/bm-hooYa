@@ -72,7 +72,7 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 			print '</table>';
 			print "<hr><h3>Associations</h3>";
 			render_bargraph(stats_getassoc($tag), 'stats.php?tags={?}');
-
+			render_colorbar(stats_getcolors($tag));
 		}
 		// An overview of all tags
 		else {

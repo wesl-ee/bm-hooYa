@@ -5,6 +5,7 @@ use DBI;
 use File::Find;
 use File::MimeInfo 'mimetype';
 use Digest::MD5::File 'file_md5_hex';
+use JSON::PP;
 use Text::Table;
 
 GetOptions(
@@ -119,24 +120,54 @@ if (defined $scan) {
 	}, $scan);
 }
 if (defined $fixprop) {
-	my $row;
+	my ($row, $file);
 	$sth = $dbh->prepare("SELECT `Files`.`Id`, `Path` FROM"
 	. "`Files`, `single_image`"
 	. " WHERE Files.`Id`=`single_image`.Id");
-	my $sth2 = $dbh->prepare("UPDATE `single_image`"
-	. " SET `Dominant Color`=?"
-	. " WHERE `Id`=?");
+	my $sth2;
+
 	$sth->execute() or die_error DBI::errstr;
 	while ($row = $sth->fetchrow_hashref) {
-		my $file = $row->{'Path'};
-		my $out =  `convert $file +dither -colors 1 -define histogram:unique-colors=true -format "%c" histogram:info:`;
-		chomp $out;
-		if (!($out =~ / (#[A-Fa-f0-9]{6}) /)) {
-			print "Could not get a palette for $file\n"; next;
+		# Detecting colors
+		$file = $row->{'Path'};
+		my @out =  `convert $file +dither -colors 6 -define histogram:unique-colors=true -format "%c" histogram:info:`;
+		my @colors;
+		foreach(@out) {
+			if (/#[A-Fa-f0-9]{2}([A-Fa-f0-9]{6})/) {
+				push @colors, "#$1";
+			}
+			elsif (/(#[A-Fa-f0-9]{6})/) {
+				push @colors, $1;
+			}
+			if (@colors >= 6) { last; }
 		}
-		my $dom_color = $1;
-		print $dom_color . " " . $file . "\n";
-		$sth2->execute($dom_color, $row->{'Id'}) or die_error DBI::errstr;
+		if (!@colors) {
+			print $row->{'Id'} . " could not get a palette for $file\n";
+			print "@out";
+		}
+		print "$file @colors\n";
+		$sth2 = $dbh->prepare("UPDATE `single_image`"
+		. " SET `Colors`=?"
+		. " WHERE `Id`=?");
+		$sth2->execute(encode_json(\@colors), $row->{'Id'}) or die_error DBI::errstr;
+	}
+
+	$sth->execute() or die_error DBI::errstr;
+	while ($row = $sth->fetchrow_hashref) {
+		# Detecting image resolutions
+		$file = $row->{'Path'};
+		my $out =  `identify $file`;
+		chomp $out;
+		if (!($out =~ /(\d+)x(\d+)/)) {
+			print "Could not dimensions for $file\n"; next;
+		}
+		my $width = $1; my $height = $2;
+		$sth2 = $dbh->prepare("UPDATE `single_image` SET"
+		. " `Width`=?, `Height`=?"
+		. " WHERE `Id`=?");
+
+		print "$file ($width" . "x$height)\n";
+		$sth2->execute($width, $height, $row->{'Id'}) or die_error DBI::errstr;
 	}
 }
 if (defined $clean) {
