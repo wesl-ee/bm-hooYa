@@ -397,8 +397,16 @@ function db_setclass($key, $class)
 	mysqli_set_charset($dbh, 'utf8');
 	// Escape all potential user input
 	$class = mysqli_real_escape_string($dbh, $class);
-	$query = 'UPDATE Files SET Class = "' . $class . '"'
-	. ' WHERE Id = "' . $key . '"';
+	$key = mysqli_real_escape_string($dbh, $key);
+	$query = "SELECT Class FROM Files WHERE Id='$key'";
+	$oldclass = mysqli_fetch_assoc(mysqli_query($dbh, $query))['Class'];
+	$query = "DELETE FROM `$oldclass` WHERE Id='$key'";
+	mysqli_query($dbh, $query);
+
+	$query = "INSERT INTO `$class` (`Id`) VALUES ('$key')";
+	mysqli_query($dbh, $query);
+	$query = "UPDATE Files SET Class = '$class'"
+	. " WHERE Id='$key'";
 	return mysqli_query($dbh, $query);
 }
 /*

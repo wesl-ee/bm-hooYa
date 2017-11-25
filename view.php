@@ -106,7 +106,7 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	</nav>
 	<aside>
 	<header>
-		<span><?php print $key?></span>
+		<span><?php print $mimetype?></span>
 	</header>
 	<form method="post" action="view.php?key=<?php echo rawurlencode($key)?>">
 		<h3 style="text-align:left;">Class</h3>
@@ -124,7 +124,7 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 			print "<div style='text-align:center;'>"
 			. "<a onClick='addTagField()'>add a tag</a>"
 			. "</div><hr/>"
-			. "<input type='submit' value='commit changes'"
+			. "<input type='submit' value='commit'"
 			. " style='margin:auto;display:block;'>";
 			else
 			print "<hr/><div style='text-align:center;'>"

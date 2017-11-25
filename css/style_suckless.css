@@ -14,7 +14,7 @@ aside {
 /* Tag frame */
 aside {
 	display: block;
-	overflow :auto;
+	overflow: auto;
 
 	/* Scrollbar on left */
 	direction: rtl;
@@ -125,7 +125,6 @@ main.thumbs img {
 	margin: auto;
 	width: 90%;
 	margin-top: 0;
-	overflow: auto;
 	padding-left: 10px;
 }
 #searchresult #tag {
