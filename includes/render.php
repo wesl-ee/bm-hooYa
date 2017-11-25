@@ -283,10 +283,11 @@ function render_colorbar($data)
 	print '<div class=colorbar>';
 	foreach ($data as $color => $value) {
 		$textcolor = getTextColor($color);
+		$htmlname = resolve_color($color);
 		$ratio = $value/$total;
 		$width = $ratio*100 . "%";
 		print "<div class=color style='width:$width;background-color:$color'>"
-		. "<span class=colorname style='background-color:$color;color:$textcolor'>$color</span>"
+		. "<span class=colorname style='background-color:$color;color:$textcolor'>$htmlname ($color)</span>"
 		. "&nbsp</div>";
 	}
 	print '</div>';
@@ -398,13 +399,13 @@ function render_colors($colors_sql)
 	$colors = json_decode($colors_sql);
 	print '<div class=colorbar>';
 	foreach ($colors as $color) {
- 		$htmlname = resolve_color($color);
+		$htmlname = resolve_color($color);
 		$textcolor = getTextColor($color);
 
 		$ratio = 1/count($colors);
 		$width = $ratio*100 . "%";
 		print "<div class=color style='width:$width;background-color:$color'>"
-		. "<span class=colorname style='background-color:$color;color:$textcolor'>$htmlname</span>"
+		. "<span class=colorname style='background-color:$color;color:$textcolor'>$htmlname ($color)</span>"
 		. "&nbsp</div>";
 	}
 	print '</div>';
@@ -686,9 +687,9 @@ function resolve_color($color)
 	"Dark Cyan" => array(0, 139, 139),
 	"Dark Electric Blue" => array(83, 104, 120),
 	"Dark Goldenrod" => array(184, 134, 11),
-	"Dark Gray (X11)" => array(169, 169, 169),
+	"Dark Gray" => array(169, 169, 169),
 	"Dark Green" => array(1, 50, 32),
-	"Dark Green (X11)" => array(0, 100, 0),
+	"Dark Green" => array(0, 100, 0),
 	"Dark Gunmetal" => array(0, 100, 0),
 	"Dark Imperial Blue" => array(110, 110, 249),
 	"Dark Jungle Green" => array(26, 36, 33),
@@ -696,7 +697,6 @@ function resolve_color($color)
 	"Dark Lava" => array(72, 60, 50),
 	"Dark Lavender" => array(115, 79, 150),
 	"Dark Liver" => array(83, 75, 79),
-	"Dark Liver (Horses)" => array(84, 61, 55),
 	"Dark Magenta" => array(139, 0, 139),
 	"Dark Medium Gray" => array(169, 169, 169),
 	"Dark Midnight Blue" => array(0, 51, 102),
@@ -866,8 +866,8 @@ function resolve_color($color)
 	"Glaucous" => array(96, 130, 182),
 	"Glitter" => array(230, 232, 250),
 	"GO Green" => array(0, 171, 102),
-	"Gold (Metallic)" => array(212, 175, 55),
-	"Gold (Web) (Golden)" => array(255, 215, 0),
+	"Metallic Gold" => array(212, 175, 55),
+	"Gold" => array(255, 215, 0),
 	"Gold Fusion" => array(133, 117, 78),
 	"Golden Brown" => array(153, 101, 21),
 	"Golden Poppy" => array(252, 194, 0),
@@ -876,18 +876,10 @@ function resolve_color($color)
 	"Granny Smith Apple" => array(168, 228, 160),
 	"Grape" => array(111, 45, 168),
 	"Gray" => array(128, 128, 128),
-	"Gray (HTML/CSS Gray)" => array(128, 128, 128),
-	"Gray (X11 Gray)" => array(190, 190, 190),
 	"Gray-Asparagus" => array(70, 89, 69),
 	"Gray-Blue" => array(140, 146, 172),
-	"Green (Color Wheel) (X11 Green)" => array(0, 255, 0),
-	"Green (Crayola)" => array(28, 172, 120),
-	"Green (HTML/CSS Color)" => array(0, 128, 0),
-	"Green (Munsell)" => array(0, 168, 119),
-	"Green (NCS)" => array(0, 159, 107),
-	"Green (Pantone)" => array(0, 173, 67),
-	"Green (Pigment)" => array(0, 165, 80),
-	"Green (RYB)" => array(102, 176, 50),
+	"Green" => array(0, 255, 0),
+	"Crayola Green" => array(28, 172, 120),
 	"Green-Blue" => array(17, 100, 180),
 	"Green-Cyan" => array(0, 153, 102),
 	"Green-Yellow" => array(173, 255, 47),
@@ -928,11 +920,7 @@ function resolve_color($color)
 	"Indian Yellow" => array(227, 168, 87),
 	"Indigo" => array(75, 0, 130),
 	"Indigo Dye" => array(9, 31, 146),
-	"Indigo (Web)" => array(75, 0, 130),
 	"International Klein Blue" => array(0, 47, 167),
-	"International Orange (Aerospace)" => array(255, 79, 0),
-	"International Orange (Engineering)" => array(186, 22, 12),
-	"International Orange (Golden Gate Bridge)" => array(192, 54, 44),
 	"Iris" => array(90, 79, 207),
 	"Irresistible" => array(179, 68, 108),
 	"Isabelline" => array(244, 240, 236),
@@ -955,8 +943,8 @@ function resolve_color($color)
 	"Kelly Green" => array(76, 187, 23),
 	"Kenyan Copper" => array(124, 28, 5),
 	"Keppel" => array(58, 176, 158),
-	"Khaki (HTML/CSS) (Khaki)" => array(195, 176, 145),
-	"Khaki (X11) (Light Khaki)" => array(240, 230, 140),
+	"Khaki" => array(195, 176, 145),
+	"Light Khaki" => array(240, 230, 140),
 	"Kobe" => array(136, 45, 23),
 	"Kobi" => array(231, 159, 196),
 	"Kobicha" => array(107, 68, 35),
@@ -968,8 +956,7 @@ function resolve_color($color)
 	"Laser Lemon" => array(255, 255, 102),
 	"Laurel Green" => array(169, 186, 157),
 	"Lava" => array(207, 16, 32),
-	"Lavender (Floral)" => array(181, 126, 220),
-	"Lavender (Web)" => array(230, 230, 250),
+	"Lavender" => array(230, 230, 250),
 	"Lavender Blue" => array(204, 204, 255),
 	"Lavender Blush" => array(255, 240, 245),
 	"Lavender Gray" => array(196, 195, 208),
@@ -1025,8 +1012,7 @@ function resolve_color($color)
 	"Light Thulian Pink" => array(230, 143, 172),
 	"Light Yellow" => array(255, 255, 224),
 	"Lilac" => array(200, 162, 200),
-	"Lime (Color Wheel)" => array(191, 255, 0),
-	"Lime (Web) (X11 Green)" => array(0, 255, 0),
+	"Lime" => array(191, 255, 0),
 	"Lime Green" => array(50, 205, 50),
 	"Limerick" => array(157, 194, 9),
 	"Lincoln Green" => array(25, 89, 5),
@@ -1043,10 +1029,8 @@ function resolve_color($color)
 	"Lust" => array(230, 32, 32),
 	"Macaroni And Cheese" => array(255, 189, 136),
 	"Magenta" => array(255, 0, 255),
-	"Magenta (Crayola)" => array(255, 85, 163),
-	"Magenta (Dye)" => array(202, 31, 123),
-	"Magenta (Pantone)" => array(208, 65, 126),
-	"Magenta (Process)" => array(255, 0, 144),
+	"Crayola Magenta" => array(255, 85, 163),
+	"Magenta" => array(202, 31, 123),
 	"Magenta Haze" => array(159, 69, 118),
 	"Magenta-Pink" => array(204, 51, 139),
 	"Magic Mint" => array(170, 240, 209),
@@ -1061,8 +1045,7 @@ function resolve_color($color)
 	"Mardi Gras" => array(136, 0, 133),
 	"Marigold" => array(234, 162, 33),
 	"Maroon (Crayola)" => array(195, 33, 72),
-	"Maroon (HTML/CSS)" => array(128, 0, 0),
-	"Maroon (X11)" => array(176, 48, 96),
+	"Maroon" => array(176, 48, 96),
 	"Mauve" => array(224, 176, 255),
 	"Mauve Taupe" => array(145, 95, 109),
 	"Mauvelous" => array(239, 152, 170),
@@ -1151,11 +1134,7 @@ function resolve_color($color)
 	"Olivine" => array(154, 185, 115),
 	"Onyx" => array(53, 56, 57),
 	"Opera Mauve" => array(183, 132, 167),
-	"Orange (Color Wheel)" => array(255, 127, 0),
-	"Orange (Crayola)" => array(255, 117, 56),
-	"Orange (Pantone)" => array(255, 88, 0),
-	"Orange (RYB)" => array(251, 153, 2),
-	"Orange (Web)" => array(255, 165, 0),
+	"Orange" => array(255, 127, 0),
 	"Orange Peel" => array(255, 159, 0),
 	"Orange-Red" => array(255, 69, 0),
 	"Orange-Yellow" => array(248, 213, 104),
@@ -1244,7 +1223,6 @@ function resolve_color($color)
 	"Pine Green" => array(1, 121, 111),
 	"Pineapple" => array(86, 60, 92),
 	"Pink" => array(255, 192, 203),
-	"Pink (Pantone)" => array(215, 72, 148),
 	"Pink Flamingo" => array(252, 116, 253),
 	"Pink Lace" => array(255, 221, 244),
 	"Pink Lavender" => array(216, 178, 209),
@@ -1255,7 +1233,6 @@ function resolve_color($color)
 	"Pistachio" => array(147, 197, 114),
 	"Platinum" => array(229, 228, 226),
 	"Plum" => array(142, 69, 133),
-	"Plum (Web)" => array(221, 160, 221),
 	"Pomp And Power" => array(134, 96, 142),
 	"Popstar" => array(190, 79, 98),
 	"Portland Orange" => array(255, 90, 54),
@@ -1266,12 +1243,10 @@ function resolve_color($color)
 	"Psychedelic Purple" => array(223, 0, 255),
 	"Puce" => array(204, 136, 153),
 	"Puce Red" => array(114, 47, 55),
-	"Pullman Brown (UPS Brown)" => array(100, 65, 23),
+	"Pullman Brown" => array(100, 65, 23),
 	"Pullman Green" => array(59, 51, 28),
 	"Pumpkin" => array(255, 117, 24),
-	"Purple (HTML)" => array(128, 0, 128),
-	"Purple (Munsell)" => array(159, 0, 197),
-	"Purple (X11)" => array(160, 32, 240),
+	"Purple" => array(160, 32, 240),
 	"Purple Heart" => array(105, 53, 156),
 	"Purple Mountain Majesty" => array(150, 120, 182),
 	"Purple Navy" => array(78, 81, 128),
@@ -1297,12 +1272,7 @@ function resolve_color($color)
 	"Razzmic Berry" => array(141, 78, 133),
 	"Rebecca Purple" => array(102, 51, 153),
 	"Red" => array(255, 0, 0),
-	"Red (Crayola)" => array(238, 32, 77),
-	"Red (Munsell)" => array(242, 0, 60),
-	"Red (NCS)" => array(196, 2, 51),
-	"Red (Pantone)" => array(237, 41, 57),
-	"Red (Pigment)" => array(237, 28, 36),
-	"Red (RYB)" => array(254, 39, 18),
+	"Crayola Red" => array(238, 32, 77),
 	"Red-Brown" => array(165, 42, 42),
 	"Red Devil" => array(134, 1, 17),
 	"Red-Orange" => array(255, 83, 73),
@@ -1314,8 +1284,6 @@ function resolve_color($color)
 	"Resolution Blue" => array(0, 35, 135),
 	"Rhythm" => array(119, 118, 150),
 	"Rich Black" => array(0, 64, 64),
-	"Rich Black (FOGRA29)" => array(1, 11, 19),
-	"Rich Black (FOGRA39)" => array(1, 2, 3),
 	"Rich Brilliant Lavender" => array(241, 167, 254),
 	"Rich Carmine" => array(215, 0, 64),
 	"Rich Electric Blue" => array(8, 146, 208),
@@ -1361,7 +1329,7 @@ function resolve_color($color)
 	"Sacramento State Green" => array(0, 86, 63),
 	"Saddle Brown" => array(139, 69, 19),
 	"Safety Orange" => array(255, 120, 0),
-	"Safety Orange (Blaze Orange)" => array(255, 103, 0),
+	"Blaze Orange" => array(255, 103, 0),
 	"Safety Yellow" => array(238, 210, 2),
 	"Saffron" => array(244, 196, 48),
 	"Sage" => array(188, 184, 138),
@@ -1408,7 +1376,7 @@ function resolve_color($color)
 	"Sky Magenta" => array(207, 113, 175),
 	"Slate Blue" => array(106, 90, 205),
 	"Slate Gray" => array(112, 128, 144),
-	"Smalt (Dark Powder Blue)" => array(0, 51, 153),
+	"Smalt" => array(0, 51, 153),
 	"Smitten" => array(200, 65, 134),
 	"Smoke" => array(115, 130, 118),
 	"Smoky Black" => array(16, 12, 8),
@@ -1531,9 +1499,6 @@ function resolve_color($color)
 	"Very Pale Orange" => array(255, 223, 191),
 	"Very Pale Yellow" => array(255, 255, 191),
 	"Violet" => array(143, 0, 255),
-	"Violet (Color Wheel)" => array(127, 0, 255),
-	"Violet (RYB)" => array(134, 1, 175),
-	"Violet (Web)" => array(238, 130, 238),
 	"Violet-Blue" => array(50, 74, 178),
 	"Violet-Red" => array(247, 83, 148),
 	"Viridian" => array(64, 130, 109),
@@ -1603,7 +1568,7 @@ function resolve_color($color)
 		$currvar = abs(pow($code[0] - $r, 2)
 			+ pow($code[1] - $g, 2)
 			+ pow($code[2] - $b, 2));
-		if (!isset($closest)) {
+		if (!isset($minvar)) {
 			$closest = $name;
 			$minvar = $currvar;
 		}

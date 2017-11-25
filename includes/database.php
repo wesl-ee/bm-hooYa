@@ -400,6 +400,8 @@ function db_setclass($key, $class)
 	$key = mysqli_real_escape_string($dbh, $key);
 	$query = "SELECT Class FROM Files WHERE Id='$key'";
 	$oldclass = mysqli_fetch_assoc(mysqli_query($dbh, $query))['Class'];
+	if ($oldclass == $class) return true;
+
 	$query = "DELETE FROM `$oldclass` WHERE Id='$key'";
 	mysqli_query($dbh, $query);
 

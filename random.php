@@ -26,13 +26,13 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 <div id="rightframe">
 	<?php
 	if (!isset($_GET['untagged'])) {
-		print "<h2>random sixteen</h2>"
+		print "<h1>random sixteen</h1>"
 		. "<header>"
 		. "<a href=?untagged&list>Show Untagged</a>"
 		. "</header>";
 		$results = db_getrandom(16);
 	} else {
-		print "<h2>random untagged sixteen</h2>"
+		print "<h1>random untagged sixteen</h1>"
 		. "<header>"
 		. "<a href=?>Show all</a>"
 		. "</header>";

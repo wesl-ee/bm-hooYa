@@ -92,13 +92,7 @@ main.thumbs img:hover, main.list img:hover {
 }
 main.thumbs img {
 	border: 1px solid;
-	width:calc(25% - 2% - 2px);
-	margin: 1%;
-	vertical-align:middle;
-}
-main.thumbs img {
-	border: 1px solid;
-	width:calc(25% - 2% - 2px);
+	width:calc(25% - 2% - 4px);
 	margin: 1%;
 	vertical-align:middle;
 }

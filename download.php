@@ -5,8 +5,10 @@ include CONFIG_COMMON_PATH.'includes/core.php';
 include CONFIG_HOOYA_PATH.'includes/video.php';
 include CONFIG_HOOYA_PATH.'includes/database.php';
 
-if (!isset($_GET['key']))
+
+if (!isset($_GET['key'])) {
 	die;
+}
 
 $key = rawurldecode($_GET['key']);
 
@@ -42,9 +44,8 @@ if (isset($_GET['thumb'])) {
 			, $output);
 
 			$duration = $output[0];
-
 			system("ffmpeg -y -loglevel panic -hide_banner -ss "
-			. ($duration/2) . " -i '$in' -an -vframes 1"
+			. ($duration/2) . " -i '$path' -an -vframes 1"
 			. " -vf scale=\"250:-1\" $file");
 		}
 		bmfft_xsendfile($file);
@@ -86,9 +87,8 @@ if ($ftype == 'video' && isset($_GET['preview'])) {
 		, $output);
 
 		$duration = $output[0];
-
 		system("ffmpeg -y -loglevel panic -hide_banner -ss "
-		. ($duration/2) . " -i '$in' -an -vframes 1"
+		. ($duration/2) . " -i '$path' -an -vframes 1"
 		. " $file");
 	}
 	bmfft_xsendfile($file);

@@ -129,8 +129,8 @@ function stats_getcolors($tag)
 			$blue = hexdec(substr($color, 5, 2));
 
 			// Calculate the distance to a gray tone
-			if (abs(pow($red, 2) - pow($green, 2)) < $boringfilter
-			&& abs(pow($red, 2) - pow($blue, 2)) < $boringfilter) continue;
+			if (pow($red - $green, 2) < $boringfilter
+			&& (pow($red, - $blue, 2) < $boringfilter)) continue;
 
 			$red = dechex(round($red / $colorestrict) * $colorestrict);
 			$green = dechex(round($green / $colorestrict) * $colorestrict);
