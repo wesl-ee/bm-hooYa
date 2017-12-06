@@ -12,6 +12,7 @@ $page = 1;
 if (isset($_GET['page']))
 	$page = $_GET['page'];
 
+
 // A list of pictures w/ new tags
 $results = db_getrecent($page);
 $totalpages = floor($results['Count']/CONFIG_THUMBS_PER_PAGE) + 1;
@@ -52,9 +53,14 @@ unset($results['Count']);
 		print '</main>';
 	}?>
 	<footer>
-		<?php render_pagenav($page, $totalpages);?>
+		<?php
+		foreach($_GET as $param => $value) {
+			if ($param != 'page') $q[$param] = $value;
+		}
+		render_pagenav($page, $totalpages, $q);?>
 		<div><?php print ($totalpages . " pages")?></div>
 		<?php $newGET = $_GET;
+
 		if (!isset($_GET['thumbs'])) {
 			print "<a href='?" . http_build_query($newGET) . "&thumbs'>"
 			. "thumbnail view</a>";

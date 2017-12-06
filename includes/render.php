@@ -12,6 +12,7 @@ function render_file($key, $ftype)
 		. '</a>'
 		. "</div>"
 		. '</main>';
+//		. "<a class=mobile href='download.php?key=$key'>View</a>";
 		break;
 	case 'video':
 		print '<main class=single>'

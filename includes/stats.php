@@ -120,10 +120,10 @@ function stats_getcolors($tag)
 		foreach ($colors as $color) {
 			// Restrict the colorspace to 128 colors for
 			// a more simple analysis
-			$colorspace = 128;
+			$colorspace = 256;
 			$colorestrict = (256 / pow($colorspace, 1/3));
 			// Filter out whites, grays and blacks
-			$boringfilter = 70 * 70;
+			$boringfilter = 50 * 50;
 			$red = hexdec(substr($color, 1, 2));
 			$green = hexdec(substr($color, 3, 2));
 			$blue = hexdec(substr($color, 5, 2));
