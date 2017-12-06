@@ -62,7 +62,8 @@ define('DB_FILE_EXTENDED_PROPERTIES',
 		'Height' => ['Type' => 'Number', 'Immutable' => 1],
 		'Colors' => [
 			'Immutable' => 1,
-			'Renderer' => 'render_colors'
+			'Renderer' => 'render_colors',
+			'Extractor' => 'extract_colors'
 		],
 	],
 	'video' => [

@@ -39,6 +39,19 @@ function simple_import($file, $class, $id)
 	. " (`Id`) VALUES ('$id')";
 	mysqli_query($dbh, $query);
 
+	// Special, class-specific properties
+	$query = "UPDATE `$class` SET `Id`='$id'";
+	foreach (DB_FILE_EXTENDED_PROPERTIES[$class] as $property => $value)
+	if ($value['Extractor']) {
+		// Call this function to extract the property value
+		$extractor = $value['Extractor'];
+		$prop_value = call_user_func($extractor, $file);
+		$query .= ",`$property`=$prop_value";
+	}
+	$query .= " WHERE `Id`='$id'";
+	if ($extractor) mysqli_query($dbh, $query);
+	
+
 	// Extra work for files with a width & height
 	$file = escapeshellarg($file);
 	if (DB_FILE_EXTENDED_PROPERTIES[$class]['Height']
@@ -69,5 +82,23 @@ function simple_import($file, $class, $id)
 	syslog(LOG_INFO|LOG_DAEMON, "User $id uploaded a file"
 	. " from " . $_SERVER['HTTP_X_REAL_IP']);
 	return True;
+}
+function extract_colors($file)
+{
+	$file = escapeshellarg($file);
+	exec("convert $file +dither -colors 6 -define histogram:unique-colors=true -format '%c' histogram:info:", $out);
+	foreach($out as $line) {
+		// For sRGBA, ignore the alpha channel
+		if (preg_match('/#([A-Fa-f0-9]{6})[A-Fa-f0-9]{2}/', $line, $m)) {
+			$colors[] = "#" . $m[1];
+		}
+		// For RGB, capture the whole string
+		elseif (preg_match('/(#[A-Fa-f0-9]{6})/', $line, $m)) {
+			$colors[] = $m[1];
+		}
+		# No more than 6 colors for each picture
+		if (@colors >= 6) { last; }
+	}
+	return "'" . json_encode($colors) . "'";
 }
 ?>

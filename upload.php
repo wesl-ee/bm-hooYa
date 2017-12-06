@@ -92,7 +92,7 @@ document.getElementById("fsubmit").style.visibility = 'hidden';
 document.getElementById("class").style.visibility = 'hidden';
 document.getElementById("hack").style.display = 'none';
 
-document.getElementById("fupload").onchange = function() {
+function fileuploaded() {
 	document.getElementById("class").style.visibility = 'initial';
 	var file = document.getElementById("fupload");
 	var name = file.value;
@@ -109,7 +109,13 @@ document.getElementById("fupload").onchange = function() {
 		};
 		reader.readAsDataURL(file.files[0]);
 	}
-};
+}
+
+document.getElementById("fupload").onchange = fileuploaded;
+document.getElementById("fupload").addEventListener("drop",  function(evt) {
+	evt.preventDefault();
+	fileuploaded();
+});
 document.getElementById("class").onchange = function() {
 	document.getElementById('fsubmit').style.visibility = 'initial';
 };
