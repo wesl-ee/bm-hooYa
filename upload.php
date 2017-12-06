@@ -29,6 +29,7 @@ $files = uploaded_today($_SESSION['userid']);
 $rem = CONFIG_HOOYA_DAILY_UPLOAD_LIMIT - count($files);
 
 if ($rem > 0 && isset($_POST['class'])) {
+	$start_time = microtime(true);
 	$class = $_POST['class'];
 	$file = $_FILES['file'];
 
@@ -36,10 +37,14 @@ if ($rem > 0 && isset($_POST['class'])) {
 	if ($file['size'] > CONFIG_HOOYA_MAX_UPLOAD) {
 		$accept_file = False;
 		$failmessage = 'File too big';
+		$duration = microtime(true) - $start_time;
+		bmlog("[hooYa!] Uploaded file too big ($duration seconds)");
 	}
 	if (!$to = DB_MEDIA_CLASSES[$class]['ULPath']) {
 		$accept_file = False;
 		$failmessage =  'Unrecognized media class';
+		$duration = microtime(true) - $start_time;
+		bmlog("[hooYa!] Unrecognzied upload media class ($duration seconds)");
 	}
 	if ($accept_file) {
 		$ext = pathinfo($file['name'], PATHINFO_EXTENSION);
@@ -55,6 +60,9 @@ if ($rem > 0 && isset($_POST['class'])) {
 		if (simple_import($to, $class, $key)) {
 			$href = "view.php?key=$key";
 			print "<script>window.location='$href'</script>";
+			$duration = microtime(true) - $start_time;
+			bmlog("[hooYa!] Successfully imported $to to hooYa!"
+			. " ($key) ($duration seconds)");
 		}
 		else $failmessage = "That file is"
 		. " <a href='view.php?key=$key'>already indexed!</a>";

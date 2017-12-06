@@ -42,7 +42,7 @@ $ftype = explode('/', $mimetype)[0];
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";
 	include CONFIG_HOOYA_PATH."includes/head.php"; ?>
-	<title>bmffd — view</title>
+	<title>hooYa — view</title>
 	<script>
 		var maxtags = <?php echo CONFIG_HOOYA_MAX_TAGS?>;
 		function hotKeys(e) { if (e.altKey) switch(e.keyCode) {

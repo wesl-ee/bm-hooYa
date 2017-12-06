@@ -25,19 +25,25 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 </div>
 <div id="rightframe">
 	<?php
+	$start_time = microtime(true);
 	if (!isset($_GET['untagged'])) {
 		print "<h1>random sixteen</h1>"
 		. "<header>"
 		. "<a href=?untagged&list>Show Untagged</a>"
 		. "</header>";
 		$results = db_getrandom(16);
+		$duration = microtime(true) - $start_time;
+		bmlog("Untagged slice took $duration seconds)");
 	} else {
 		print "<h1>random untagged sixteen</h1>"
 		. "<header>"
 		. "<a href=?>Show all</a>"
 		. "</header>";
 		$results = db_getuntaggedrandom(16);
+		$duration = microtime(true) - $start_time;
+		bmlog("Random slice took $duration seconds)");
 	}
+
 	if (!count($results)) {
 		print '<header>'
 		. 'No more pictures to index!'

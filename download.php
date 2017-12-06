@@ -7,6 +7,7 @@ include CONFIG_HOOYA_PATH.'includes/database.php';
 
 if (!isset($_GET['key'])) {
 	$file = CONFIG_HOOYA_PATH . 'img/400.jpg';
+	bmlog("[hooYa!] Malformed request (forgot key?)");
 	bmfft_xsendfile($file);
 	return;
 }
@@ -22,6 +23,7 @@ $ftype = explode('/', $mimetype)[0];
 
 if (!file_exists($path)) {
 	$file = CONFIG_HOOYA_PATH . 'img/404.jpg';
+	bmlog("[hooYa!] Could not find file $path - ($key)");
 	bmfft_xsendfile($file);
 	return;
 }

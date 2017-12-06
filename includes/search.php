@@ -1,6 +1,7 @@
 <?php
 function hooya_search($query, $page)
 {
+	$start_time = microtime(true);
 	if (!empty($query['media_class'])) $mediaclass = $query['media_class'];
 
 	// First, tokenikze the search string
@@ -126,6 +127,11 @@ function hooya_search($query, $page)
 			'Indexed' => $row['Indexed'],
 	];
 	}
+
+	// Performance timing
+	$duration = microtime(true) - $start_time;
+	bmlog("[hooYa!] Search for " . json_encode($terms) . " (page $page) took $duration seconds");
+
 	return $results;
 }
 function hooya_bestguess($member)
