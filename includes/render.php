@@ -287,7 +287,7 @@ function render_colorbar($data)
 		$ratio = $value/$total;
 		$width = $ratio*100 . "%";
 		print "<div class=color style='width:$width;background-color:$color'>"
-		. "<span class=colorname style='background-color:$color;color:$textcolor'>$htmlname ($color)</span>"
+		. "<span class=colorname style='background-color:$color;color:$textcolor'>$htmlname</span>"
 		. "&nbsp</div>";
 	}
 	print '</div>';
@@ -405,7 +405,7 @@ function render_colors($colors_sql)
 		$ratio = 1/count($colors);
 		$width = $ratio*100 . "%";
 		print "<div class=color style='width:$width;background-color:$color'>"
-		. "<span class=colorname style='background-color:$color;color:$textcolor'>$htmlname ($color)</span>"
+		. "<span class=colorname style='background-color:$color;color:$textcolor'>$htmlname</span>"
 		. "&nbsp</div>";
 	}
 	print '</div>';

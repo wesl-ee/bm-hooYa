@@ -54,10 +54,10 @@ if (isset($_GET['thumb'])) {
 	}
 	// Take the first frame of a .gif and thumbnail it
 	if ($ftype == 'image' && $mimetype == 'image/gif') {
-		$file = CONFIG_TEMPORARY_PATH . $key . '.jpg';
+		$file = CONFIG_TEMPORARY_PATH . $key . '.gif';
 		if (!file_exists($file))
-			exec('convert '.escapeshellarg($path)
-			.'[0] -thumbnail "500x500>" '.$file);
+			exec('convert ' . escapeshellarg($path)
+			. ' -fuzz 30% -layers Optimize ' . $file);
 		bmfft_xsendfile($file);
 		return;
 	}
