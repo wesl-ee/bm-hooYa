@@ -5,9 +5,10 @@ include CONFIG_COMMON_PATH.'includes/core.php';
 include CONFIG_HOOYA_PATH.'includes/video.php';
 include CONFIG_HOOYA_PATH.'includes/database.php';
 
-
 if (!isset($_GET['key'])) {
-	die;
+	$file = CONFIG_HOOYA_PATH . 'img/400.jpg';
+	bmfft_xsendfile($file);
+	return;
 }
 
 $key = rawurldecode($_GET['key']);
@@ -46,7 +47,7 @@ if (isset($_GET['thumb'])) {
 			$duration = $output[0];
 			system("ffmpeg -y -loglevel panic -hide_banner -ss "
 			. ($duration/2) . " -i '$path' -an -vframes 1"
-			. " -vf scale=\"250:-1\" $file");
+			. " -vf scale=\"500:-1\" $file");
 		}
 		bmfft_xsendfile($file);
 		return;
@@ -99,7 +100,7 @@ bmfft_xsendfile($file);
 
 function bmfft_xsendfile($file) {
 	header('Content-Type:'.mime_content_type($file));
-	header('Content-Disposition: inline; filename="bigmike-' . basename($file) . '"');
+	header('Content-Disposition: inline; filename="hooYa-' . basename($file) . '"');
 	header('X-Sendfile: '.$file);
 }
 ?>

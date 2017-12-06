@@ -97,12 +97,12 @@ while (my $ref = $sth->fetchrow_hashref()) {
 	if ($ref->{'Mimetype'} eq 'image/png') {
 		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.png';
 		if (-f $thumb) { next; }
-		system("convert '" . $ref->{'Path'} . "' -thumbnail 250x250 $thumb");
+		system("convert '" . $ref->{'Path'} . "' -thumbnail 500x500 $thumb");
 	}
 	if ($ref->{'Mimetype'} eq 'image/jpeg') {
 		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.jpg';
 		if (-f $thumb) { next; }
-		system("convert '" . $ref->{'Path'} . "' -thumbnail 250x250 $thumb");
+		system("convert '" . $ref->{'Path'} . "' -thumbnail 500x500 $thumb");
 	}
 	if ($ref->{'Mimetype'} =~ '^video') {
 		if (-f $thumb) { next; }
@@ -115,7 +115,7 @@ while (my $ref = $sth->fetchrow_hashref()) {
 		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '.jpg';
 		system("ffmpeg -y -loglevel panic -hide_banner -ss "
 		. ($duration/2) . " -i '$in' -an -vframes 1"
-		. " -vf scale=\"250:-1\" $thumb");
+		. " -vf scale=\"500:-1\" $thumb");
 
 		# Create the video preview
 		$thumb = '/var/http/thumbs/' . $ref->{'Id'} . '_preview.png';
