@@ -1,5 +1,7 @@
+// Namespaces
 var n = document.getElementsByClassName('space');
 for (var i = 0; i < n.length; i++) {
+	// Auto-suggestions
 	n[i].addEventListener('input', function(e) {
 		var suggestlist = document.getElementById('namespace-suggest-list');
 		if (this.value.length < 1) {
@@ -11,9 +13,19 @@ for (var i = 0; i < n.length; i++) {
 		var suggested = suggestlist.childNodes;
 		remote_suggestnamespace(this, suggestlist);
 	});
+	// TODO Custom notification box in the top left telling the
+	// user that this is a new tag
+/*	n[i].addEventListener('blur', function(e) {
+		var queryfield = e.target;
+		if (queryfield.classList.contains('warn')) {
+		}
+	});*/
 }
+
+// Members
 var n = document.getElementsByClassName('member');
 for (var i = 0; i < n.length; i++) {
+	// Auto-suggestions
 	n[i].addEventListener('input', function(e) {
 		var suggestlist = document.getElementById('member-suggest-list');
 		if (this.value.length < 1) {
@@ -59,6 +71,13 @@ function addTagField()
 		var suggested = suggestlist.childNodes;
 		remote_suggestnamespace(this, suggestlist);
         });
+        // TODO Custom notification box in the top left telling the
+	// user that this is a new tag
+/*	space.addEventListener('blur', function(e){
+		var queryfield = e.target;
+		if (queryfield.classList.contains('warn')) {
+		}
+	});*/
 	td.appendChild(space);
 	tr.appendChild(td);
 

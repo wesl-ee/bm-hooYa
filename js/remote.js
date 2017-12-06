@@ -5,7 +5,7 @@ function remote_suggest(queryfield, suggestlist)
 	xhr.onreadystatechange = function() { if (this.readyState == 4 &&
 	this.status == 200) {
 		var suggests = JSON.parse(this.responseText);
-		if (!suggests) return;
+		if (!suggests) { queryfield.classList.add('warn'); return; }
 		var suggestedtext = [];
 		var suggested = suggestlist.children;
 		for (i = 0; i < suggested.length; i++) {
@@ -14,6 +14,11 @@ function remote_suggest(queryfield, suggestlist)
 			else
 				suggestedtext.push(suggested[i].value);
 		}
+		// Warn the user about tags which are not already in the DB
+		if (suggestedtext.indexOf(queryText) == -1)
+			queryfield.classList.add('warn');
+		else
+			queryfield.classList.remove('warn');
 		suggests.forEach(function(suggest) {
 			// Do not add the same suggestion twice!
 			if (suggestedtext.indexOf(suggest) != -1) return;
@@ -33,7 +38,7 @@ function remote_suggestnamespace(queryfield, suggestlist)
 	xhr.onreadystatechange = function() { if (this.readyState == 4 &&
 	this.status == 200) {
 		var suggests = JSON.parse(this.responseText);
-		if (!suggests) return;
+		if (!suggests) { queryfield.classList.add('warn'); return; }
 		var suggestedtext = [];
 		var suggested = suggestlist.children;
 		for (i = 0; i < suggested.length; i++) {
@@ -42,6 +47,11 @@ function remote_suggestnamespace(queryfield, suggestlist)
 			else
 				suggestedtext.push(suggested[i].value);
 		}
+		// Warn the user about tags which are not already in the DB
+		if (suggestedtext.indexOf(queryText) == -1)
+			queryfield.classList.add('warn');
+		else
+			queryfield.classList.remove('warn');
 		suggests.forEach(function(suggest) {
 			// Do not add the same suggestion twice!
 			if (suggestedtext.indexOf(suggest) != -1) return;
