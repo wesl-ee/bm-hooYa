@@ -51,38 +51,12 @@ function simple_import($file, $class, $id)
 	$query .= " WHERE `Id`='$id'";
 	if ($extractor) mysqli_query($dbh, $query);
 	
-
-	// Extra work for files with a width & height
-	$file = escapeshellarg($file);
-	if (DB_FILE_EXTENDED_PROPERTIES[$class]['Height']
-	&& DB_FILE_EXTENDED_PROPERTIES[$class]['Width']) {
-
-		exec("identify $file", $output);
-		preg_match('/(\d+)x(\d+)/', $output[0], $m);
-		$width = $m[1]; $height = $m[2];
-		$query = "UPDATE `$class` SET"
-		. " `Width`=$width, `Height`=$height WHERE `Id`='$id'";
-		mysqli_query($dbh, $query);
-		unset($output, $m);
-	}
-	if (DB_FILE_EXTENDED_PROPERTIES[$class]['Dominant Color']) {
-		exec("convert $file +dither -colors 1 -define"
-		. " histogram:unique-colors=true -format '%c'"
-		. " histogram:info:", $output);
-		preg_match('/ (#[A-Fa-f0-9]{6}) /', $output[0], $m);
-		unset($output);
-		$dom_color = $m[1];
-		if ($dom_color) {
-			$query = "UPDATE `$class` SET"
-			. " `Dominant Color`='$dom_color' WHERE `Id`='$id'";
-			mysqli_query($dbh, $query);
-		}
-		unset($output, $m);
-	}
 	syslog(LOG_INFO|LOG_DAEMON, "User $id uploaded a file"
 	. " from " . $_SERVER['HTTP_X_REAL_IP']);
 	return True;
 }
+
+// PROPERTY EXTRACTION FUNCTIONS
 function extract_colors($file)
 {
 	$file = escapeshellarg($file);
@@ -100,5 +74,25 @@ function extract_colors($file)
 		if (@colors >= 6) { last; }
 	}
 	return "'" . json_encode($colors) . "'";
+}
+function extract_imgheight($file)
+{
+	$file = escapeshellarg($file);
+	exec("convert $file -print '%h\n' /dev/null", $out);
+	$line = $out[0];
+	if (preg_match('/(\d+)/', $line, $m)) {
+		$height = $m[1];
+		return $height;
+	}
+}
+function extract_imgwidth($file)
+{
+	$file = escapeshellarg($file);
+	exec("convert $file -print '%w\n' /dev/null", $out);
+	$line = $out[0];
+	if (preg_match('/(\d+)/', $line, $m)) {
+		$width = $m[1];
+		return $width;
+	}
 }
 ?>

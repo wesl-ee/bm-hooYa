@@ -23,7 +23,7 @@ define("CONFIG_THUMBS_PER_PAGE", 20);
 define("CONFIG_HOOYA_MAX_TAGS", 7);
 
 // Where you want to keep hooYa files
-define("CONFIG_HOOYA_STORAGE_PATH", "/var/media/")
+define("CONFIG_HOOYA_STORAGE_PATH", "/var/media/");
 
 // hooYa upload limit
 define("CONFIG_HOOYA_DAILY_UPLOAD_LIMIT", 15);
@@ -58,13 +58,21 @@ define('DB_MEDIA_CLASSES', [
 define('DB_FILE_EXTENDED_PROPERTIES',
 [
 	'single_image' => [
-		'Width' => ['Type' => 'Number', 'Immutable' => 1],
-		'Height' => ['Type' => 'Number', 'Immutable' => 1],
+		'Width' => [
+			'Type' => 'Number',
+			'Immutable' => 1,
+			'Extractor' => 'extract_imgwidth'
+		],
+		'Height' => [
+			'Type' => 'Number',
+			'Immutable' => 1,
+			'Extractor' => 'extract_imgheight'
+		],
 		'Colors' => [
 			'Immutable' => 1,
 			'Renderer' => 'render_colors',
 			'Extractor' => 'extract_colors'
-		],
+		]
 	],
 	'video' => [
 		'Width' => ['Type' => 'Number', 'Immutable' => 1],
