@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <?php
 include "../includes/config.php";
 
@@ -7,6 +6,7 @@ include CONFIG_HOOYA_PATH."includes/database.php";
 include CONFIG_HOOYA_PATH."includes/render.php";
 include CONFIG_HOOYA_PATH."includes/fm.php";
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";

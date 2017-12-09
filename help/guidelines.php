@@ -1,9 +1,9 @@
-<!DOCTYPE HTML>
 <?php
 include "../includes/config.php";
 
 include CONFIG_COMMON_PATH."includes/core.php";
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";

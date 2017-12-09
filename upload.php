@@ -1,12 +1,15 @@
-<!DOCTYPE HTML>
 <?php
+
 include "includes/config.php";
+
 
 include CONFIG_COMMON_PATH."includes/core.php";
 include CONFIG_COMMON_PATH."includes/auth.php";
 include CONFIG_HOOYA_PATH."includes/upload.php";
 include CONFIG_HOOYA_PATH."includes/render.php";
+
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";
@@ -25,6 +28,7 @@ include CONFIG_HOOYA_PATH."includes/render.php";
 	</aside>
 </div>
 <?php
+
 $files = uploaded_today($_SESSION['userid']);
 $rem = CONFIG_HOOYA_DAILY_UPLOAD_LIMIT - count($files);
 

@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <?php
 include "../includes/config.php";
 
@@ -16,6 +15,7 @@ if (is_file(CONFIG_DAILY_DUMP_FILE) && isset($_POST['download'])) {
 	die;
 }
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";

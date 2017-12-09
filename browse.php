@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <?php
 include "includes/config.php";
 
@@ -22,6 +21,7 @@ $totalpages = floor($results['Count']/CONFIG_THUMBS_PER_PAGE) + 1;
 unset($results['Count']);
 
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";

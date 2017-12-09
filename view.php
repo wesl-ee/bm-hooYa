@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <?php
 include "includes/config.php";
 
@@ -38,6 +37,7 @@ if (!logged_in() && DB_MEDIA_CLASSES[$class]['Restricted'])
 // Filetype is the first half of the mimetype
 $ftype = explode('/', $mimetype)[0];
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 	<?php include CONFIG_COMMON_PATH."includes/head.php";
@@ -67,6 +67,7 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 	&& count($_POST['tag_space']) == count($_POST['tag_space'])
 	&& count($_POST['tag_space']) <= CONFIG_HOOYA_MAX_TAGS
 	&& logged_in()) {
+	$start_time = microtime(true);
 	$tag_space = $_POST['tag_space'];
 	$tag_member = $_POST['tag_member'];
 	for ($i = 0; $i < count($tag_space); $i++) {
@@ -93,6 +94,9 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 		db_update_highscore($_SESSION['userid'], $new_tags);
 	}
 
+	$duration = microtime(true) - $start_time;
+	bmlog("Updated tags " . json_encode(db_get_tags([$key]))
+	. " > " . json_encode($tags) . " in $duration seconds");
 	// Replace the previous tags with the space -> member pairs we
 	// just read in
 	db_set_tags($key, $tags);
