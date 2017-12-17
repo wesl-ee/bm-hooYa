@@ -91,9 +91,7 @@ if (isset($_POST['tag_space'], $_POST['tag_member'])
 		else
 			syslog(LOG_INFO|LOG_DAEMON, "User " . $_SESSION['username']
 				. " removed " . abs($new_tags) . " tags from $key");
-		db_update_highscore($_SESSION['userid'], $new_tags);
 	}
-
 	$duration = microtime(true) - $start_time;
 	bmlog("Updated tags " . json_encode(db_get_tags([$key]))
 	. " > " . json_encode($tags) . " in $duration seconds");

@@ -551,18 +551,4 @@ function db_getnamespacehints($hint)
 	}
 	return $ret;
 }
-/*
-* Update the number of tags a user has added / destroyed
-* IN: User ID and the number to add / subtract from the user's score
-* OUT: False on error, True otherwise
-*/
-function db_update_highscore($userid, $diff)
-{
-	$conn = new mysqli(CONFIG_DB_SERVER, CONFIG_DB_USERNAME
-	,CONFIG_DB_PASSWORD, CONFIG_DB_DATABASE);
-	// Keep a high-score count for every logged-in user!
-	$cmd = 'UPDATE `users` SET `tags_added` = `tags_added` + '
-	. $diff . ' WHERE `id`=' . $userid;
-	return $conn->query($cmd);
-}
 ?>
