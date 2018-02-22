@@ -4,6 +4,7 @@ function remote_suggest(queryfield, suggestlist)
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() { if (this.readyState == 4 &&
 	this.status == 200) {
+		console.log(this.responseText);
 		var suggests = JSON.parse(this.responseText);
 		if (!suggests) { queryfield.classList.add('warn'); return; }
 		var suggestedtext = [];
@@ -27,9 +28,11 @@ function remote_suggest(queryfield, suggestlist)
 			suggestlist.appendChild(option);
 		});
 	} }
-	var uri = "?q=" + queryText;
-	xhr.open('GET', 'hint.php' + uri);
-	xhr.send();
+	var uri = "q=" + queryText;
+	xhr.open('POST', 'hint.php');
+	xhr.setRequestHeader('Content-type',
+	'application/x-www-form-urlencoded');
+	xhr.send(uri);
 }
 function remote_suggestnamespace(queryfield, suggestlist)
 {
@@ -60,7 +63,9 @@ function remote_suggestnamespace(queryfield, suggestlist)
 			suggestlist.appendChild(option);
 		});
 	} }
-	var uri = "?n=" + queryText;
-	xhr.open('GET', 'hint.php' + uri);
-	xhr.send();
+	var uri = "n=" + queryText;
+	xhr.open('POST', 'hint.php');
+	xhr.setRequestHeader('Content-type',
+	'application/x-www-form-urlencoded');
+	xhr.send(uri);
 }

@@ -76,7 +76,7 @@ $sth->execute();
 $total = ($sth->fetchrow_hashref())->{'Total'};
 $sth = $dbh->prepare("SELECT `Id`, CONCAT(`Space`,':',`Member`) AS tag FROM `Tags`");
 $sth->execute();
-print "TagX,\"X Frequency\",TagY,\"Y Frequency given X\",P(Y|X)\n";
+# print "TagX,\"X Frequency\",TagY,\"Y Frequency given X\",P(Y|X)\n";
 
 while (my $ref = $sth->fetchrow_hashref()) {
 	my $tag = $ref->{'tag'};
@@ -89,11 +89,11 @@ while (my $ref = $sth->fetchrow_hashref()) {
 	print "$tag ($freq files)\n";
 
 	$sth2 = $dbh->prepare("SELECT CONCAT(Space, ':', Member) AS Tag, COUNT(*) AS Freq"
-        . " FROM Tags, TagMap WHERE TagId=Tags.Id AND FileId IN"
-        . " (SELECT FileId FROM TagMap, Tags WHERE TagId=Tags.Id"
-        . " AND CONCAT(Space,':',Member)='$tag')"
-        . " AND CONCAT(Space,':',Member)!='$tag' GROUP By Tag"
-        . " ORDER BY Freq DESC");
+	. " FROM Tags, TagMap WHERE TagId=Tags.Id AND FileId IN"
+	. " (SELECT FileId FROM TagMap, Tags WHERE TagId=Tags.Id"
+	. " AND CONCAT(Space,':',Member)='$tag')"
+	. " AND CONCAT(Space,':',Member)!='$tag' GROUP By Tag"
+	. " ORDER BY Freq DESC");
         $sth2->execute();
         my $rows = $sth2->rows;
 	while (my $ref2 = $sth2->fetchrow_hashref()) {
@@ -101,12 +101,12 @@ while (my $ref = $sth->fetchrow_hashref()) {
 		my $tag2 = $ref2->{'Tag'};
 		my $prob = $freq2/$freq;
 		print "  ";
-#		if (--$rows == 0) { print "└" }
-		if (--$rows == 0) { print "\\" }
-#		else { print "├" }
-		else { print "|-" }
-#		print "──── $tag2 ($freq2/$freq)\n";
-		print "---$tag2 ($freq2/$freq)\n";
+		if (--$rows == 0) { print "└" }
+#		if (--$rows == 0) { print "\\" }
+		else { print "├" }
+#		else { print "|-" }
+		print "──── $tag2 ($freq2/$freq)\n";
+#		print "---$tag2 ($freq2/$freq)\n";
 #		printf "\"$tag\",$freq,\"$tag2\",$freq2,%.3f\n", $prob;
 	}
 }

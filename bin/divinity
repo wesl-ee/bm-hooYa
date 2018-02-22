@@ -175,6 +175,8 @@ if (defined $import) {
 
 # Unmapping
 elsif (defined $unmap || $delete) {
+	if (defined $delete, $class) {
+	}
 	if (!defined $key) {
 		print "Key to unmap: ";
 		$key = <STDIN>;
@@ -203,9 +205,11 @@ elsif (defined $unmap || $delete) {
 
 # Function definitions
 sub importfile {
-	return if !-f;
+	$_ = @_[0];
+	return if (!-f);
 	# Hash file contents
 	my $path = $_;
+
 	my $md5 = file_md5_hex($path);
 	my $mtype = mimetype($path);
 	my $ftype = (split(/\//, $mtype))[0];

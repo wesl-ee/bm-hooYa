@@ -133,17 +133,19 @@ if (defined $fixprop) {
 		my @out =  `convert $file +dither -colors 6 -define histogram:unique-colors=true -format "%c" histogram:info:`;
 		my @colors;
 		foreach(@out) {
-			if (/#[A-Fa-f0-9]{2}([A-Fa-f0-9]{6})/) {
+			# For sRGBA, ignore the alpha channel
+			if (/#([A-Fa-f0-9]{6})[A-Fa-f0-9]{2}/) {
 				push @colors, "#$1";
 			}
+			# For RGB, capture the whole string
 			elsif (/(#[A-Fa-f0-9]{6})/) {
 				push @colors, $1;
 			}
+			# No more than 6 colors for each picture
 			if (@colors >= 6) { last; }
 		}
 		if (!@colors) {
-			print $row->{'Id'} . " could not get a palette for $file\n";
-			print "@out";
+			print $row->{'Id'} . " could not get a palette for $file\n"; next;
 		}
 		print "$file @colors\n";
 		$sth2 = $dbh->prepare("UPDATE `single_image`"
@@ -156,7 +158,7 @@ if (defined $fixprop) {
 	while ($row = $sth->fetchrow_hashref) {
 		# Detecting image resolutions
 		$file = $row->{'Path'};
-		my $out =  `identify $file`;
+		my $out =  `convert $file -print "Size: %wx%h\n" /dev/null`;
 		chomp $out;
 		if (!($out =~ /(\d+)x(\d+)/)) {
 			print "Could not dimensions for $file\n"; next;
